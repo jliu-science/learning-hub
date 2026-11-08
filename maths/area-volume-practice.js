@@ -131,8 +131,8 @@ window.AVQ=(function(){
       return {text:`A metal plate is a rectangle with a square hole cut out. The hole is ${s} cm by ${s} cm. Find the area of the metal that is left.`, base:'cm', ans:A, unit:'cm²', hint:F.rect,
         fig:fig({pts:[[0,0],[Wd,0],[Wd,Ht],[0,Ht]],polys:[{pts:[[Wd/2-s/2,Ht/2-s/2],[Wd/2+s/2,Ht/2-s/2],[Wd/2+s/2,Ht/2+s/2],[Wd/2-s/2,Ht/2+s/2]],cls:'hole'}],dims:[{a:[0,0],b:[Wd,0],t:`${Wd} cm`,k:'b'},{a:[Wd,0],b:[Wd,Ht],t:`${Ht} cm`,k:'w'}]}).replace(/(<polygon class="fig hole"[^>]*\/>)(.*?)(<polygon class="fig main"[^>]*\/>)/,'$3$2$1'),
         work:[`Whole plate: ${Wd} × ${Ht} = ${Wd*Ht} cm²`,`Hole: ${s} × ${s} = ${s*s} cm²`,`Left: ${Wd*Ht} − ${s*s} = ${A} cm²`]}; },
-    R=>{ const w=R.even(4,10), l=R.int(6,12); const r=w/2, A=l*w+Math.PI*r*r/2;
-      return {text:'This shape is a rectangle with a semicircle on one end. Find its total area.', base:'cm', ans:A, dp:1, pi:true, unit:'cm²', hint:`${F.rect}<br>${F.circ}`,
+    R=>{ const w=R.even(4,10), l=R.int(6,12); const r=w/2, rectangle=l*w, A=rectangle+Math.PI*r*r/2;
+      return {text:'This shape is a rectangle with a semicircle on one end. Find its total area.', base:'cm', ans:A, dp:1, pi:true, piOffset:rectangle, unit:'cm²', hint:`${F.rect}<br>${F.circ}`,
         fig:fig({pts:[[0,0],[l,0],...Array.from({length:21},(_,i)=>[l+r*Math.sin(Math.PI*i/20),r-r*Math.cos(Math.PI*i/20)]),[0,w]],dash:[[[l,0],[l,w]]],dims:[{a:[0,0],b:[l,0],t:`${l} cm`,k:'b'},{a:[0,w],b:[0,0],t:`${w} cm`,k:'w'}]}),
         work:[`Rectangle: ${l} × ${w} = ${l*w} cm²`,`Semicircle: radius = ${w} ÷ 2 = ${r} cm, so ½ × π × ${r}² = ${f(Math.PI*r*r/2,2)} cm²`,`Total: ${l*w} + ${f(Math.PI*r*r/2,2)} = ${f(A,1)} cm²`]}; }
   ];

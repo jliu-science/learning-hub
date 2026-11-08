@@ -33,7 +33,7 @@ window.MARKS = {
   l5:[
     [ [['bacteria','probiotic','microb','microorganism','bacterium','good bacteria']], [['vitamin']], [['break','digest','healthy','health','gut']] ],
     [ [['starch','carbohydrate']], [['carbohydrase','enzyme'],['saliva','mouth']], [['sugar']] ],
-    [ [['large','big'],['small']], [['speed','faster','quicker']], [['used up','not used','without being','aren t used','isn t used','not changed']] ],
+    [ [['large','big'],['small']], [['speed','faster','quicker']], {all:[['not used up','not get used up','without being used up','without getting used up','aren t used up','isn t used up','not consumed','not changed','unchanged','reused','reusable','used again']],reject:[/\b(?:enzymes?|catalysts?|they) (?:are |is |get |gets |become )?(?:used up|consumed)\b/]} ],
     [ [['enzyme'],['small','break','chop']], [['carbohydrase','protease','lipase','different nutrient','different type']], [['bacteria'],['large intestine','fibre','fiber']], [['vitamin']] ]
   ],
   final:[

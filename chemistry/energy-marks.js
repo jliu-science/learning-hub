@@ -9,6 +9,15 @@ const FROM=['from the','from it','from your','out of the','away from','leaves','
 const TO=['to the','into the','to your','warms','heats','gives','transfer'];
 const DOWN=['decreas','down','drop','fall','lower','cool','colder','reduc','less'];
 const UP=['increas','rise','rose','goes up','hotter','warmer','higher','heat up','heats up'];
+// Each choice is one distinct controlled variable, even when several synonyms occur.
+const CONTROLS=[
+  {all:[['volume of water','mass of water','amount of water','water volume','water mass','how much water']],patterns:[/\b(?:volume|mass|amount) and (?:the )?(?:initial|starting|start) temperature of (?:the )?water\b/]},
+  [['starting temperature','start temperature','initial temperature']],
+  [['mass of fuel','amount of fuel','fuel mass','same fuel amount','volume of fuel','fuel volume','how much fuel']],
+  [['burning time','burn time','same time','time']],
+  [['distance','height','flame beaker gap']],
+  [['same beaker','same container']]
+];
 window.MARKS = {
   l1:[
     [ [ENDO], [['energy','heat'], FROM.concat(['into the pack','into the mixture','into the cold'])], [DOWN] ],
@@ -27,7 +36,7 @@ window.MARKS = {
     [ [['bond'],['break','broken','split']], [['energy','endotherm'],['need','take','require','absorb','in','endotherm']], [['hot','heat','temperature','engine'],['energy','supply','provide','give','enough']], [['platinum','rhodium','catalyst']] ]
   ],
   final:[
-    [ [['exotherm']], [['energy','heat'],['water','surround','beaker','to the','hotter','rise','increas','warm']], [['independent'],['fuel','type']], [['volume','amount of water','mass of water','same water','how much water']], [['mass of fuel','amount of fuel','how much fuel','time','starting temperature','start temperature','initial temperature','distance','height','same beaker','same fuel amount']] ],
+    [ [['exotherm']], [['energy','heat'],['water','surround','beaker','to the','hotter','rise','increas','warm']], [['independent'],['fuel','type']], {choices:CONTROLS,minimum:1}, {choices:CONTROLS,minimum:2} ],
     [ [['higher','above','products','reactants'],['more energy','store','products','reactants']], [['endotherm','taken in','takes in','take in'],['taken in','takes in','take in','absorb','from the surround','in from']], [['cold'],['cool','injur','takes','take','colder','lower']] ],
     [ [['break','broken'],['in','take','need','endotherm','absorb','requir']], [['make','made','form'],['out','give','releas','exotherm']], [['more','greater','bigger','less','smaller']], [['lower','below','down','less energy']] ]
   ]

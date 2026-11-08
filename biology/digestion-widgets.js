@@ -75,8 +75,16 @@ window.DigestionWidgets = (function(){
         for(let i=0;i<3;i++){ drop.setAttribute('cy',-10); drop.animate([{transform:'translateY(0)'},{transform:'translateY(130px)'}],{duration:450,easing:'ease-in'}); await sleep(470); }
         $('#liquid').style.fill = mix(test.start);
         await sleep(900);
-        if(test.heat){ $('#res').textContent=test.steps[1]; $('#bath').setAttribute('opacity',.9); bub.setAttribute('opacity',1); await sleep(1800); }
-        if(test.cloudy){ $('#res').textContent=test.steps[1]; await sleep(1200); }
+        for(const step of test.steps.slice(1,-1)){
+          $('#res').textContent=step;
+          if(test.heat){ $('#bath').setAttribute('opacity',.9); bub.setAttribute('opacity',1); await sleep(1800); }
+          else if(test.cloudy) await sleep(1200);
+          else {
+            // Show the second reagent being added before revealing the Biuret result.
+            drop.setAttribute('fill','#e9f4fb');
+            for(let i=0;i<3;i++){ drop.setAttribute('cy',-10); drop.animate([{transform:'translateY(0)'},{transform:'translateY(130px)'}],{duration:450,easing:'ease-in'}); await sleep(470); }
+          }
+        }
         $('#res').textContent=test.steps[test.steps.length-1];
         if(positive){ if(test.cloudy) $('#cloud').style.opacity=.85; else $('#liquid').style.fill=test.pos; }
         await sleep(1500);
