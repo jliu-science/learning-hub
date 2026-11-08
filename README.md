@@ -1,8 +1,8 @@
-# Dora revision
+# Learning Hub
 
 Interactive Year 8 science and maths revision, built with HTML, CSS and JavaScript.
 
-Website: https://jliu-science.github.io/dora-revision/
+Website: https://jliu-science.github.io/learning-hub/
 
 Open `index.html` locally, or use the website above after deployment. Progress is stored in the current browser and is not synced between devices.
 
