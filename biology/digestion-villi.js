@@ -147,7 +147,7 @@
       const msg = $('#vx-msg');
       if(target < .2) msg.innerHTML = `<b>${pc}% absorbed.</b> With a flat wall there is only a small surface, so most of the food passed on before it could be absorbed. Now grow the villi and try again.`;
       else if(target < .8) msg.innerHTML = `<b>${pc}% absorbed.</b> Better. Taller villi stick further out of the wall, giving a bigger surface area. Try them at full height.`;
-      else msg.innerHTML = `<b>${pc}% absorbed.</b> The villi give a <b>big surface area</b>, so more nutrients are absorbed <b>quickly</b>, before the undigested food passes out of the body. The <b>thin wall</b> and the <b>blood capillaries</b> carry the absorbed food molecules away.`;
+      else msg.innerHTML = `<b>${pc}% absorbed.</b> The villi give a <b>big surface area</b>, so more nutrients are absorbed <b>quickly</b>, before the undigested food passes out of the body. Nutrients pass through the <b>thin wall</b> into the blood, and the <b>blood capillaries</b> carry them away.`;
       lastRun = null;
       $('#vx-go').textContent = 'Release digested food';
     }

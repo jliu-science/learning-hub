@@ -169,20 +169,52 @@
   /* ---------- auto-marking: keyword groups per marking point ---------- */
   const mnorm=t=>' '+String(t).toLowerCase().replace(/[^a-z0-9]+/g,' ')+' ';
   const esc=w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-  const hasWord=(text,w)=>new RegExp('(^|[^a-z0-9])'+esc(mnorm(w).trim())).test(text);
-  /* stem = scenario + question text. Sentences copied from it are ignored, and a
-     point only scores if at least one of its key words is not already in the stem. */
-  const words=t=>mnorm(t).trim().split(' ').filter(w=>w.length>2);
+  /* Match related words within one statement, rather than joining unrelated facts.
+     Only verbatim copied sentences are ignored: correct answers often reuse terms
+     from the question, so vocabulary overlap alone is not evidence of copying. */
+  const statements=t=>String(t).split(/(?<!\d)\.|\.(?!\d)|[!?;\n]+|(?:[,\:]\s*|\b(?:but|whereas|while|and)\s+)(?=(?:the\s+)?(?:carbohydrase|amylase|protease|lipase|enzymes?|catalysts?)\b)/i).map(s=>mnorm(s).trim()).filter(Boolean);
   function dropCopied(answer,stem){
-    if(!stem) return answer; const sw=new Set(words(stem));
-    return answer.split(/(?<=[.!?\n])\s*/).filter(sen=>{ const w=words(sen); if(w.length<4) return true; return w.filter(x=>sw.has(x)).length/w.length<0.8; }).join(' ');
+    const copied=new Set(statements(stem||''));
+    return statements(answer).filter(s=>s.split(' ').length<6||!copied.has(s));
+  }
+  function positiveHit(text,word){
+    const term=mnorm(word).trim();
+    const re=new RegExp('(^|[^a-z0-9])'+esc(term),'g'); let match;
+    while((match=re.exec(text))){
+      const before=text.slice(0,match.index+match[1].length);
+      const explicitNegative=/\b(?:not|without|never|no)\b|\b(?:aren|isn|don|doesn|can|won) t\b/.test(term);
+      const negated=/\b(?:not|never|no|cannot|can t|don t|doesn t|isn t|aren t|wasn t|weren t|won t|without)\b(?:\s+[a-z0-9]+){0,3}\s*$/.test(before);
+      if(explicitNegative||!negated) return word;
+    }
+    return null;
   }
   function markAnswer(answer,rules,stem){
-    const t=mnorm(dropCopied(answer,stem)); const st=stem?mnorm(stem):'';
-    const res=rules.map(groups=>{ const hits=[]; const ok=groups.every(g=>{ const f=g.find(w=>hasWord(t,w)); if(f) hits.push(f); return !!f; });
-      return {ok,hits,stemOnly:!!st&&hits.every(w=>hasWord(st,w))}; });
-    const own=res.some(r=>r.ok&&!r.stemOnly);
-    return res.map(r=>{ const ok=r.ok&&(own||!r.stemOnly); return {ok,hits:ok?r.hits:[]}; });
+    const original=dropCopied(answer,stem), whole=mnorm(answer);
+    // A pronoun can continue the preceding explanation without naming the nutrient again.
+    const parts=original.flatMap((part,i)=>i&&/^(?:if )?(?:they|it|these|this)\b/.test(part)?[part,original[i-1]+' '+part]:[part]);
+    const matchGroups=rule=>{
+      const groups=Array.isArray(rule)?rule:rule.all;
+      for(const part of parts){
+        const hits=groups.map(group=>group.map(w=>positiveHit(part,w)).find(Boolean));
+        if(hits.every(Boolean)) return hits;
+        for(const pattern of rule.patterns||[]){
+          const match=part.match(pattern);
+          if(match&&positiveHit(part,match[0])) return [match[0]];
+        }
+      }
+      return null;
+    };
+    return rules.map(rule=>{
+      const spec=Array.isArray(rule)?{all:rule}:rule;
+      if((spec.reject||[]).some(re=>re.test(whole))) return {ok:false,hits:[]};
+      if(spec.choices){
+        const found=spec.choices.map(matchGroups).filter(Boolean);
+        const ok=found.length>=(spec.minimum||1);
+        return {ok,hits:ok?[...new Set(found.flat())]:[]};
+      }
+      const hits=matchGroups(spec.all);
+      return {ok:!!hits,hits:hits||[]};
+    });
   }
   function highlight(answer,words){
     let html=answer.replace(/&/g,'&amp;').replace(/</g,'&lt;');
@@ -214,12 +246,12 @@
         const stem=(a.scenario+' '+a.question).replace(/<[^>]+>/g,' '); const res = rules ? markAnswer(ans,rules,stem) : a.points.map(()=>({ok:false,hits:[]}));
         const got=res.filter(r=>r.ok).length; const score=Math.round(got/a.points.length*max);
         const words=[].concat(...res.filter(r=>r.ok).map(r=>r.hits));
-        box.innerHTML=`<div class="score"><span class="big">${score}<small> / ${max}</small></span><span>${score===max?'Full marks. Excellent answer.':score>=max/2?'Good. Add the missing points below for full marks.':'A start. Look at what\'s missing below, add it, and submit again.'}</span></div>
+        box.innerHTML=`<div class="score"><span class="big">${score}<small> / ${max}</small></span><span>${score===max?'All key points found. Compare your answer with the model answer.':score>=max/2?'Some key points found. Check the suggestions below.':'Check the model answer, then add any missing explanations.'}</span></div>
           <div class="yours"><h4>Your answer</h4><p>${highlight(ans,words)}</p></div>
           ${got?`<div class="good-pts"><h4>Super — you included</h4><ul>${a.points.map((p,i)=>res[i].ok?`<li>${p}</li>`:'').join('')}</ul></div>`:''}
           ${got<a.points.length?`<div class="miss-pts"><h4>Missing — add this to your answer</h4><ul>${a.points.map((p,i)=>res[i].ok?'':`<li>${p}</li>`).join('')}</ul></div>`:''}
           <details class="model-d"><summary>Show the model answer</summary><p>${a.model}</p></details>
-          <p class="hint" style="margin:8px 0 0">Marked by looking for key words. If you think you said it in a different way, check the model answer.</p>`;
+          <p class="hint" style="margin:8px 0 0">This is a suggested score. Check the model answer, especially if you expressed an idea differently.</p>`;
         d.querySelector('.sb').textContent='Submit again'; d.classList.add('marked');
         if(window.innerWidth<900) box.scrollIntoView({behavior:'smooth',block:'nearest'});
       };

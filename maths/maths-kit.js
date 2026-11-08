@@ -116,11 +116,17 @@
   /* ---------- practice: one question at a time, number + unit checked separately ---------- */
   function parseNum(s){ s=String(s).trim().replace(/,/g,'').replace(/\s+/g,''); if(!/^-?\d*\.?\d+$/.test(s)) return NaN; return parseFloat(s); }
   function checkNum(val,q){
-    if(isNaN(val)) return 'bad';
-    const tol=q.dp?0.5*Math.pow(10,-q.dp)+1e-9:1e-6;
-    if(Math.abs(val-q.ans)<=tol) return 'ok';
-    if(q.pi&&Math.abs(val-q.ans)/Math.abs(q.ans)<0.0015) return 'ok314';
-    if(q.dp&&Math.abs(val-q.ans)<=Math.pow(10,-q.dp)*1.5) return 'close';
+    if(!Number.isFinite(val)) return 'bad';
+    const dp=Number.isInteger(q.dp)?q.dp:null;
+    const same=(a,b)=>Math.abs(a-b)<=1e-6;
+    const matches=answer=>same(val,answer)||(dp!==null&&same(val,round(answer,dp)));
+    if(matches(q.ans)) return 'ok';
+    if(q.pi){
+      const offset=q.piOffset??0;
+      const with314=offset+(q.ans-offset)*3.14/Math.PI;
+      if(matches(with314)) return 'ok314';
+    }
+    if(dp!==null&&Math.abs(val-q.ans)<=Math.pow(10,-dp)*1.5) return 'close';
     return 'no';
   }
   function practice(el,gens,id,n,onDone,intro){
