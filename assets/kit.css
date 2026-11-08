@@ -1,0 +1,63 @@
+/* ===== Extra styles for the Chemistry and Physics models (loaded only by those pages) ===== */
+.sim{display:grid;grid-template-columns:minmax(220px,.85fr) minmax(0,1.4fr);gap:18px;align-items:start}
+.sim.wide{grid-template-columns:minmax(0,1fr)}
+.sim .ctl h4{margin:.2em 0 .45em;font-family:"IBM Plex Mono",monospace;font-size:.76rem;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.sim .ctl h4:not(:first-child){margin-top:14px}
+.sim .ctl p{margin:.4em 0;font-size:.92rem}
+.ch{display:flex;flex-wrap:wrap;gap:6px}
+.ch button{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:6px 11px;font-weight:500;font-size:.88rem;text-align:left}
+.ch button:hover:not(.on):not(:disabled){border-color:var(--accent)}
+.ch button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);font-weight:600}
+.ch button:disabled{opacity:.45;cursor:default}
+.ch.col{flex-direction:column;align-items:stretch}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:10px;position:relative}
+.stage svg{width:100%;height:auto;display:block;touch-action:none;user-select:none}
+.stage svg text{font-family:"Atkinson Hyperlegible",sans-serif}
+.stage svg .mono{font-family:"IBM Plex Mono",monospace}
+.readout{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--muted);margin-top:8px}
+.readout b{color:var(--ink);font-size:.95rem;font-weight:500}
+.sim .verdict{margin-top:10px}
+.sim .verdict b.up{color:#b91c1c}.sim .verdict b.down{color:#0369a1}
+.kit-range{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;margin:6px 0 10px;font-size:.9rem}
+.kit-range input{grid-column:1 / -1;width:100%;accent-color:var(--accent)}
+.kit-range output{font-family:"IBM Plex Mono",monospace;font-size:.85rem}
+.grab{cursor:grab}.grab:active{cursor:grabbing}
+.handle{cursor:ns-resize}
+.calc{font-family:"IBM Plex Mono",monospace;font-size:.86rem;background:var(--soft);border:1px solid var(--line);border-radius:3px;padding:8px 10px;margin-top:8px;line-height:1.7}
+.calc .ok{color:var(--good);font-weight:600}.calc .no{color:var(--bad);font-weight:600}
+.steps-list{list-style:none;padding:0;margin:8px 0 0;counter-reset:st}
+.steps-list li{counter-increment:st;display:grid;grid-template-columns:22px 1fr;gap:8px;padding:6px 8px;border-left:3px solid transparent;font-size:.9rem;color:var(--muted);transition:background .2s,color .2s,border-color .2s}
+.steps-list li::before{content:counter(st);font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--muted)}
+.steps-list li.on{background:var(--accent-soft);border-left-color:var(--accent);color:var(--ink)}
+.steps-list li.on::before{color:var(--accent)}
+.btn.hold{user-select:none;touch-action:none}
+.btn.hold.down{filter:brightness(.88)}
+.tbdiagram.lbl .slot text{font-size:17px}
+.sorted-hint{font-size:.85rem;color:var(--muted);margin-top:6px}
+@media (max-width:900px){.sim{grid-template-columns:1fr}}
+.stage svg{max-height:380px}
+/* bond energy + fuels models (6.4.2, 6.4.3) */
+.btab{border-collapse:collapse;margin:10px 0 4px;font-size:.9rem}
+.btab th{background:var(--accent-soft);color:var(--ink);text-align:left;font-weight:600;padding:5px 10px;border:1px solid var(--line);font-size:.82rem}
+.btab td{padding:4px 10px;border:1px solid var(--line)}
+.btab .chip{display:inline-block;font-family:"IBM Plex Mono",monospace;padding:2px 12px}
+.bond-sim .stage svg,.fdrop svg{max-height:460px}
+.bslot.over rect{stroke:var(--accent);stroke-dasharray:none;fill:var(--accent-soft)}
+.steps-list li.done{color:var(--ink)}
+.fadein{animation:fadein .5s both}@keyframes fadein{from{opacity:0}}
+.fdrop.over{outline:2px dashed var(--accent);outline-offset:-4px}
+.frank{margin:4px 0 12px;padding-left:20px;font-size:.9rem}
+.frank li{display:flex;justify-content:space-between;gap:12px;padding:2px 4px}
+.frank li.on{background:var(--accent-soft)}
+.ch button.shake{animation:shake .35s}
+.btab .chip{border:1.5px dashed var(--accent);background:var(--accent-soft);cursor:grab;animation:nudge 1.8s ease-in-out 4}
+.btab .chip::before{content:'';display:inline-block;width:6px;height:12px;margin-right:7px;vertical-align:-1px;background:radial-gradient(circle,var(--accent) 1.2px,transparent 1.4px) 0 0/3px 4px}
+@keyframes nudge{0%,70%,100%{transform:none}80%{transform:translateX(5px)}90%{transform:translateX(-2px)}}
+.bslot:not([data-done]) rect{stroke:var(--accent);animation:slotpulse 1.3s ease-in-out infinite}
+@keyframes slotpulse{50%{fill:var(--accent-soft)}}
+.lb-how{margin:8px 0 12px;padding-left:20px;font-size:.92rem}.lb-how li{margin:4px 0}
+#lp.bob{animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{0%,60%,100%{transform:none}70%{transform:translateY(-6px)}85%{transform:translateY(6px)}}
+#fpool .chip{border:1.5px dashed var(--accent);background:var(--accent-soft);cursor:grab}
+#fpool .chip.ok{border-style:solid;background:var(--good-soft);border-color:#bbe5c9;cursor:default}
+#fpool .chip::before,.btab .chip::before{content:'';display:inline-block;width:6px;height:12px;margin-right:7px;vertical-align:-1px;background:radial-gradient(circle,var(--accent) 1.2px,transparent 1.4px) 0 0/3px 4px}
