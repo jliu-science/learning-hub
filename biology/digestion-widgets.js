@@ -36,6 +36,7 @@ window.DigestionWidgets = (function(){
           <p class="hint">Remember: to make a food solution, crush the food with a <b>pestle and mortar</b>, add a few drops of <b>distilled water</b> and mix well. Use <b>filter paper</b> for a solid piece of food.</p>
         </div>
         <div class="bench">
+          <div class="result-label" style="margin:0 0 8px" id="res">Pick a sample and a test</div>
           <svg viewBox="0 0 200 260" id="tube">
             <rect id="bath" x="20" y="150" width="160" height="90" rx="10" fill="#cfe8ff" opacity="0"/>
             <g id="bubbles" opacity="0"></g>
@@ -51,7 +52,6 @@ window.DigestionWidgets = (function(){
             </g>
             <ellipse cx="100" cy="250" rx="60" ry="6" fill="#000" opacity=".08"/>
           </svg>
-          <div class="result-label" id="res">Pick a sample and a test</div>
         </div>
       </div>
       <div class="logwrap"><table class="logtable"><thead><tr><th>Sample</th><th>Test</th><th>Result</th><th>Nutrient present?</th></tr></thead><tbody id="log"><tr><td colspan="4" class="hint">Results appear here. Use them to work out what is in the mystery sample.</td></tr></tbody></table></div>`;
@@ -130,10 +130,10 @@ window.DigestionWidgets = (function(){
       [[d[1],'#2fa36b','male',-bw-2],[d[2],'#e0702a','female',2]].forEach(([v,c,sex,off])=>{ if(v==null) return; const hgt=v/max*H; s+=`<rect class="barr" data-t="${d[0]} (${sex}): about ${v.toLocaleString()} kJ per day (estimate)" x="${x0+off}" y="${H-hgt+10}" width="${bw}" height="${hgt}" rx="4" fill="${c}"><animate attributeName="height" from="0" to="${hgt}" dur=".9s"/><animate attributeName="y" from="${H+10}" to="${H-hgt+10}" dur=".9s"/></rect>`; });
       s+=`<text x="${x0}" y="${H+30}" text-anchor="middle" font-size="12" font-weight="700">${d[0]}</text>`; });
     s+=`<rect x="${W-170}" y="14" width="12" height="12" fill="#2fa36b"/><text x="${W-152}" y="24" font-size="12">male</text><rect x="${W-100}" y="14" width="12" height="12" fill="#e0702a"/><text x="${W-82}" y="24" font-size="12">female</text></svg>`;
-    el.innerHTML=s+`<div class="chart-read" id="cr">Tap a bar to read its estimated value</div>
+    el.innerHTML=`<div class="chart-read k-callout" id="cr" style="text-align:center;margin:0 0 8px">Tap a bar to read its estimated value</div>`+s+`
       <p style="text-align:center"><b style="background:#fde68a;padding:0 .3em">Estimates only:</b> these values are read by eye from the textbook graph, so they are not exact.</p>
       <div class="memory"><b>Pattern:</b> energy needs go up with <b>age</b> (growing), <b>body size</b> and <b>how active you are</b>. The more exercise you do, the more energy your body requires.</div>`;
-    el.querySelectorAll('.barr').forEach(b=>b.onclick=()=>{ el.querySelector('#cr').textContent='📊 '+b.dataset.t; });
+    el.querySelectorAll('.barr').forEach(b=>b.onclick=()=>{ el.querySelector('#cr').innerHTML='<b>'+b.dataset.t+'</b>'; el.querySelectorAll('.barr').forEach(x=>x.style.opacity=x===b?1:.45); });
   }
 
   /* ---------------- 4. Digestive system body diagram ---------------- */

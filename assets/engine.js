@@ -1,4 +1,4 @@
-/* ===== Revision engine: renders a topic (lessons → Learn / Explore / Quiz / Apply tabs) =====
+/* ===== Revision engine: renders a topic (lessons → Explore / Learn / Quiz / Apply tabs) =====
    A topic data file calls Engine.start(TOPIC). Reuse for chemistry/physics. */
 (function(){
   let TOPIC;
@@ -295,18 +295,18 @@
     setAccent(l.accent||LESSON_COL[idx%LESSON_COL.length]);
     header(c,'Lesson '+l.code,l.title,l.hook,l.goals,pv&&[pv.id,pv.short],nx?[nx.id,nx.short]:['final','Final challenge'],l.ico||['diet','test','energy','organ','enzyme','other'][idx]);
     tabs(c,[
+      {id:'explore',label:'Explore',badge:(l.widgets||[]).length,render(p){ const pills=h('div',{class:'pills'}); const box=card(); p.append(pills,box);
+        const show=i=>{ pills.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',i===j)); const w=l.widgets[i]; box.innerHTML=`<h2>${w.title}</h2>${w.intro?`<p class="sub">${w.intro}</p>`:''}`; const d=h('div'); box.appendChild(d); w.render(d,{sorter,matcher,toast,confetti,h,shuffle}); if(window.Kit&&Kit.after) Kit.after(d,w); };
+        l.widgets.forEach((w,i)=>{ const b=h('button',{},w.title); b.onclick=()=>show(i); pills.appendChild(b); }); show(0); }},
       {id:'learn',label:'Learn',render(p){ const g=h('div',{class:'grid2'});
         const k=card('Key words','Say what each word means, then tap the card to check.'); k.appendChild(flipCards(l.keywords));
         const s=card('Summary'); const ul=h('ol',{class:'summary'}); l.summary.forEach(x=>ul.appendChild(h('li',{},`${icon(x[0],toneKey(x[0])||tone(x[1]))}<span>${x[1]}</span>`))); s.appendChild(ul);
         if(l.memory) s.appendChild(h('div',{class:'memory'},`<b>Remember</b> ${l.memory}`));
         if(l.fact) s.appendChild(h('div',{class:'foul'},l.fact[1]));
         g.append(k,s); p.appendChild(g); }},
-      {id:'explore',label:'Explore',badge:(l.widgets||[]).length,render(p){ const pills=h('div',{class:'pills'}); const box=card(); p.append(pills,box);
-        const show=i=>{ pills.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',i===j)); const w=l.widgets[i]; box.innerHTML=`<h2>${w.title}</h2>${w.intro?`<p class="sub">${w.intro}</p>`:''}`; const d=h('div'); box.appendChild(d); w.render(d,{sorter,matcher,toast,confetti,h,shuffle}); };
-        l.widgets.forEach((w,i)=>{ const b=h('button',{},w.title); b.onclick=()=>show(i); pills.appendChild(b); }); show(0); }},
       {id:'quiz',label:'Quiz',badge:l.quiz.length,render(p){ const d=card(); p.appendChild(d); quiz(d,l.quiz,TOPIC.id+'-'+l.id,()=>nav(l.id)); }},
       {id:'apply',label:'Apply it',badge:l.apply.length,render(p){ p.appendChild(h('p',{class:'hint',style:'margin-top:-6px'},'You don\'t need to have memorised these. Work them out from what you know, write your answer, then press Submit.')); const d=h('div'); p.appendChild(d); applyQs(d,l.apply,l.id); }}
-    ],tab||'learn',l.id);
+    ],tab||((l.widgets||[]).length?'explore':'learn'),l.id);
   }
   function renderFinal(tab){
     const m=$('#main'); m.innerHTML=''; const c=h('div',{class:'content'}); m.appendChild(c); const F=TOPIC.final;
