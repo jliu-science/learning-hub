@@ -206,6 +206,7 @@
     };
     return rules.map(rule=>{
       const spec=Array.isArray(rule)?{all:rule}:rule;
+      if(spec.check){ const ok=!!spec.check(answer,parts,positiveHit); return {ok,hits:[]}; }
       if((spec.reject||[]).some(re=>re.test(whole))) return {ok:false,hits:[]};
       if(spec.choices){
         const found=spec.choices.map(matchGroups).filter(Boolean);

@@ -38,12 +38,24 @@
       </ul>
       <div class="bar"><i id="chem-bar" style="width:0;background:var(--chem)"></i></div>
     </a>
-    <div class="subject phys soon">
-      <div class="tile">Ph</div>
-      <span class="status">Physics · not added yet</span>
-      <h2>Forces &amp; magnets</h2>
-      <ul class="topic-list"><li>Contact forces</li><li>Magnetism &amp; electromagnets</li></ul>
-    </div>
+    <a class="subject phys" href="physics/forces.html">
+      <div class="tile"><small>1.3</small>Ph</div>
+      <span class="status" style="color:var(--phys)">Physics</span>
+      <h2>Contact forces</h2>
+      <ul class="topic-list">
+        <li>1.3.1 Friction &amp; drag</li><li>1.3.2 Squashing &amp; stretching</li><li>1.3.3 Turning forces</li>
+      </ul>
+      <div class="bar"><i id="force-bar" style="width:0;background:var(--phys)"></i></div>
+    </a>
+    <a class="subject phys" href="physics/magnets.html">
+      <div class="tile"><small>2.3</small>Ph</div>
+      <span class="status" style="color:var(--phys)">Physics</span>
+      <h2>Magnetism &amp; electromagnets</h2>
+      <ul class="topic-list">
+        <li>2.3.1 Magnets &amp; magnetic fields</li><li>2.4.1 Electromagnets</li><li>2.4.2 Using electromagnets</li>
+      </ul>
+      <div class="bar"><i id="mag-bar" style="width:0;background:var(--phys)"></i></div>
+    </a>
   </div>
 
   <h2>Maths</h2>
@@ -78,6 +90,8 @@
     const s=Engine.Store.total('digestion'), max=18;
     document.getElementById('bio-bar').style.width=Math.min(100,s/max*100)+'%';
     document.getElementById('chem-bar').style.width=Math.min(100,Engine.Store.total('chemical-energy')/12*100)+'%';
+    document.getElementById('force-bar').style.width=Math.min(100,Engine.Store.total('contact-forces')/12*100)+'%';
+    document.getElementById('mag-bar').style.width=Math.min(100,Engine.Store.total('magnetism')/12*100)+'%';
     document.getElementById('maths-bar').style.width=Math.min(100,Engine.Store.total('area-volume')/33*100)+'%';
     document.getElementById('xp').innerHTML=`<b>★</b> ${Engine.Store.total()} stars`;
   })();
