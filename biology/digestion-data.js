@@ -34,10 +34,10 @@ const L1 = {
     {title:'Sort the foods',icon:'',intro:'Which nutrient is each food richest in? Drag each food into the right box.',render:(el,U)=>U.sorter(el,{
       bins:[{id:'c',label:'Carbohydrate'},{id:'l',label:'Lipid'},{id:'p',label:'Protein'},{id:'v',label:'Vitamins & minerals'}],
       items:[
-        {label:'Bread',bin:'c',why:'bread contains starch'},{label:'Pasta',bin:'c',why:'pasta contains starch'},{label:'Rice',bin:'c',why:'rice is mostly starch'},{label:'Sugar',bin:'c',why:'sugar is a simple carbohydrate'},
-        {label:'Butter',bin:'l',why:'butter is mostly fat'},{label:'Olive oil',bin:'l',why:'lipids are fats and oils'},
-        {label:'Chicken',bin:'p'},{label:'Fish',bin:'p'},{label:'Meat',bin:'p'},
-        {label:'Broccoli',bin:'v',why:'vegetables are a good source of vitamins and minerals'},{label:'Carrots',bin:'v',why:'vegetables are a good source of vitamins and minerals'},{label:'Spinach',bin:'v',why:'vegetables are a good source of vitamins and minerals'}
+        {label:'Bread',ic:'bread',bin:'c',why:'bread contains starch'},{label:'Pasta',ic:'pasta',bin:'c',why:'pasta contains starch'},{label:'Rice',ic:'rice',bin:'c',why:'rice is mostly starch'},{label:'Sugar',ic:'sugar',bin:'c',why:'sugar is a simple carbohydrate'},
+        {label:'Butter',ic:'butter',bin:'l',why:'butter is mostly fat'},{label:'Olive oil',ic:'oliveoil',bin:'l',why:'lipids are fats and oils'},
+        {label:'Chicken',ic:'protein',bin:'p'},{label:'Fish',ic:'fish',bin:'p'},{label:'Meat',ic:'meat',bin:'p'},
+        {label:'Broccoli',ic:'broccoli',bin:'v',why:'vegetables are a good source of vitamins and minerals'},{label:'Carrots',ic:'carrot',bin:'v',why:'vegetables are a good source of vitamins and minerals'},{label:'Spinach',ic:'spinach',bin:'v',why:'vegetables are a good source of vitamins and minerals'}
       ]})},
     {title:'Match the nutrient to its job',icon:'🔗',intro:'Textbook Summary Question 1.',render:(el,U)=>U.matcher(el,[
       ['Carbohydrates','Provide energy'],['Lipids','Energy store and insulation'],['Protein','Growth and repair'],

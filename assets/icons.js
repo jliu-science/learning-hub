@@ -47,3 +47,17 @@ Object.assign(window.ICONS, {
   circuit:  '<path d="M3 12h6M15 12h6M9 7v10M12 9.5v5"/>',
   material: '<path d="M4 8.5 12 4l8 4.5v7L12 20l-8-4.5z"/><path d="M4 8.5 12 13l8-4.5M12 13v7"/>'
 });
+/* Food icons for "Sort the foods" (8.4.1). */
+Object.assign(window.ICONS, {
+  broccoli: '<path d="M6.8 12.5a3 3 0 0 1 0-6 4 4 0 0 1 7.6-1.4 3.2 3.2 0 0 1 3.1 5.5 2.6 2.6 0 0 1-1.8 1.9z"/><path d="M10 12.5l.8 7.5h2.4l.8-7.5M12 16l-1.6-2M12 16l1.6-2"/>',
+  spinach:  '<path d="M5 19C5 11 9.5 5 19.5 4.5 19.5 13 14 19 5 19z"/><path d="M5 19 16 8M9.5 14.5h4M12.5 11.5V8"/>',
+  carrot:   '<path d="M15 9c-1.7-1.7-4.3-1.5-6 .5L4 20l10.5-5c2-1.7 2.2-4.3.5-6z"/><path d="M15 9l1.5-5M15 9l5-1.5M15 9l3.5-3.5M8.3 13.2l1.4 1M6.6 16.6l1.4 1"/>',
+  pasta:    '<path d="M3.5 12h17a8.5 8.5 0 0 1-17 0z"/><path d="M6 12c1-2 2-2 3 0s2 2 3 0 2-2 3 0 2 2 3 0"/><path d="M13.5 9.5 16.5 3M15.8 10l3.4-5.5"/>',
+  butter:   '<path d="M5 11h10v6H5zM5 11l3-3h10l-3 3M15 17l3-3V8"/><path d="M3 19.5h18"/>',
+  meat:     '<path d="M6 7c3-3 9-3 12 0 2.5 2.5 2 7-1 9.5-3 2.5-8 4-11 1.5S3 10 6 7z"/><circle cx="14" cy="10.5" r="2"/><path d="M7 11c1.5 2 3.5 3 6 3"/>',
+  fish:     '<path d="M3 12c3-4.5 9-5.5 13-2l4-3v10l-4-3c-4 3.5-10 2.5-13-2z"/><circle cx="7" cy="11.2" r=".7"/><path d="M11 9.3c.8 1.6.8 3.8 0 5.4"/>',
+  sugar:    '<path d="M4 13l4-2 4 2v5l-4 2-4-2zM4 13l4 2 4-2M8 15v5"/><path d="M12 13l4-2 4 2v5l-4 2-4-2M12 13l4 2 4-2M16 15v5"/><path d="M8 11V6l4-2 4 2v5M8 6l4 2 4-2M12 8v5"/>',
+  rice:     '<path d="M3.5 12h17a8.5 8.5 0 0 1-17 0z"/><path d="M5.5 12a6.5 5 0 0 1 13 0"/><path d="M9 9.6l1 .3M12 8.2l.9.4M14.6 9.6l1-.2M11 10.8l.9.1"/>',
+  bread:    '<path d="M4 12c-1-3.5 1.5-7 8-7s9 3.5 8 7v7H4z"/><path d="M8.5 7.5 10 10.5M12.5 6.8v3.4M16.3 7.6l-1.3 2.9"/>',
+  oliveoil: '<path d="M10 3h4v3l2 3v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9l2-3z"/><path d="M10 6h4"/><ellipse cx="12" cy="14.5" rx="1.7" ry="2.3"/>'
+});

@@ -547,3 +547,9 @@ svg.gut .g-lbl{font:600 13px "Atkinson Hyperlegible",sans-serif;fill:#6b6455}
 .dm-z.good{border-color:var(--good);background:#f1f8ee}.dm-z.bad{border-color:#d97706;background:#fff7ea}
 .dm-why{margin:6px 0 0;font-size:.86rem}.dm-why:empty{display:none}
 @media (max-width:900px){.eb-grid{grid-template-columns:1fr}.dm{grid-template-columns:1fr}.dm-fig{max-height:50vh}}
+.home-btn{display:flex;align-items:center;gap:7px;color:#fffdf8;border:1.5px solid rgba(255,253,248,.55);border-radius:999px;padding:6px 14px 6px 11px;font-weight:700;font-size:1rem;text-decoration:none;margin-right:2px}
+.home-btn:hover{background:rgba(255,253,248,.12);border-color:#fffdf8}
+@media (max-width:560px){.home-btn span{display:none}.home-btn{padding:6px 9px}}
+/* food icons in sorter chips */
+.chip .fi{display:inline-flex;vertical-align:-5px;margin-right:7px;color:#6b5f4a}
+.chip.ok .fi{color:inherit}
