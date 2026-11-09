@@ -63,3 +63,21 @@
 #fpool .chip{border:1.5px dashed var(--accent);background:var(--accent-soft);cursor:grab}
 #fpool .chip.ok{border-style:solid;background:var(--good-soft);border-color:#bbe5c9;cursor:default}
 #fpool .chip::before,.btab .chip::before{content:'';display:inline-block;width:6px;height:12px;margin-right:7px;vertical-align:-1px;background:radial-gradient(circle,var(--accent) 1.2px,transparent 1.4px) 0 0/3px 4px}
+
+.lfq{min-height:84px;padding:10px 12px;border:1px solid var(--line);background:var(--card);margin:6px 0}
+.lfrow{display:flex;gap:10px;padding:5px 2px;border-bottom:1px dashed var(--line);font-size:.9rem;color:var(--muted)}
+.lfrow.done{color:var(--ink)}
+.lfrow .mono{width:18px;color:var(--accent)}
+.tbl th,.tbl td{padding:4px 6px;border-bottom:1px solid var(--line)}
+.mbal{margin-top:8px;display:grid;gap:6px}
+.mrow{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;font-size:.9rem}
+.mrow .ml{font-weight:700}
+.mbar{height:12px;background:var(--line);overflow:hidden}
+.mbar i{display:block;height:100%;transition:width .25s}
+.mrow .mv{font-size:.85rem}
+@media(max-width:600px){.mrow{grid-template-columns:90px 1fr}.mrow .mv{grid-column:1/-1}}
+.emflow{animation:emflow .6s linear infinite}
+@keyframes emflow{to{stroke-dashoffset:-16}}
+.embtn:hover circle{filter:brightness(1.15)}
+.logtable tr.on td{background:var(--accent-soft)}
+.steps-list li.done::before{content:'✓';color:var(--accent)}

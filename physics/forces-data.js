@@ -34,14 +34,14 @@ const L1 = {
     ['friction','Push gently on a book on a table and it may not move. Push harder and it starts to move. Remove the force and the book slows down and stops, because the rough surfaces can no longer move past each other.'],
     ['drag','Moving through a fluid (air or water) gives a <b>drag force</b> that slows you down: <b>air resistance</b> or <b>water resistance</b>. The object has to push the air or water particles out of the way.'],
     ['balance','An object keeps moving at a steady speed (or stays still) unless a <b>resultant force</b> acts. To keep something moving you need a force to cancel out friction or drag.'],
-    ['balance','A falling leaf speeds up while its weight is bigger than air resistance. When the resultant force is <b>zero</b> it falls at a <b>steady speed</b>: it is in <b>equilibrium</b>.'],
+    ['balance','A falling leaf speeds up while its weight is bigger than air resistance. When the resultant force is <b>zero</b> it falls at a <b>steady speed</b> in the same direction: it is in <b>equilibrium</b>.'],
     ['drag','Reduce drag by being <b>streamlined</b>: an Olympic cyclist tucks her arms in. Reduce friction by <b>lubrication</b> with oil or grease.']
   ],
-  memory:'Resultant force <b>zero</b> = no change: still stays still, moving keeps a <b>steady speed</b>.',
+  memory:'Resultant force <b>zero</b> = no change: still stays still, moving keeps a <b>steady speed in the same direction</b>.',
   fact:['','Fantastic fact: in 1995 Fred Rompelberg cycled at 167 mph. He rode behind a lorry, where there was very little air resistance.'],
   widgets:[
-    {title:'Push the book',intro:'Change the surface and your push. When does the book move? What does friction do?',render:W.pushBook},
-    {title:'Falling leaf',intro:'Drop the leaf and watch the two forces on it.',render:W.leaf},
+    {title:'Push the book',intro:'Push gently, then harder, then let go. When does the book move, and why does it stop?',render:W.pushBook},
+    {title:'Falling leaf',intro:'Drag the leaf down. Watch the two forces and the speed.',render:W.leaf},
     {title:'More or less?',intro:'Does each one reduce friction or drag, or increase it? <b>How:</b> press and hold a card, drag it into the right box, then let go.',render:(el,U)=>U.sorter(el,{
       bins:[{id:'less',label:'Less friction or drag',t:'drag'},{id:'more',label:'More friction or drag',t:'friction'}],
       items:[
@@ -111,7 +111,7 @@ const L2 = {
     ['spring','Bungee cords, springs and lift cables all stretch when you exert a force. The amount they stretch is the <b>extension</b>.'],
     ['spring','<b>Double</b> the force on a spring and the extension will <b>double</b>. Remove the force and it goes back to its original length.'],
     ['spring','Past its <b>elastic limit</b> a spring will not go back. Trampoline springs are designed never to go past it.'],
-    ['spring','<b>Hooke’s Law</b>: extension doubles when force doubles. The graph is a straight line through (0,0): a <b>linear relationship</b>. Not everything does this, e.g. an elastic band or poly(ethene).']
+    ['spring','<b>Hooke’s Law</b>: extension doubles when force doubles (up to the <b>elastic limit</b>). The graph is a straight line through (0,0): a <b>linear relationship</b>. Not everything does this, e.g. an elastic band or poly(ethene).']
   ],
   memory:'<b>Squash → compression. Stretch → tension.</b> Straight line through zero → Hooke’s Law.',
   fact:['','Foul fact: when a footballer heads a ball, the forces deform both the ball and the footballer’s head.'],
@@ -177,9 +177,9 @@ const L3 = {
   memory:'<b>M = F × d</b>. Balanced when <b>clockwise = anticlockwise</b>.',
   fact:['','Fantastic fact: the world’s largest see-saw is in New York. It is just over 24 metres long and lifts you higher than a house.'],
   widgets:[
-    {title:'Balance the see-saw',intro:'<b>How:</b> press and hold a person card under the see-saw, drag it onto a seat on the plank, then let go. Tap a person on the see-saw to take them off.',render:W.seesaw},
-    {title:'Open the door',intro:'Change the force and where you push. Watch the moment.',render:W.door},
-    {title:'Tipping a chair',intro:'Lean the chair back and watch the centre of gravity.',render:W.chair},
+    {title:'Balance the see-saw',intro:'Moment = force × distance from the pivot. Make the clockwise and anticlockwise moments equal.',render:W.seesaw},
+    {title:'Open the door',intro:'Push the door. In this demo the door is <b>set</b> to open at <b>3.75 Nm</b>: the answer to the textbook example (5 N × 0.75 m).',render:W.door},
+    {title:'Tipping a chair',intro:'Lean back too far and you topple. Where is the <b>centre of gravity</b>?',render:W.chair},
     {title:'Spell it',intro:'Read the clue and type the key word. Exact UK spelling.',render:(el,U)=>K.spell(el,U,[
       {word:'pivot',clue:'The point something turns around.'},
       {word:'moment',clue:'The turning effect of a force.'},
@@ -193,19 +193,19 @@ const L3 = {
     {q:'What is the point that something turns around called?',options:['Pivot','Moment','Newton','Extension'],answer:0},
     {q:'What is the unit of a moment?',options:['Newton metres (Nm)','Newtons (N)','Metres (m)','Joules (J)'],answer:0},
     {q:'Which equation is correct?',options:['moment = force × perpendicular distance from the pivot','moment = force ÷ distance','moment = force + distance','moment = distance ÷ force'],answer:0},
-    {q:'A girl pushes a door with 5 N, 0.75 m from the hinge. What is the moment?',options:['3.75 Nm','5.75 Nm','6.67 Nm','0.15 Nm'],answer:0},
+    {q:'A girl pushes a door at right angles with 5 N, 0.75 m from the hinge. What is the moment?',options:['3.75 Nm','5.75 Nm','6.67 Nm','0.15 Nm'],answer:0},
     {q:'What does the law of moments say?',options:['In equilibrium, the sum of clockwise moments = the sum of anticlockwise moments','Moments always make things fall over','Clockwise moments are always bigger','Forces have no turning effect'],answer:0},
     {q:'A 500 N person sits 1 m from the pivot. How far from the pivot must a 1000 N person sit on the other side to balance?',options:['0.5 m','1 m','2 m','0.25 m'],answer:0},
-    {q:'A see-saw is 2 m long. A 150 N child sits at one end. Where must the 600 N mother sit to balance?',options:['0.25 m from the pivot','1 m from the pivot','0.5 m from the pivot','At the other end'],answer:0,explain:'Child: 150 × 1 = 150 Nm. Mother: 600 × d = 150, so d = 0.25 m.'},
+    {q:'A see-saw is 2 m long with the pivot in the middle. A 150 N child sits at one end. Where must the 600 N mother sit to balance?',options:['0.25 m from the pivot','1 m from the pivot','0.5 m from the pivot','At the other end'],answer:0,explain:'Child: 150 × 1 = 150 Nm. Mother: 600 × d = 150, so d = 0.25 m.'},
     {q:'Another name for the centre of gravity is the…',options:['centre of mass','pivot','moment','elastic limit'],answer:0},
     {q:'You tip your chair back. When is there NO turning force from your weight?',options:['When the centre of gravity is directly above the pivot','When you sit still on the floor','When the chair is light','Never'],answer:0},
     {type:'fill',q:'The turning effect of a force is called a ________.',answers:['moment']}
   ],
   apply:[
-    {scenario:'A girl applies a force of 5 N to close a door. The handle is 0.75 m from the hinge.',question:'Calculate the moment of the force. Show your working and give the unit.',marks:2,
+    {scenario:'A girl pushes at right angles to a door with a force of 5 N to close it. The handle is 0.75 m from the hinge.',question:'Calculate the moment of the force. Show your working and give the unit.',marks:2,
       model:'moment = force × perpendicular distance from the pivot = 5 N × 0.75 m = 3.75 Nm.',
       points:['Uses moment = force × distance (5 × 0.75)','3.75 Nm']},
-    {scenario:'A mother and daughter are on a see-saw 2 m long. The mother has a weight of 600 N and the child has a weight of 150 N. The child sits at one end.',question:'Calculate where the mother must sit to balance the child. Show your working.',marks:3,
+    {scenario:'A mother and daughter are on a see-saw 2 m long, with the pivot in the middle. The mother has a weight of 600 N and the child has a weight of 150 N. The child sits at one end.',question:'Calculate where the mother must sit to balance the child. Show your working.',marks:3,
       chain:['Child’s distance?','Child’s moment?','Mother’s distance?'],
       model:'The pivot is in the middle, so the child is 1 m from the pivot. Child’s moment = 150 N × 1 m = 150 Nm. For balance the mother’s moment must also be 150 Nm, so 600 N × d = 150 Nm, d = 150 ÷ 600 = 0.25 m from the pivot on the other side.',
       points:['Child is 1 m from the pivot: 150 × 1 = 150 Nm','Mother’s moment must equal 150 Nm (law of moments)','d = 150 ÷ 600 = 0.25 m']},
