@@ -184,7 +184,10 @@
   }
   function positiveHit(text,word){
     const term=mnorm(word).trim();
-    const re=new RegExp('(^|[^a-z0-9])'+esc(term),'g'); let match;
+    // Word stems are useful for scientific vocabulary, but numbers must not
+    // match the beginning of a different value (45 must not match 450).
+    const end=/^[0-9 ]+$/.test(term)?'(?![a-z0-9])':'';
+    const re=new RegExp('(^|[^a-z0-9])'+esc(term)+end,'g'); let match;
     while((match=re.exec(text))){
       const before=text.slice(0,match.index+match[1].length);
       const explicitNegative=/\b(?:not|without|never|no)\b|\b(?:aren|isn|don|doesn|can|won) t\b/.test(term);

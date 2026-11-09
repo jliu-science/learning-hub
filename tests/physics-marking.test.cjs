@@ -86,3 +86,26 @@ test('surgeon rubric requires an explained material problem for the two problem 
   assert.equal(c.score('final', 1, 'An electromagnet can be strong and turned off. The splinter is metal.'), 2);
   assert.equal(c.score('final', 1, 'Use an electromagnet because it can be switched off. A non-magnetic splinter would not be attracted.'), 4);
 });
+
+test('bell and breaker comparison needs a shared mechanism and reset difference', () => {
+  const c = load('magnets');
+  for (const answer of ['An electromagnet rings the bell.', 'Both use electromagnets. Bells ring.',
+    'The bell rings again.', 'Both have an electromagnet that repels the iron catch.']) {
+    assert.equal(c.score('l3', 1, answer), 0, answer);
+  }
+  const similarity = 'Both use an electromagnet that attracts iron and breaks the circuit. ';
+  assert.equal(c.score('l3', 1, similarity), 1);
+  for (const difference of ['The circuit breaker stays off until you press the reset button.',
+    'The breaker must be manually reset.',
+    'The bell circuit makes again by itself.',
+    'The bell keeps making and breaking the circuit.']) {
+    assert.equal(c.score('l3', 1, similarity + difference), 2, difference);
+  }
+  for (const wrong of ['The breaker resets automatically.',
+    'The circuit breaker does not need a reset.',
+    'The circuit breaker does not stay off.',
+    'The breaker does not need to be reset.',
+    'The bell circuit never makes again by itself.']) {
+    assert.equal(c.mark('l3', 1, similarity + wrong)[1].ok, false, wrong);
+  }
+});

@@ -72,6 +72,17 @@ test('correct short statements are not discarded for reusing question vocabulary
   assert.equal(c.mark('final', 0, 'The independent variable is the type of fuel.')[2].ok, true);
 });
 
+test('numeric marking terms cannot match prefixes of a different number', () => {
+  const c = load('chemistry');
+  for (const [term, wrong] of [['45', '450'], ['594', '5940'], ['1124', '11240'], ['100', '1000']]) {
+    const rules = [[[term]]];
+    assert.equal(c.Engine.markAnswer(`The answer is ${term}.`, rules, '')[0].ok, true);
+    assert.equal(c.Engine.markAnswer(`The answer is ${wrong}.`, rules, '')[0].ok, false);
+  }
+  // Scientific stems still accept inflected vocabulary.
+  assert.equal(c.Engine.markAnswer('The reaction is exothermic.', [[['exotherm']]], '')[0].ok, true);
+});
+
 test('any two distinct controls earn two marks; synonyms alone earn one', () => {
   const c = load('chemistry');
   const choices = ['volume of water', 'starting temperature', 'mass of fuel', 'burning time', 'distance from flame to beaker'];
