@@ -55,6 +55,8 @@
 @keyframes nudge{0%,70%,100%{transform:none}80%{transform:translateX(5px)}90%{transform:translateX(-2px)}}
 .bslot:not([data-done]) rect{stroke:var(--accent);animation:slotpulse 1.3s ease-in-out infinite}
 @keyframes slotpulse{50%{fill:var(--accent-soft)}}
+.chip.dragme,.pool .chip{border:1.5px dashed var(--accent);background:var(--accent-soft);cursor:grab}
+.tgt{animation:slotpulse 1.3s ease-in-out infinite}
 .lb-how{margin:8px 0 12px;padding-left:20px;font-size:.92rem}.lb-how li{margin:4px 0}
 #lp.bob{animation:bob 1.6s ease-in-out infinite}
 @keyframes bob{0%,60%,100%{transform:none}70%{transform:translateY(-6px)}85%{transform:translateY(6px)}}
