@@ -103,7 +103,7 @@ const L2 = {
   memory:'Stronger electromagnet: <b>more turns, more current, iron core</b>.',
   fact:['','Fantastic fact: the strongest magnet is an electromagnet that produces a magnetic field 10 million times stronger than the Earth’s magnetic field.'],
   widgets:[
-    {title:'Mixed up electromagnets',intro:'The textbook’s results table. Change <b>one</b> thing, switch on, count the paper clips.',render:W.buildEM},
+    {title:'Mixed up electromagnets',intro:'What makes an electromagnet <b>stronger</b>? Test one thing at a time with the textbook’s results.',render:W.buildEM},
     {title:'Which field shape?',intro:'<b>How:</b> press and hold a description, drag it onto the box beside the thing it belongs to, then let go.',render:(el,U)=>U.matcher(el,[
       ['A straight wire with a current','Circular field lines around the wire'],
       ['A circular loop of wire','Field lines at the centre are straight'],
@@ -162,8 +162,8 @@ const L3 = {
   memory:'Bell: <b>attract → break → spring back → make</b>, again and again.',
   fact:['','Remember: there is a board in your house with lots of circuit breakers, near your electricity meter. Do not touch the circuit breakers!'],
   widgets:[
-    {title:'Label the bell',intro:'<b>How:</b> press and hold a label, drag it into the empty box that points at that part of the bell, then let go.',render:W.bellLabel},
-    {title:'Ring the bell',intro:'Hold the bell push and watch the <b>make and break</b> switch keep the bell ringing.',render:W.bellSim},
+    {title:'Label the bell',intro:'The parts of an <b>electric bell</b>, as named in the textbook.',render:W.bellLabel},
+    {title:'Ring the bell',intro:'How does the <b>make and break switch</b> keep the bell ringing?',render:W.bellSim},
     {title:'Circuit breaker',intro:'Make the current bigger and watch the <b>electromagnet</b> pull on the <b>iron catch</b>.',render:W.breaker},
     {title:'Permanent or electromagnet?',intro:'Which kind of magnet is used? <b>How:</b> press and hold a card, drag it into the right box, then let go.',render:(el,U)=>U.sorter(el,{
       bins:[{id:'perm',label:'Permanent magnet',t:'magnet'},{id:'em',label:'Electromagnet',t:'electro'}],

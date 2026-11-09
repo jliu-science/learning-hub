@@ -1,4 +1,4 @@
-/* ===== Maths engine: a topic = lessons, each with See why / Explore / Practice tabs.
+/* ===== Maths engine: a topic = lessons, each with Explore / See why / Practice tabs.
    A topic data file calls MathsEngine.start(TOPIC). Reuses Engine.Store and the shared styles.
    Add a new maths topic as maths/<topic>.html + <topic>-*.js files, then link it on index.html. */
 (function(){
@@ -173,7 +173,7 @@
     const finish=()=>{
       const pct=score/qs.length, stars=pct===1?3:pct>=.75?2:pct>=.5?1:0; if(id) E.Store.setStars(id,stars);
       el.innerHTML=`<div class="result card"><div class="hint">Your score</div><div class="big">${score} / ${qs.length}</div><div class="stars">${'★'.repeat(stars)}<span style="color:#d1d5db">${'★'.repeat(3-stars)}</span></div>
-        <p>${stars===3?'Every answer right.':stars===2?'Nearly there. A new set has different numbers, so have another go.':stars===1?'Look back at See why, then try a new set.':'Go through See why and Explore first, then come back.'}</p>
+        <p>${stars===3?'Every answer right.':stars===2?'Nearly there. A new set has different numbers, so have another go.':stars===1?'Look back at See why, then try a new set.':'Go through Explore and See why first, then come back.'}</p>
         <div class="row" style="justify-content:center"><button class="btn accent" id="again">New set of questions</button></div>
         <div class="review">${log.map(([t,ok])=>`<div>${ok?'✓':'✗'} &nbsp;${t.replace(/<[^>]+>/g,'')}</div>`).join('')}</div></div>`;
       $('#again',el).onclick=()=>practice(el,gens,id,n,onDone);
@@ -216,8 +216,8 @@
     const k=ALL.indexOf(l), pv=ALL[k-1], nx=ALL[k+1]; setAccent(l.accent);
     header(c,'Lesson '+l.code,l.title,l.hook,l.formula,pv&&[pv.id,pv.short],nx?[nx.id,nx.short]:['mixed','Mixed practice'],l.icon);
     tabs(c,[
-      {id:'why',label:'See why',render(p){ l.see(p,K); }},
       {id:'explore',label:'Explore',render(p){ l.explore(p,K); }},
+      {id:'why',label:'See why',render(p){ l.see(p,K); }},
       {id:'practice',label:'Practice',render(p){ const d=h('div',{class:'card'}); p.appendChild(d); practice(d,l.practice,sid(l),8,()=>nav(l.id)); }}
     ],tab,l.id);
   }

@@ -104,5 +104,42 @@ window.Kit = (function(){
     rs.forEach(r=>r.addEventListener('input',upd)); upd(); return rs;
   }
 
-  return {NS,choices,pt,svgDrag,arrow,range,ranges,spell,label};
+  /* ---- start cue: when the widget first comes into view, flash what to touch first.
+     t = element to press/drag; o.to = element (or {dx,dy} in px) to show a ghost drag towards; o.tap = show a press only.
+     The cue stops as soon as the user touches anything in the widget. ---- */
+  function cue(tt,o={}){
+    const get=()=>typeof tt==='function'?tt():tt, w=o.watch||get(); if(!w) return; const host=o.host||w.closest('.stage')?.parentNode||document.body;
+    host.dataset.cued='1'; let done=false, chk=0; const bits=[]; const stop=()=>{ done=true; clearInterval(chk); bits.forEach(b=>b.remove()); };
+    host.addEventListener('pointerdown',stop,{once:true,capture:true});
+    function play(){ const t=get(); if(done||!t||!t.isConnected) return; const r=t.getBoundingClientRect(); if(!r.width) return;
+      chk=setInterval(()=>{ if(!w.isConnected||!w.getClientRects().length) stop(); },150); setTimeout(()=>clearInterval(chk),4500);
+      const rg=t.type==='range', fr=rg?(t.value-t.min)/((t.max-t.min)||1):.5, X=r.left+scrollX+(rg?8+fr*(r.width-16):r.width/2), Y=r.top+scrollY+r.height/2;
+      if(!(t instanceof SVGElement) && !o.ring){ const a=t.animate([{boxShadow:'0 0 0 0 rgba(37,99,235,.65)'},{boxShadow:'0 0 0 12px rgba(37,99,235,0)'}],{duration:850,iterations:3}); bits.push({remove:()=>a.cancel()}); }
+      else { const R=Math.max(22,Math.min(46,Math.max(r.width,r.height)/2+8)), ring=document.createElement('div');
+        ring.style.cssText=`position:absolute;left:${X-R}px;top:${Y-R}px;width:${2*R}px;height:${2*R}px;border:3px solid #2563eb;border-radius:50%;pointer-events:none;z-index:50`;
+        document.body.appendChild(ring); bits.push(ring);
+        ring.animate([{transform:'scale(.55)',opacity:1},{transform:'scale(1.25)',opacity:0}],{duration:850,iterations:3}).onfinish=()=>ring.remove(); }
+      let dx=0,dy=0; const to=typeof o.to==='function'?o.to():o.to; if(to&&to.getBoundingClientRect){ const q=to.getBoundingClientRect(); dx=q.left+q.width/2-(r.left+r.width/2); dy=q.top+q.height/2-(r.top+r.height/2); } else if(to){ dx=to.dx||0; dy=to.dy||0; } else if(rg){ dx=Math.min(110,(1-fr)*(r.width-16)); }
+      const h=document.createElement('div');
+      h.innerHTML=`<svg width="30" height="36" viewBox="0 0 30 36"><circle cx="6" cy="6" r="6" fill="#2563eb" opacity=".35"/><path d="M6 6 L6 30 L12 24 L16 34 L20 32 L16 22 L24 22 Z" fill="#fff" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/></svg>`;
+      h.style.cssText=`position:absolute;left:${X-6}px;top:${Y-6}px;pointer-events:none;z-index:51;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))`;
+      document.body.appendChild(h); bits.push(h);
+      const k=o.tap&&!dx&&!dy ? [{transform:'translate(0,0) scale(1)',opacity:0},{transform:'translate(0,0) scale(1)',opacity:1,offset:.2},{transform:'translate(0,0) scale(.82)',opacity:1,offset:.45},{transform:'translate(0,0) scale(1)',opacity:1,offset:.7},{opacity:0}]
+        : [{transform:'translate(0,0)',opacity:0},{transform:'translate(0,0) scale(.85)',opacity:1,offset:.18},{transform:`translate(${dx}px,${dy}px) scale(.85)`,opacity:1,offset:.75},{transform:`translate(${dx}px,${dy}px) scale(1)`,opacity:0}];
+      h.animate(k,{duration:1700,delay:350,iterations:2,easing:'ease-in-out',fill:'both'}).onfinish=()=>h.remove();
+    }
+    if(!('IntersectionObserver' in window)) return setTimeout(play,500);
+    const io=new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ io.disconnect(); setTimeout(play,o.delay||450); } },{threshold:.4});
+    io.observe(w);
+  }
+
+  /* ---- guide: keep the control for the NEXT step pulsing (blue glow). pick() returns that element, or null.
+     Checked a few times a second, so it follows the widget's own state without changing the widget. ---- */
+  function guide(el,pick){ let cur=null; const id=setInterval(()=>{ if(!el.isConnected){ clearInterval(id); cur&&cur.classList.remove('cue-on'); return; }
+      let t=null; try{ t=pick(); }catch(e){} if(t!==cur){ cur&&cur.classList.remove('cue-on'); cur=t; t&&t.classList.add('cue-on'); } },300); }
+  /* ---- callout: move the widget's explanation box(es) to the top of the picture ---- */
+  function callout(stage,...nodes){ if(!stage) return; const box=document.createElement('div'); box.className='k-callout';
+    nodes.filter(Boolean).forEach(n=>{ n.style.margin='0'; box.appendChild(n); });
+    if(stage instanceof SVGElement||stage.tagName==='CANVAS') stage.parentNode.insertBefore(box,stage); else { box.style.margin='8px 8px 8px'; stage.insertBefore(box,stage.firstChild); } return box; }
+  return {NS,choices,pt,svgDrag,arrow,range,ranges,spell,label,cue,guide,callout};
 })();

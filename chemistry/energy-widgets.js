@@ -207,7 +207,7 @@ window.EnergyWidgets = (function(){
       const ay=yR-24; atoms=[['H',79,ay],['H',105,ay],[R.X,159,ay],[R.X,185,ay]].map(([a,x,y])=>{ const g=document.createElementNS('http://www.w3.org/2000/svg','g'); g.innerHTML=atomSvg(a); $('#bat').appendChild(g); return {a,el:g,x,y}; }); place();
       $('#bsl').innerHTML=slot(92,yR-74,'H–H',0)+slot(172,yR-74,`${R.X}–${R.X}`,1);
       setStep(0); $('#bq').innerHTML='';
-      $('#btxt').innerHTML=`First the bonds in the reactants break. <b style="color:${BL}">Breaking bonds takes IN energy.</b><br><b>How:</b> press and hold a number in the table (e.g. <b>436</b>), drag it onto the <b>?</b> box above the matching molecule in the diagram, then let go. Fill both <b>?</b> boxes.`;
+      $('#btxt').innerHTML=`First the bonds in the reactants break. <b style="color:${BL}">Breaking bonds takes IN energy.</b><br>Drag each bond energy from the table into its <b>?</b> box.`;
       calc(); }
     function calc(){ const q=i=>vals[i]!==undefined?vals[i]:'?';
       let h=`<span style="color:${BL}">Energy needed to break bonds<br>= ${step===0?`${q(0)} + ${q(1)}${filled===2?` = <b>${IN} kJ/mol</b>`:''}`:`${R.hh} + ${R.xx} = <b>${IN} kJ/mol</b>`}</span>`;
@@ -234,7 +234,7 @@ window.EnergyWidgets = (function(){
     function stepMake(){ setStep(1); calc(); busy=true;
       moveTo([[261,TOP-24],[356,TOP-24],[299,TOP-24],[394,TOP-24]],600,()=>{ busy=false;
         $('#bsl').innerHTML=slot(280,TOP-74,`H–${R.X}`,0)+slot(375,TOP-74,`H–${R.X}`,1); });
-      $('#btxt').innerHTML=`Now the atoms join up in a new way to make 2H${R.X}. <b style="color:${RED}">Making bonds gives OUT energy.</b><br>2H${R.X} means two molecules, so there are <b>two</b> H–${R.X} bonds to make.<br><b>How:</b> drag <b>${R.hx}</b> (H–${R.X}) from the table onto <b>each</b> of the two <b>?</b> boxes.`; }
+      $('#btxt').innerHTML=`Now the atoms join up in a new way to make 2H${R.X}. <b style="color:${RED}">Making bonds gives OUT energy.</b><br>2H${R.X} means two molecules, so there are <b>two</b> H–${R.X} bonds to make.<br>Drag <b>${R.hx}</b> into <b>both</b> <b>?</b> boxes.`; }
     function made(){ busy=true;
       setTimeout(()=>{ $('#bsl').innerHTML=''; const y=yP-24;
         $('#blv').insertAdjacentHTML('beforeend',level(432,655,yP,`products: 2H${R.X}`));
