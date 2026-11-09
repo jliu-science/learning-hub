@@ -1,6 +1,6 @@
 /* ===== Maths pages: extra styles on top of ../assets/style.css ===== */
 :root{--cb:#2563eb;--ch:#ea580c;--cw:#059669;--cr:#7c3aed;--cc:#0d9488;--warn:#b45309}
-.brand .logo.ma{font-family:"IBM Plex Mono",monospace}
+.brand .logo.ma{font-family:"Inter","Segoe UI",sans-serif}
 .side .micon{display:inline-flex;color:var(--lc,var(--muted));opacity:.85}
 .side a.on .micon{opacity:1}
 
@@ -12,7 +12,7 @@
 .v{font-style:italic;font-weight:700;font-family:"Fraunces",Georgia,serif}
 .v-b{color:var(--cb)}.v-h{color:var(--ch)}.v-w{color:var(--cw)}.v-r{color:var(--cr)}.v-c,.v-a{color:var(--cc)}.v-g{color:var(--muted)}
 .formula{font-family:"Fraunces",Georgia,serif;font-size:1.3rem;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);padding:8px 14px;margin:10px 0}
-.formula small{display:block;font-family:"Atkinson Hyperlegible",sans-serif;font-size:.82rem;color:var(--muted)}
+.formula small{display:block;font-family:"Inter","Segoe UI",sans-serif;font-size:.82rem;color:var(--muted)}
 
 /* two-column: drawing on the left, explanation on the right */
 .msplit{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,1fr);gap:20px;align-items:start}
@@ -20,7 +20,7 @@
 .mleft{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:8px}
 .mright{display:flex;flex-direction:column;gap:10px}
 svg.mstage{width:100%;height:auto;max-height:58vh;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
-svg.mstage text,svg.qfig text{font-family:"Atkinson Hyperlegible",sans-serif}
+svg.mstage text,svg.qfig text{font-family:"Inter","Segoe UI",sans-serif}
 
 /* drawing styles */
 .grid{stroke:#e9e1cf;stroke-width:1;fill:none}
@@ -37,7 +37,7 @@ svg.mstage text,svg.qfig text{font-family:"Atkinson Hyperlegible",sans-serif}
 .dim text{fill:var(--dc);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:middle;paint-order:stroke;stroke:#fffdf8;stroke-width:5px;stroke-linejoin:round}
 .dl{font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:middle;paint-order:stroke;stroke:#fffdf8;stroke-width:5px}
 .big-a{font-family:"Fraunces",Georgia,serif;font-size:22px;font-weight:600;fill:var(--ink);text-anchor:middle;dominant-baseline:middle;paint-order:stroke;stroke:#fffdf8;stroke-width:6px}
-.cnt{font:700 11px "IBM Plex Mono",monospace;fill:var(--accent);text-anchor:middle;dominant-baseline:middle;pointer-events:none}
+.cnt{font:700 11px "Inter","Segoe UI",sans-serif;fill:var(--accent);text-anchor:middle;dominant-baseline:middle;pointer-events:none}
 .hdl{cursor:grab}
 .hdl .hit{fill:transparent}
 .hdl .ring{fill:#fffdf8;stroke:var(--hc);stroke-width:2.5}
@@ -58,21 +58,21 @@ svg.dragging,svg.dragging .hdl{cursor:grabbing}
 /* explanation panel */
 .msteps{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:12px 14px}
 .snav{display:flex;align-items:center;gap:5px;margin-bottom:8px}
-.snav button{width:30px;height:30px;border:1px solid var(--line);background:var(--card);border-radius:2px;font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:.85rem}
+.snav button{width:30px;height:30px;border:1px solid var(--line);background:var(--card);border-radius:2px;font-family:"Inter","Segoe UI",sans-serif;font-weight:600;font-size:.85rem}
 .snav button.done{color:var(--accent);border-color:var(--accent)}
 .snav button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .snav .hint{margin-left:auto}
 .stext{min-height:7.5em;font-size:.98rem}
 .stext p{margin:.2em 0 .6em}
 .mcalc{font-family:"Fraunces",Georgia,serif;font-size:1.15rem;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);padding:10px 14px;line-height:1.7}
-.mcalc .hint{font-family:"Atkinson Hyperlegible",sans-serif;display:block;line-height:1.4}
+.mcalc .hint{font-family:"Inter","Segoe UI",sans-serif;display:block;line-height:1.4}
 .mcalc .res{font-weight:600}
 .mnote{font-size:.9rem;color:var(--ink2);border-top:1px dashed var(--line);padding-top:8px}
 .mnote b{color:var(--warn)}
 .mslider{display:grid;grid-template-columns:96px 1fr 64px;gap:10px;align-items:center;font-size:.92rem}
 .mslider .sl{font-weight:700;color:var(--sc)}
 .mslider input{width:100%;accent-color:var(--sc)}
-.mslider .sv{font-family:"IBM Plex Mono",monospace;font-size:.9rem;text-align:right;color:var(--sc)}
+.mslider .sv{font-family:"Inter","Segoe UI",sans-serif;font-size:.9rem;text-align:right;color:var(--sc)}
 .mright .seg{align-self:flex-start;flex-wrap:wrap}
 .toggles{display:flex;flex-wrap:wrap;gap:6px}
 .tg{border:1px solid var(--line);background:var(--card);border-radius:2px;padding:5px 11px;font-weight:600;font-size:.86rem}
@@ -94,7 +94,7 @@ svg.qfig{width:100%;height:auto;max-height:44vh}
 .ansrow .num:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
 .ansrow .num.ok{border-color:var(--good);background:#eef6ea}
 .ansrow .num.no{border-color:var(--bad);background:#f9ece8}
-.seg.units button{min-width:52px;font-family:"Atkinson Hyperlegible",sans-serif}
+.seg.units button{min-width:52px;font-family:"Inter","Segoe UI",sans-serif}
 .seg.units button.right{background:#eef6ea;color:#166534;box-shadow:inset 0 -2px 0 var(--good)}
 .seg.units button.wrong{background:#f9ece8;color:var(--bad);text-decoration:line-through}
 .mprac .hintbox{display:none;margin-top:10px;border-left:3px solid var(--gold);padding:6px 12px;font-family:"Fraunces",Georgia,serif;font-size:1.1rem}
@@ -108,8 +108,8 @@ svg.qfig{width:100%;height:auto;max-height:44vh}
 .fcard{display:flex;gap:12px;align-items:flex-start;text-decoration:none;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--lc);border-radius:3px;padding:12px 14px;font-family:"Fraunces",Georgia,serif;font-size:1.15rem}
 .fcard:hover{border-color:var(--lc)}
 .fcard .fi{color:var(--lc)}
-.fcard b{display:block;font-family:"Atkinson Hyperlegible",sans-serif;font-size:.95rem;margin-bottom:2px}
-.fcard .hint{display:block;font-family:"Atkinson Hyperlegible",sans-serif;font-size:.8rem;margin-top:4px}
+.fcard b{display:block;font-family:"Inter","Segoe UI",sans-serif;font-size:.95rem;margin-bottom:2px}
+.fcard .hint{display:block;font-family:"Inter","Segoe UI",sans-serif;font-size:.8rem;margin-top:4px}
 
 /* hub card for maths */
 .subject.maths .tile{background:#7c3aed}
