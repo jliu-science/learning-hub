@@ -9,6 +9,8 @@ const ordered=(pattern,expected)=>expected.map((want,i)=>({check:answer=>{
   return found[i]&&found[i].startsWith(want);
 }}));
 const poles=ordered('\\bnorth(?:[- ]seeking)?\\b|\\bsouth(?:[- ]seeking)?\\b|\\brepel[a-z]*\\b|\\battract[a-z]*\\b|\\bneedle\\b|\\bcompass\\b',['north','south','repel','attract','needle','compass']);
+// the first two blanks can be north and south in either order
+['north','south'].forEach((want,i)=>{ poles[i]={check:answer=>{ const f=(answer.toLowerCase().match(/\bnorth(?:[- ]seeking)?\b|\bsouth(?:[- ]seeking)?\b|\brepel[a-z]*\b|\battract[a-z]*\b|\bneedle\b|\bcompass\b/g)||[]).slice(0,2); return f.some(w=>w.startsWith(want)); }}; });
 const devices=ordered('\\belectro[ -]?magnet\\b|\\bring[a-z]*\\b|\\bswitch\\b|\\breset\\b|\\bpermanent\\b|\\brepel[a-z]*\\b|\\battract[a-z]*\\b',['electromagnet','ring','switch','reset','permanent']);
 devices.push({check:answer=>{
   const found=answer.toLowerCase().match(/\belectro[ -]?magnet\b|\bring[a-z]*\b|\bswitch\b|\breset\b|\bpermanent\b|\brepel[a-z]*\b|\battract[a-z]*\b/g)||[];

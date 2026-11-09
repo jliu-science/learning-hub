@@ -36,8 +36,8 @@ const L1 = {
   memory:'<b>Like poles repel, unlike poles attract.</b>',
   fact:['','Fantastic fact: the Earth’s magnetic field keeps flipping. About 500 000 years ago the magnetic north pole was actually the south pole.'],
   widgets:[
-    {title:'Two magnets',intro:'Flip a magnet, then slide magnet B closer. Do the poles attract or repel? <b>How:</b> press and hold magnet B, drag it towards magnet A, then let go.',render:W.twoMagnets},
-    {title:'Plot the field',intro:'The needle lines up with the field. <b>How:</b> press and hold the compass, drag it to a new place around the magnet, then let go. Do it lots of times to see the pattern.',render:W.compassPlot},
+    {title:'Two magnets',intro:'Turn the magnets round and watch them move. Which poles <b>attract</b>, which <b>repel</b>?',render:W.twoMagnets},
+    {title:'Plot the field',intro:'Find the shape of the <b>magnetic field</b> two ways, like the textbook: with a <b>plotting compass</b> and with <b>iron filings</b>.',render:W.compassPlot},
     {title:'Attract or repel?',intro:'<b>How:</b> press and hold a card, drag it into Attract or Repel, then let go.',render:(el,U)=>U.sorter(el,{
       bins:[{id:'att',label:'Attract',t:'field'},{id:'rep',label:'Repel',t:'magnet'}],
       items:[
@@ -76,7 +76,7 @@ const L1 = {
     {scenario:'A compass always points in the same direction, wherever you point it in a room.',question:'Explain why.',marks:2,
       model:'The needle of the compass is a small magnet. It lines up with the magnetic field of the Earth, so it always points north–south.',
       points:['The needle is a (small) magnet','It lines up with the Earth’s magnetic field']},
-    {scenario:'You are given some iron filings, a sheet of paper and a bar magnet.',question:'State two ways to find out the shape of a magnetic field, and say how the diagram shows where the field is strongest.',marks:3,
+    {scenario:'You are given some plotting compasses, some iron filings, a sheet of paper and a bar magnet.',question:'State two ways to find out the shape of a magnetic field, and say how the diagram shows where the field is strongest.',marks:3,
       model:'Use plotting compasses, or sprinkle iron filings around the magnet. The field is strongest where the field lines are closest together.',
       points:['Plotting compasses','Iron filings','Field lines closer together = stronger field']}
   ]
@@ -103,7 +103,7 @@ const L2 = {
   memory:'Stronger electromagnet: <b>more turns, more current, iron core</b>.',
   fact:['','Fantastic fact: the strongest magnet is an electromagnet that produces a magnetic field 10 million times stronger than the Earth’s magnetic field.'],
   widgets:[
-    {title:'Mixed up electromagnets',intro:'The textbook’s results table, one change at a time. Pick a value, switch on, and count the paper clips.',render:W.buildEM},
+    {title:'Mixed up electromagnets',intro:'The textbook’s results table. Change <b>one</b> thing, switch on, count the paper clips.',render:W.buildEM},
     {title:'Which field shape?',intro:'<b>How:</b> press and hold a description, drag it onto the box beside the thing it belongs to, then let go.',render:(el,U)=>U.matcher(el,[
       ['A straight wire with a current','Circular field lines around the wire'],
       ['A circular loop of wire','Field lines at the centre are straight'],
@@ -163,8 +163,8 @@ const L3 = {
   fact:['','Remember: there is a board in your house with lots of circuit breakers, near your electricity meter. Do not touch the circuit breakers!'],
   widgets:[
     {title:'Label the bell',intro:'<b>How:</b> press and hold a label, drag it into the empty box that points at that part of the bell, then let go.',render:W.bellLabel},
-    {title:'Ring the bell',intro:'Press and hold the doorbell switch. Watch the circuit make and break.',render:W.bellSim},
-    {title:'Circuit breaker',intro:'Turn up the current. What happens when it gets too large?',render:W.breaker},
+    {title:'Ring the bell',intro:'Hold the bell push and watch the <b>make and break</b> switch keep the bell ringing.',render:W.bellSim},
+    {title:'Circuit breaker',intro:'Make the current bigger and watch the <b>electromagnet</b> pull on the <b>iron catch</b>.',render:W.breaker},
     {title:'Permanent or electromagnet?',intro:'Which kind of magnet is used? <b>How:</b> press and hold a card, drag it into the right box, then let go.',render:(el,U)=>U.sorter(el,{
       bins:[{id:'perm',label:'Permanent magnet',t:'magnet'},{id:'em',label:'Electromagnet',t:'electro'}],
       items:[
@@ -205,7 +205,7 @@ Engine.start({
   id:'magnetism', subject:'Physics', title:'Magnetism & electromagnets', tones:TONES,
   lessons:[L1,L2,L3],
   final:{
-    intro:'Mix it all together. These are the textbook’s End-of-Big-Idea questions.',
+    intro:'Mix it all together. A <b>selection</b> of the textbook’s End-of-Big-Idea questions (not all of them).',
     commandWords:[
       ['State / Name','Give a short answer. One word or a phrase is fine.'],
       ['Describe','Say what happens, step by step. No need to say why.'],

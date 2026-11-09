@@ -6,6 +6,11 @@
   const h = (tag, attrs={}, html) => { const e=document.createElement(tag); for(const k in attrs){ if(k==='class') e.className=attrs[k]; else if(k.startsWith('on')) e.addEventListener(k.slice(2),attrs[k]); else e.setAttribute(k,attrs[k]); } if(html!==undefined) e.innerHTML=html; return e; };
   const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
   const norm = s => String(s).toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+  // Fill-in marking: the answer word on its own (a/an/the and a plural s are fine), or followed by the words
+  // that come straight after the blank in the question (e.g. "elastic limit"). Anything else, e.g. "not a moment", is wrong.
+  const fillOK=(q,v)=>{ const clean=t=>norm(t).replace(/^(it is|its|it s|they are|a|an|the) /,'').replace(/^(a|an|the) /,'');
+    const next=norm(q.q.split(/_{2,}/)[1]||'').split(' ').filter(Boolean).slice(0,3);
+    return q.answers.some(a=>{ const A=clean(a), V=clean(v); return V===A||V===A+'s'||next.some((_,k)=>V===[A,...next.slice(0,k+1)].join(' ')); }); };
 
   /* ---------- colour system: each concept gets a consistent colour ---------- */
   const PAL={
@@ -135,7 +140,7 @@
       const done=(ok,extra='')=>{ answered=true; if(ok) score++; log.push([q.q,ok]); fb.className='fb show '+(ok?'good':'bad'); fb.innerHTML=`<b>${ok?'Correct.':'Not quite.'}</b> ${extra}${q.explain?' '+q.explain:''}`; next.disabled=false; next.focus(); };
       if(q.type==='fill'){
         const f=h('div',{class:'fill row'}); const inp=h('input',{type:'text',placeholder:'Type your answer','aria-label':'answer'}); const go=h('button',{class:'btn'},'Check');
-        const check=()=>{ if(answered) return; const v=norm(inp.value); if(!v){inp.focus();return;} const ok=q.answers.some(a=>v===norm(a)||(norm(a).length>4&&v.includes(norm(a)))); inp.classList.add(ok?'ok':'no'); inp.disabled=true; go.disabled=true; done(ok, ok?'':`Answer: <b>${q.answers[0]}</b>.`); };
+        const check=()=>{ if(answered) return; const v=norm(inp.value); if(!v){inp.focus();return;} const ok=fillOK(q,v); inp.classList.add(ok?'ok':'no'); inp.disabled=true; go.disabled=true; done(ok, ok?'':`Answer: <b>${q.answers[0]}</b>.`); };
         go.onclick=check; inp.addEventListener('keydown',e=>{ if(e.key==='Enter') answered? next.click() : check(); });
         f.append(inp,go); w.appendChild(f); setTimeout(()=>inp.focus(),50);
       } else if(q.type==='order'){
