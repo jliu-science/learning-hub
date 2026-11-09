@@ -101,7 +101,7 @@ window.ForcesWidgets = (function(){
   function leaf(el,U){
     const N=240, TAU=1, T=4.2, VT=1; const ts=[], vs=[], ys=[];
     for(let i=0;i<=N;i++){ const t=i/N*T; ts.push(t); vs.push(VT*Math.tanh(t/TAU)); ys.push(VT*TAU*Math.log(Math.cosh(t/TAU))); }
-    const YMAX=ys[N], TOP=40, H=205, LX=95, WL=52; // weight arrow length
+    const YMAX=ys[N], TOP=40, H=205, LX=95, WL=64; // weight arrow length
     const yAt=i=>TOP+(.55*i/N+.45*ys[i]/YMAX)*H, airOf=i=>(vs[i]/VT)**2; // air resistance as a fraction of weight
     const CP=[{i:Math.round(.8/T*N),ans:0,txt:'starting to fall'},{i:Math.round(1.6/T*N),ans:0,txt:'falling faster'},{i:Math.round(3.6/T*N),ans:2,txt:'much later'}];
     const RES=['Weight is bigger: it speeds up','Air resistance is bigger','Equal: steady speed (equilibrium)'];
@@ -111,8 +111,8 @@ window.ForcesWidgets = (function(){
         <div id="lfcp" class="lfcp"></div>
         <div class="row" style="margin-top:8px"><button class="btn ghost small" id="lfr">Start again</button></div>
         <p class="hint" style="margin:10px 0 0;font-size:.85rem">The fall is replayed in steps: how fast you drag does not change the leaf’s speed.</p></div>
-      <div><div class="readout"><span>weight <b>same all the way down</b></span><span>air resistance <b id="lfa">0%</b> of weight</span><span>resultant <b id="lfres">down</b></span></div><div class="stage"><svg viewBox="0 0 400 320" id="lfsvg" aria-label="A falling leaf with force arrows and a speed-time graph">
-        <rect x="20" y="10" width="150" height="300" fill="#eef3e6"/>
+      <div><div class="readout"><span>weight <b>same all the way down</b></span><span>air resistance <b id="lfa">0%</b> of weight</span><span>resultant <b id="lfres">down</b></span></div><div class="stage"><svg viewBox="0 0 400 340" id="lfsvg" aria-label="A falling leaf with force arrows and a speed-time graph">
+        <rect x="20" y="10" width="150" height="320" fill="#eef3e6"/>
         <g id="lfmarks"></g><g id="lfhint"></g><g id="lfg"></g><g id="lfleaf" class="grab" style="cursor:grab"><circle r="26" fill="transparent"/><circle id="lfring" r="24" fill="none" stroke="${PUSH}" stroke-width="2" stroke-dasharray="4 4"/><path id="lfpath" d="M0 -16 C14 -9 16 7 0 18 C-16 7 -14 -9 0 -16Z M0 -16 L0 18" fill="#d97706" stroke="#92400e" stroke-width="1.5"/></g><g id="lfgraph" transform="translate(225 40)"></g></svg></div>
       </div></div>`;
     const $=s=>el.querySelector(s);
