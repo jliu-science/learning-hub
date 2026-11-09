@@ -111,10 +111,10 @@ window.ForcesWidgets = (function(){
         <div id="lfcp" class="lfcp"></div>
         <div class="row" style="margin-top:8px"><button class="btn ghost small" id="lfr">Start again</button></div>
         <p class="hint" style="margin:10px 0 0;font-size:.85rem">The fall is replayed in steps: how fast you drag does not change the leaf’s speed.</p></div>
-      <div><div class="stage"><svg viewBox="0 0 400 320" id="lfsvg" aria-label="A falling leaf with force arrows and a speed-time graph">
+      <div><div class="readout"><span>weight <b>same all the way down</b></span><span>air resistance <b id="lfa">0%</b> of weight</span><span>resultant <b id="lfres">down</b></span></div><div class="stage"><svg viewBox="0 0 400 320" id="lfsvg" aria-label="A falling leaf with force arrows and a speed-time graph">
         <rect x="20" y="10" width="150" height="300" fill="#eef3e6"/>
         <g id="lfmarks"></g><g id="lfhint"></g><g id="lfg"></g><g id="lfleaf" class="grab" style="cursor:grab"><circle r="26" fill="transparent"/><circle id="lfring" r="24" fill="none" stroke="${PUSH}" stroke-width="2" stroke-dasharray="4 4"/><path id="lfpath" d="M0 -16 C14 -9 16 7 0 18 C-16 7 -14 -9 0 -16Z M0 -16 L0 18" fill="#d97706" stroke="#92400e" stroke-width="1.5"/></g><g id="lfgraph" transform="translate(225 40)"></g></svg></div>
-      <div class="readout"><span>weight <b>same all the way down</b></span><span>air resistance <b id="lfa">0%</b> of weight</span><span>resultant <b id="lfres">down</b></span></div></div></div>`;
+      </div></div>`;
     const $=s=>el.querySelector(s);
     function marks(){ $('#lfmarks').innerHTML=CP.map((c,k)=>{ const tg=k===solved&&!asking, at=k===solved&&asking, col=tg?PUSH:at?'#d97706':MUTED;
       return `<line x1="24" y1="${yAt(c.i)}" x2="145" y2="${yAt(c.i)}" stroke="${col}" stroke-dasharray="${tg||at?'0':'5 4'}" stroke-width="${tg||at?3:1}"/><circle cx="156" cy="${yAt(c.i)}" r="11" fill="${tg?PUSH:at?'#d97706':'#fff'}" stroke="${col}"/><text x="156" y="${yAt(c.i)+5}" text-anchor="middle" font-size="14" font-weight="700" class="mono" fill="${tg||at?'#fff':INK}">${k+1}</text>`; }).join(''); }
