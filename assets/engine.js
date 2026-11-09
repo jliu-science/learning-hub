@@ -94,7 +94,7 @@
     let left=items.length, mistakes=0;
     bins.forEach(b=>{ const [ie,lt]=splitIcon(b.label); const bc=toneKey(b.t)||tone(lt); binWrap.appendChild(h('div',{class:'bin','data-id':b.id,style:vars(bc)},`<h4>${(ie||b.t)?icon(ie,bc):''}${lt}</h4><div class="items"></div>`)); });
     shuffle(items).forEach(it=>{
-      const c=h('div',{class:'chip','data-bin':it.bin},splitIcon(it.label)[1]);
+      const c=h('div',{class:'chip','data-bin':it.bin},(it.ic&&window.ICONS&&ICONS[it.ic]?`<span class="fi">${svgIcon(it.ic,22)}</span>`:'')+splitIcon(it.label)[1]);
       drag(c,{targets:'.bin',onDrop:(chip,bin)=>{
         if(chip.dataset.bin===bin.dataset.id){ chip.classList.add('ok'); bin.querySelector('.items').appendChild(chip); left--; status.textContent = left? `${left} left` : `All sorted (${mistakes} wrong attempt${mistakes===1?'':'s'}).`; return true; }
         mistakes++; nope(chip); toast(it.why?('Hint: '+it.why):'Not that box. Try another one.'); return false; }});
