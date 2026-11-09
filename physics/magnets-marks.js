@@ -27,6 +27,31 @@ const outcome=(label,expected)=>({check:(answer,_parts,hit)=>{
   return text.split(/[.!?;,]|\b(?:and|but|whereas|while)\b/).map(norm).some(s=>relation.test(s)&&hit(s,expected)&&!hit(s,opposite));
 }});
 const materialProblem=answer=>/\b(?:must be (?:a )?magnetic|non[ -]?magnetic|not all\b[^.!?;]*\bmagnetic|aluminium|copper|another metal|other metal)\b/i.test(answer);
+// Credit the shared mechanism and the different reset behaviour separately.
+// Mentioning an electromagnet and a ringing bell does not describe a comparison.
+const sharedMechanism={check:(_answer,parts,hit)=>parts.some(s=>
+  /\b(?:both|each|similarity|similar|in common)\b|\bbells?\b.*\b(?:and|as well as)\b.*\bbreakers?\b|\bbreakers?\b.*\band\b.*\bbells?\b/.test(s)&&
+  (hit(s,'electromagnet')||hit(s,'electro magnet'))&&
+  ((hit(s,'attract')&&(hit(s,'iron')||hit(s,'armature')||hit(s,'catch')))||
+    ((hit(s,'break')||hit(s,'open'))&&hit(s,'circuit'))))};
+const resetDifference={check:(_answer,parts,hit)=>{
+  const clauses=parts.flatMap(s=>s.split(/\b(?:but|whereas|while)\b/));
+  return clauses.some(s=>{
+    if(/\bbreaker\b/.test(s)) {
+      if(/\b(?:not|never|doesn t)\s+(?:stay\w*|remain\w*|keep\w*)\s+(?:switched |turned )?off\b|\breset\w*\s+(?:automatically|by itself|on its own)\b/.test(s)) return false;
+      const manual=/\b(?:reset|press|push|manually|manual)\b/.test(s)&&
+        !/\b(?:automatically|by itself|on its own)\b/.test(s)&&hit(s,'reset');
+      const staysOff=/\b(?:stay\w*|remain\w*|keep\w*)\s+(?:switched |turned )?off\b/.test(s)&&!hit(s,'automatically');
+      if(manual||staysOff) return !/\b(?:does not|doesn t|never)\s+(?:need|require)\w*\s+(?:a )?reset\b/.test(s);
+    }
+    if(/\bbell\b/.test(s)&&hit(s,'circuit')) {
+      return /\b(?:again|repeated\w*|continual\w*|automatic\w*|by itself|on its own|keeps?)\b/.test(s)&&
+        (hit(s,'mak')||hit(s,'remak')||hit(s,'clos'))&&
+        !/\b(?:not|never)\s+(?:\w+\s+){0,2}(?:mak\w*|remak\w*|clos\w*)\b/.test(s);
+    }
+    return false;
+  });
+}};
 window.MARKS = {
   l1:[
     poles,
@@ -40,7 +65,7 @@ window.MARKS = {
   ],
   l3:[
     devices,
-    [ [[...EM,'coil','iron','armature','catch','break','attract']], [['reset','stay off','stays off','keep ring','keeps ring','ring','again','by itself']] ],
+    [ sharedMechanism, resetDifference ],
     [ [['strong','power','lift heav','heavier']], [OFF] ]
   ],
   final:[

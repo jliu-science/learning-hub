@@ -35,6 +35,26 @@ test('numeric answers match the requested rounding or the actual 3.14 calculatio
   assert.equal(check(120 + (generated.ans - 120) * 3.14 / Math.PI, generated), 'ok314');
 });
 
+test('cylinder working keeps full pi until the final rounding', () => {
+  const c = {Engine: {}}; c.window = c;
+  vm.createContext(c);
+  const kit = fs.readFileSync(path.join(root, 'maths/maths-kit.js'), 'utf8');
+  vm.runInContext(kit.replace('  window.MathsEngine={', '  globalThis.checkNum=checkNum;\n  window.MathsEngine={'), c);
+  vm.runInContext(fs.readFileSync(path.join(root, 'maths/area-volume-practice.js'), 'utf8'), c);
+  for (const [radius, height] of [[2, 20], [3, 11], [7, 19]]) {
+    const values = [radius, height];
+    const q = c.AVQ.cyl[0]({int: () => values.shift()});
+    const work = q.work.map(s => s.replace(/<[^>]*>/g, ''));
+    assert.match(work[0], /≈/, 'rounded area is an approximation');
+    assert.ok(work[1].includes(`π × ${radius}² × ${height}`), 'volume uses exact circle area');
+    const rounded = Number((Math.PI * radius * radius * height).toFixed(1));
+    assert.equal(c.checkNum(rounded, q), 'ok');
+    assert.ok(work[1].replace(/,/g, '').endsWith(`≈ ${rounded} cm³`), work[1]);
+  }
+  const q = c.AVQ.cyl[0]({int: (() => {const values = [2, 20]; return () => values.shift();})()});
+  assert.notEqual(c.checkNum(251.4, q), 'ok', 'intermediate rounding is not the requested final answer');
+});
+
 test('protein lab adds both reagents before showing the purple result', async () => {
   const nodes = new Map();
   const snapshots = [];

@@ -168,7 +168,7 @@ window.AVQ=(function(){
   /* ---------- V3 cylinders ---------- */
   const cyl=[
     R=>{ const r=R.int(2,10), h=R.int(3,20); const V=Math.PI*r*r*h; return {text:'Find the volume of this cylinder.', base:'cm', ans:V, dp:1, pi:true, unit:'cm³', hint:F.cyl,
-      fig:cylFig(`${r} cm`,`${h} cm`,false,r*2/h), work:[`Area of circle: π × ${v('r',r)}² = ${f(Math.PI*r*r,2)} cm²`,`V = ${f(Math.PI*r*r,2)} × ${v('h',h)} = ${f(V,1)} cm³`]}; },
+      fig:cylFig(`${r} cm`,`${h} cm`,false,r*2/h), work:[`Area of circle: π × ${v('r',r)}² ≈ ${f(Math.PI*r*r,2)} cm²`,`Keep π in the calculation until the final step: V = π × ${r}² × ${v('h',h)} ≈ ${f(V,1)} cm³`]}; },
     R=>{ const d=R.even(4,20), h=R.int(3,20); const r=d/2, V=Math.PI*r*r*h; return {text:'Find the volume of this cylinder.', base:'cm', ans:V, dp:1, pi:true, unit:'cm³', hint:F.cyl,
       fig:cylFig(`${d} cm`,`${h} cm`,true,d/h), work:[`The diameter is ${d} cm, so the radius is ${v('r',r)} cm.`,`V = π × ${r}² × ${v('h',h)} = ${f(V,1)} cm³`]}; },
     R=>{ const d=R.pick([6,7,8,10]), h=R.pick([10,11,12,15]); const r=d/2, V=Math.PI*r*r*h; return {text:`A tin of beans is a cylinder with diameter ${d} cm and height ${h} cm. How many millilitres does it hold? (1 ml = 1 cm³) Give your answer to the nearest ml.`, units:['ml','cm²','cm'], ans:Math.round(V), unit:'ml', hint:F.cyl, fig:'',
