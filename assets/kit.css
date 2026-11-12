@@ -81,3 +81,43 @@
 .embtn:hover circle{filter:brightness(1.15)}
 .logtable tr.on td{background:var(--accent-soft)}
 .steps-list li.done::before{content:'✓';color:var(--accent)}
+/* What is a bond? (6.4.3) */
+.bkey{display:grid;gap:8px;margin:10px 0;padding:8px 10px;border:1px solid var(--line);background:var(--card)}
+.bkey>div{display:grid;grid-template-columns:70px minmax(0,1fr);gap:10px;align-items:center;font-size:.9rem}
+.patom .ring{animation:slotpulse 1.3s ease-in-out infinite}
+.patom{cursor:grab}
+#mgrab{cursor:grab}#mgrab.bob{animation:bob 1.6s ease-in-out infinite}
+.how{background:var(--accent-soft);padding:6px 9px;font-size:.92rem}
+.wig{animation:wig 1.4s ease-in-out infinite}
+@keyframes wig{0%,50%,100%{transform:none}65%{transform:translate(var(--dx),var(--dy))}80%{transform:none}}
+.cuefade{animation:fadein .4s both}
+.stage svg.fx{position:absolute;inset:10px;width:calc(100% - 20px);height:auto;pointer-events:none;overflow:visible}
+.fxring{animation:fxring .7s ease-out forwards}@keyframes fxring{from{r:4;opacity:1}to{r:34;opacity:0}}
+.fxnum{animation:fxnum 1.2s ease-out forwards}@keyframes fxnum{from{transform:translateY(-6px);opacity:1}to{transform:translateY(-46px);opacity:0}}
+.subst{border:1px solid var(--line);background:var(--card);padding:8px 10px;font-size:.88rem;margin:8px 0}
+.subst p{margin:0 0 6px}
+.ghsrow{display:flex;gap:12px;flex-wrap:wrap}
+.ghs{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted)}
+.ghs svg{width:52px;height:52px}
+/* Build the diagram (6.4.2) */
+.lb-list{list-style:none;padding:0;margin:4px 0 12px;font-size:.88rem;counter-reset:lb}
+.lb-list li{counter-increment:lb;padding:4px 8px;border-left:3px solid transparent;color:var(--muted)}
+.lb-list li::before{content:counter(lb) "  ";font-size:.75rem}
+.lb-list li.on{border-left-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+.lb-list li.ok::after{content:"  ✓";color:var(--good)}
+.lb-list li.retry::after{content:"  ✓";color:var(--muted)}
+.lb-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:2px 4px 8px;border-bottom:1px solid var(--line)}
+.lb-n{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lb-t{font-family:"Fraunces",serif;font-size:1.1rem;font-weight:600}
+.lb-eq{font-size:.9rem;color:var(--ink2)}
+.lb-ask{margin:10px 4px 0;font-size:.95rem}
+.lb-ask button{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:4px 10px;margin:0 3px;font:inherit;font-weight:600;cursor:pointer}
+.lb-ask button:hover:not(:disabled){border-color:var(--accent)}
+.lb-ask button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.lb-ask button.no{text-decoration:line-through;color:var(--muted)}
+.lb-ask button:disabled:not(.on){opacity:.55;cursor:default}
+.lb-cap{min-height:1.4em;margin:2px 4px 8px;font-size:.92rem}
+.lb-pulse{animation:lbpulse 1.4s ease-in-out infinite}@keyframes lbpulse{50%{opacity:.25}}
+.lb-dia{position:relative}
+.lb-note{position:absolute;top:4px;left:12%;right:2%;font-size:.86rem;background:var(--card);border-left:3px solid;padding:3px 8px;line-height:1.4}
+.lb-note b{color:inherit}
