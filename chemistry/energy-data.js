@@ -106,7 +106,7 @@ const L2 = {
   memory:'Products go <b>down</b>, energy goes <b>out</b> (exo). Products go <b>up</b>, energy goes <b>in</b> (endo).',
   fact:['','Fantastic fact: hydrogen gives out about three times as much energy per kilogram as diesel, and the only product is water.'],
   widgets:[
-    {title:'Build the diagram',intro:'Read the change, decide if it gives out or takes in energy, then drag the purple products line up or down to match.',render:W.levelBuilder},
+    {title:'Build the diagram',intro:'Decide if each change is exothermic or endothermic, then drag the products line to match.',render:W.levelBuilder},
     {title:'Compare fuels',intro:'Burn 1 kg of each fuel on the same energy level diagram. The lower the products line, the more energy is given out.',render:W.fuels},
     {title:'Read the diagram',intro:'Drag each clue into the box for the type of change it shows.',render:(el,U)=>U.sorter(el,{
       bins:[{id:'x',label:'Exothermic',t:'exo'},{id:'n',label:'Endothermic',t:'endo'}],
@@ -156,6 +156,7 @@ const L3 = {
   ],
   summary:[
     ['bond','In a molecule, strong forces called <b>chemical bonds</b> hold the atoms together. The energy needed to break a bond is its <b>bond energy</b>.'],
+    ['bond','In a diagram, bonds are drawn as lines. One line (C–H) is a <b>single bond</b>. Two lines (O=O) is a <b>double bond</b>.'],
     ['endo','<b>Bond breaking</b> takes in energy: it is <b>endothermic</b>.'],
     ['exo','<b>Bond making</b> gives out energy: it is <b>exothermic</b>.'],
     ['exo','<b>Exothermic</b> reaction: energy to break bonds is <b>less than</b> energy released making new bonds.'],
@@ -165,6 +166,8 @@ const L3 = {
   ],
   memory:'<b>Break = take</b> (energy in). <b>Make = give</b> (energy out). Whichever is bigger wins.',
   widgets:[
+    {title:'What is a bond?',intro:'One line or two? Pull atoms apart and feel how much energy each bond needs.',render:W.pullApart},
+    {title:'Burning methane',intro:'The example from class: methane + oxygen. Break the bonds, make new ones, then compare.',render:W.methane},
     {title:'Bond energy calculator',intro:'Three steps: break the bonds (energy in), make new bonds (energy out), then compare the two.',render:W.bonds},
     {title:'Match the key words',intro:'Drag each description onto its word.',render:(el,U)=>U.matcher(el,[
       ['Chemical bond','Force that holds atoms together in a molecule'],['Bond energy','Energy needed to break a bond (kJ/mol)'],

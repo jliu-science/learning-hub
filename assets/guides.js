@@ -16,8 +16,7 @@
     /* ---------- chemistry ---------- */
     'Thermometer lab':d=>{ K.callout(q(d,'.stage'),q(d,'#tver'));
       K.guide(d,()=>q(d,'#tver [data-a]')?q(d,'#tver .row'):!q(d,'#tmix').disabled?q(d,'#tmix'):!q(d,'#twait').disabled?q(d,'#twait'):q(d,'#tx')); },
-    'Build the diagram':d=>{ const how=q(d,'.lb-how'); if(how) how.remove(); K.callout(q(d,'.stage'),q(d,'#lb-n'),q(d,'#lb-q'),q(d,'#lb-fb'));
-      K.guide(d,()=>vis(q(d,'#lb-x'))?q(d,'#lb-x'):q(d,'#lhint').style.display!=='none'?q(d,'#lp'):q(d,'#lb-c')); },
+    'Build the diagram':d=>{ K.guide(d,()=>vis(q(d,'#lbnext'))?q(d,'#lbnext'):q(d,'#lbask button.on')?null:q(d,'#lbask')); },
     'Compare fuels':d=>{ const h=q(d,'.ctl .hint'); if(h) h.remove(); K.callout(q(d,'.stage'),q(d,'#fv'));
       const c=firstFree(d,'#fpool .chip'); if(c) K.cue(c,{host:d,ring:true,to:q(d,'#fsvg')}); K.guide(d,()=>firstFree(d,'#fpool .chip')); },
     'Bond energy calculator':d=>{ K.callout(q(d,'.stage'),q(d,'#btxt'),q(d,'#bcalc'),q(d,'#bq'));
