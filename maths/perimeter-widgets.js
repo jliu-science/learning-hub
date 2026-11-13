@@ -133,7 +133,7 @@ window.AV=window.AV||{};
         o+=`<text class="sumh" x="${W-30}" y="40" style="text-anchor:end">${done?'One full turn':'Rolled'}</text>`;
         o+=`<text class="sumt" x="${W-30}" y="76" style="text-anchor:end">${K.fmt(dist,2)} cm</text>`;
         o+=`<text class="sums" x="${W-30}" y="102" style="text-anchor:end">${K.fmt(turns,2)} ${Math.abs(turns-1)<1e-9?'turn':'turns'}</text>`;
-        if(done) o+=`<text class="sums" x="${W-30}" y="134" style="text-anchor:end;fill:#1d1b16">${K.fmt(dist,2)} ÷ ${K.fmt(2*r)} = <tspan style="font-weight:700;fill:#dc2626">3.14…</tspan></text><text class="sums" x="${W-30}" y="160" style="text-anchor:end">The rim is π × d long, whatever the size.</text>`;
+        if(done) o+=`<text class="sums" x="${W-30}" y="134" style="text-anchor:end;fill:#1d1b16">${K.fmt(dist,2)} ÷ ${K.fmt(2*r)} ≈ <tspan style="font-weight:700;fill:#dc2626">3.14</tspan></text><text class="sums" x="${W-30}" y="160" style="text-anchor:end">The rim is π × d long, whatever the size.</text>`;
         o+=btn('reset',30,8,80,'Reset',false);
         st.draw(o); };
       st.svg.addEventListener('pointerdown',()=>{ cued=true; });
@@ -159,9 +159,9 @@ window.AV=window.AV||{};
         {t:`<p>A <b>semicircle</b> has a curved edge <b>and</b> a straight edge.</p><p>Perimeter = half the circumference + the diameter.</p><p class="mnote"><b>Common mistake:</b> forgetting the straight edge.</p>`}
       ],i=>{ stop();
         if(i===0) st.draw(parts());
-        if(i===1) stop=K.tween(0,C,2600,s=>st.draw(wheelDraw(K,r,s,{rods:false}).svg+`<text class="sumt" x="${W-30}" y="60" style="text-anchor:end">${s>=C-1?'C = '+K.fmt(C/S,2)+' cm':''}</text>`));
-        if(i===2) stop=K.tween(0,1,1200,t=>st.draw(wheelDraw(K,r,C,{}).svg+`<text class="sumt" x="${W-30}" y="60" style="text-anchor:end;opacity:${t}">${K.fmt(C/S,2)} ÷ ${K.fmt(2*r)} = 3.14…</text>`));
-        if(i===3) st.draw(wheelDraw(K,r,C,{}).svg+`<text class="sumt" x="${W-30}" y="60" style="text-anchor:end">C = π × ${K.fmt(2*r)} = ${K.fmt(C/S,2)} cm</text>`);
+        if(i===1) stop=K.tween(0,C,2600,s=>st.draw(wheelDraw(K,r,s,{rods:false}).svg+`<text class="sumt" x="${W-30}" y="60" style="text-anchor:end">${s>=C-1?'C ≈ '+K.fmt(C/S,2)+' cm':''}</text>`));
+        if(i===2) stop=K.tween(0,1,1200,t=>st.draw(wheelDraw(K,r,C,{}).svg+`<text class="sumt" x="${W-30}" y="60" style="text-anchor:end;opacity:${t}">${K.fmt(C/S,2)} ÷ ${K.fmt(2*r)} ≈ 3.14</text>`));
+        if(i===3) st.draw(wheelDraw(K,r,C,{}).svg+`<text class="sumt" x="${W-30}" y="60" style="text-anchor:end">C = π × ${K.fmt(2*r)} = ${K.fmt(2*r)}π ≈ ${K.fmt(C/S,2)} cm</text>`);
         if(i===4) st.draw(semi());
       }); }
   };

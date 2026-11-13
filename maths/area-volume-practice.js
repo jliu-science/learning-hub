@@ -105,15 +105,15 @@ window.AVQ=(function(){
   const circ=[
     R=>{ const r=R.int(2,15), u=pickU(R); return {text:'Find the area of this circle.', base:u, ans:Math.PI*r*r, dp:1, pi:true, unit:u+'²', hint:F.circ,
       fig:fig({circles:[{c:[0,0],r:1}],extra:(m,s)=>{ const c=m([0,0]); return `<line x1="${c[0]}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#7c3aed" stroke-width="2"/><text class="dl" x="${c[0]+s/2}" y="${c[1]-12}" style="fill:#7c3aed">${r} ${u}</text>`; }}),
-      work:[`A = π${v('r','r')}² = π × ${v('r',r)}² = π × ${r*r}`,`= ${f(Math.PI*r*r,1)} ${u}² (1 d.p.)`]}; },
+      work:[`A = π${v('r','r')}² = π × ${v('r',r)}² = π × ${r*r}`,`≈ ${f(Math.PI*r*r,1)} ${u}² (1 d.p.)`]}; },
     R=>{ const d=R.even(4,20); const r=d/2; return {text:'Find the area of this circle.', base:'cm', ans:Math.PI*r*r, dp:1, pi:true, unit:'cm²', hint:F.circ,
       fig:fig({circles:[{c:[0,0],r:1}],extra:(m,s)=>{ const c=m([0,0]); return `<line x1="${c[0]-s}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#2563eb" stroke-width="2"/><text class="dl" x="${c[0]}" y="${c[1]-12}" style="fill:#2563eb">${d} cm</text>`; }}),
-      work:[`This is the diameter, so the radius is ${d} ÷ 2 = ${v('r',r)} cm.`,`A = π × ${v('r',r)}² = π × ${r*r} = ${f(Math.PI*r*r,1)} cm²`]}; },
+      work:[`This is the diameter, so the radius is ${d} ÷ 2 = ${v('r',r)} cm.`,`A = π × ${v('r',r)}² = π × ${r*r} ≈ ${f(Math.PI*r*r,1)} cm²`]}; },
     R=>{ const d=R.even(6,20), r=d/2; return {text:'Find the area of this semicircle.', base:'cm', ans:Math.PI*r*r/2, dp:1, pi:true, unit:'cm²', hint:F.circ,
       fig:fig({pts:Array.from({length:31},(_,i)=>[Math.cos(Math.PI*i/30),Math.sin(Math.PI*i/30)]),dims:[{a:[1,0],b:[-1,0],t:`${d} cm`,k:'b',off:-0.001}]}),
-      work:[`The radius is ${d} ÷ 2 = ${v('r',r)} cm.`,`Whole circle: π × ${r}² = ${f(Math.PI*r*r,2)} cm²`,`Half of it: ${f(Math.PI*r*r,2)} ÷ 2 = ${f(Math.PI*r*r/2,1)} cm²`]}; },
+      work:[`The radius is ${d} ÷ 2 = ${v('r',r)} cm.`,`Whole circle: π × ${r}² = ${f(r*r)}π cm²`,`Half of it: ${f(r*r)}π ÷ 2 = ${f(r*r/2)}π ≈ ${f(Math.PI*r*r/2,1)} cm²`,'Keep π until the last step, then round.']}; },
     R=>{ const r=R.half(1.5,9); return {text:`A round table top has a radius of <b>${f(r)} m</b>. What is its area?`, base:'m', ans:Math.PI*r*r, dp:1, pi:true, unit:'m²', hint:F.circ, fig:'',
-      work:[`A = π × ${v('r',f(r))}² = π × ${f(r*r)} = ${f(Math.PI*r*r,1)} m²`]}; }
+      work:[`A = π × ${v('r',f(r))}² = π × ${f(r*r)} ≈ ${f(Math.PI*r*r,1)} m²`]}; }
   ];
 
   /* ---------- A6 compound shapes ---------- */
@@ -134,7 +134,7 @@ window.AVQ=(function(){
     R=>{ const w=R.even(4,10), l=R.int(6,12); const r=w/2, rectangle=l*w, A=rectangle+Math.PI*r*r/2;
       return {text:'This shape is a rectangle with a semicircle on one end. Find its total area.', base:'cm', ans:A, dp:1, pi:true, piOffset:rectangle, unit:'cm²', hint:`${F.rect}<br>${F.circ}`,
         fig:fig({pts:[[0,0],[l,0],...Array.from({length:21},(_,i)=>[l+r*Math.sin(Math.PI*i/20),r-r*Math.cos(Math.PI*i/20)]),[0,w]],dash:[[[l,0],[l,w]]],dims:[{a:[0,0],b:[l,0],t:`${l} cm`,k:'b'},{a:[0,w],b:[0,0],t:`${w} cm`,k:'w'}]}),
-        work:[`Rectangle: ${l} × ${w} = ${l*w} cm²`,`Semicircle: radius = ${w} ÷ 2 = ${r} cm, so ½ × π × ${r}² = ${f(Math.PI*r*r/2,2)} cm²`,`Total: ${l*w} + ${f(Math.PI*r*r/2,2)} = ${f(A,1)} cm²`]}; }
+        work:[`Rectangle: ${l} × ${w} = ${l*w} cm²`,`Semicircle: radius = ${w} ÷ 2 = ${r} cm, so ½ × π × ${r}² = ${f(r*r/2)}π cm²`,`Total: ${l*w} + ${f(r*r/2)}π ≈ ${f(A,1)} cm²`]}; }
   ];
 
   /* ---------- V1 cuboids ---------- */
@@ -168,11 +168,11 @@ window.AVQ=(function(){
   /* ---------- V3 cylinders ---------- */
   const cyl=[
     R=>{ const r=R.int(2,10), h=R.int(3,20); const V=Math.PI*r*r*h; return {text:'Find the volume of this cylinder.', base:'cm', ans:V, dp:1, pi:true, unit:'cm³', hint:F.cyl,
-      fig:cylFig(`${r} cm`,`${h} cm`,false,r*2/h), work:[`Area of circle: π × ${v('r',r)}² ≈ ${f(Math.PI*r*r,2)} cm²`,`Keep π in the calculation until the final step: V = π × ${r}² × ${v('h',h)} ≈ ${f(V,1)} cm³`]}; },
+      fig:cylFig(`${r} cm`,`${h} cm`,false,r*2/h), work:[`Area of circle: π × ${v('r',r)}² = ${r*r}π cm²`,`V = ${r*r}π × ${v('h',h)} = ${r*r*h}π ≈ ${f(V,1)} cm³`]}; },
     R=>{ const d=R.even(4,20), h=R.int(3,20); const r=d/2, V=Math.PI*r*r*h; return {text:'Find the volume of this cylinder.', base:'cm', ans:V, dp:1, pi:true, unit:'cm³', hint:F.cyl,
-      fig:cylFig(`${d} cm`,`${h} cm`,true,d/h), work:[`The diameter is ${d} cm, so the radius is ${v('r',r)} cm.`,`V = π × ${r}² × ${v('h',h)} = ${f(V,1)} cm³`]}; },
+      fig:cylFig(`${d} cm`,`${h} cm`,true,d/h), work:[`The diameter is ${d} cm, so the radius is ${v('r',r)} cm.`,`V = π × ${r}² × ${v('h',h)} = ${r*r*h}π ≈ ${f(V,1)} cm³`]}; },
     R=>{ const d=R.pick([6,7,8,10]), h=R.pick([10,11,12,15]); const r=d/2, V=Math.PI*r*r*h; return {text:`A tin of beans is a cylinder with diameter ${d} cm and height ${h} cm. How many millilitres does it hold? (1 ml = 1 cm³) Give your answer to the nearest ml.`, units:['ml','cm²','cm'], ans:Math.round(V), unit:'ml', hint:F.cyl, fig:'',
-      work:[`Radius = ${d} ÷ 2 = ${f(r)} cm`,`V = π × ${f(r)}² × ${h} = ${f(V,1)} cm³`,`1 cm³ = 1 ml, so about ${Math.round(V)} ml.`]}; }
+      work:[`Radius = ${d} ÷ 2 = ${f(r)} cm`,`V = π × ${f(r)}² × ${h} = ${f(r*r*h)}π ≈ ${f(V,3)} cm³`,`1 cm³ = 1 ml, so to the nearest ml: ${Math.round(V)} ml`]}; }
   ];
   cyl[2]=(g=>R=>{ const q=g(R); q.ans=Math.round(q.ans); return q; })(cyl[2]);
 
