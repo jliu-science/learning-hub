@@ -111,12 +111,12 @@ window.AV=window.AV||{};
   AV.cyl={
     see(p,K){ const {stage,panel}=K.split(p); const st=K.stage(stage,W,H); const r=3,h=6; let stop=()=>{};
       K.steps(panel,[
-        {t:`<p>A <b>cylinder</b> is like a prism with a circle as its cross-section.</p><p>Start with the circle on the bottom. Its area is π${K.v('r','r')}².</p><p>With ${K.v('r','r')} = 3 cm: π × 3² = 28.3 cm².</p>`},
-        {t:`<p>Make it 1 cm thick, like a coin.</p><p>Its volume is the area of the circle × 1 cm = 28.3 cm³.</p>`},
-        {t:`<p>Stack coins until the cylinder is ${K.v('h','6')} cm tall.</p><p>6 coins × 28.3 cm³ ≈ 170 cm³.</p>`},
+        {t:`<p>A <b>cylinder</b> is like a prism with a circle as its cross-section.</p><p>Start with the circle on the bottom. Its area is π${K.v('r','r')}².</p><p>With ${K.v('r','r')} = 3 cm: π × 3² = 9π ≈ 28.3 cm².</p>`},
+        {t:`<p>Make it 1 cm thick, like a coin.</p><p>Its volume is the area of the circle × 1 cm = 9π cm³ ≈ 28.3 cm³.</p>`},
+        {t:`<p>Stack coins until the cylinder is ${K.v('h','6')} cm tall.</p><p>6 × 9π = 54π ≈ 169.6 cm³.</p>`},
         {t:`<p>Area of the circle × height:</p>${K.formula(`Volume = π${K.v('r','r')}² × ${K.v('h','h')}<small>also written πr²h</small>`)}<p class="mnote"><b>Watch out:</b> if you are given the diameter, halve it first to get the radius.</p>`}
       ],(i)=>{ stop();
-        if(i===0) st.draw(cylDraw(K,r,0,{ghost:h,al:'πr² = 28.3 cm²'}));
+        if(i===0) st.draw(cylDraw(K,r,0,{ghost:h,al:'πr² = 9π ≈ 28.3 cm²'}));
         if(i===1) st.draw(cylDraw(K,r,1,{ghost:h,hl:'1 cm'}));
         if(i===2) stop=K.tween(1,h,2000,z=>st.draw(cylDraw(K,r,Math.round(z),{ghost:h})));
         if(i===3) st.draw(cylDraw(K,r,h,{}));
@@ -124,7 +124,7 @@ window.AV=window.AV||{};
     explore(p,K){ const {stage,panel}=K.split(p); const st=K.stage(stage,W,H); let r=3,h=5;
       const c=K.calc();
       const draw=()=>{ st.draw(cylDraw(K,r,h,{s:Math.min(30,260/(h+r*.64+1))}));
-        const A=Math.PI*r*r; c.innerHTML=`<span class="hint">Area of circle = πr²</span>π × ${K.v('r',K.fmt(r))}² = ${K.fmt(A,2)} cm²<br><span class="hint">Volume = area × height</span>${K.fmt(A,2)} × ${K.v('h',h)} = <span class="res">${K.fmt(A*h,1)} cm³</span>`; };
+        const A=Math.PI*r*r; c.innerHTML=`<span class="hint">Area of circle = πr²</span>π × ${K.v('r',K.fmt(r))}² = ${K.fmt(r*r)}π cm²<br><span class="hint">Volume = area × height</span>${K.fmt(r*r)}π × ${K.v('h',h)} = ${K.fmt(r*r*h)}π ≈ <span class="res">${K.fmt(A*h,1)} cm³</span>`; };
       panel.append(K.h('p',{class:'hint',style:'margin:0'},'Change the radius and the height. Which makes the volume grow faster?'));
       K.slider(panel,{label:'Radius',k:'r',min:1,max:4,step:.5,value:r,unit:'cm',oninput:x=>{ r=x; draw(); }});
       K.slider(panel,{label:'Height',k:'h',min:1,max:8,value:h,unit:'cm',oninput:x=>{ h=x; draw(); }});

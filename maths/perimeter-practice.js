@@ -32,14 +32,14 @@
     :`<line x1="${c[0]}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#7c3aed" stroke-width="2"/><text class="dl" x="${c[0]+s/2}" y="${c[1]-12}" style="fill:#7c3aed">${t}</text>`; }});
   const circum=[
     R=>{ const d=R.int(3,20), u=pickU(R); const C=Math.PI*d; return {text:'Find the circumference of this circle.', base:u, ans:C, dp:1, pi:true, unit:u, hint:F.circ,
-      fig:cfig(`${d} ${u}`,'b',true), work:[`C = π${v('b','d')} = π × ${v('b',d)}`,`= ${f(C,1)} ${u} (1 d.p.)`]}; },
+      fig:cfig(`${d} ${u}`,'b',true), work:[`C = π${v('b','d')} = π × ${v('b',d)}`,`≈ ${f(C,1)} ${u} (1 d.p.)`]}; },
     R=>{ const r=R.int(2,15); const C=2*Math.PI*r; return {text:'Find the circumference of this circle.', base:'cm', ans:C, dp:1, pi:true, unit:'cm', hint:F.circ,
-      fig:cfig(`${r} cm`,'r',false), work:[`This is the radius, so d = 2 × ${r} = ${2*r} cm.`,`C = π × ${2*r} = ${f(C,1)} cm (1 d.p.)`]}; },
+      fig:cfig(`${r} cm`,'r',false), work:[`This is the radius, so d = 2 × ${r} = ${2*r} cm.`,`C = π × ${2*r} = ${2*r}π ≈ ${f(C,1)} cm (1 d.p.)`]}; },
     R=>{ const d=R.even(4,20); const curve=Math.PI*d/2, Ptot=curve+d; return {text:'Find the perimeter of this semicircle.', base:'cm', ans:Ptot, dp:1, pi:true, piOffset:d, unit:'cm', hint:F.semi,
       fig:fig({pts:Array.from({length:31},(_,i)=>[Math.cos(Math.PI*i/30),Math.sin(Math.PI*i/30)]),dims:[{a:[1,0],b:[-1,0],t:`${d} cm`,k:'b',off:-0.001}]}),
-      work:[`Curved edge: half of π × ${d} = ${f(curve,4)}… cm`,`Straight edge: the diameter, ${d} cm`,`Perimeter = ${f(curve,4)}… + ${d} = ${f(Ptot,4)}… ≈ ${f(Ptot,1)} cm`]}; },
+      work:[`Curved edge: half of π × ${d} = ${d/2}π cm`,`Straight edge: the diameter, ${d} cm`,`Perimeter = ${d/2}π + ${d} ≈ ${f(Ptot,1)} cm`,'Keep π until the last step, then round.']}; },
     R=>{ const d=R.pick([50,60,64,70,80]), n=R.pick([10,20,50,100]); const dist=Math.PI*d*n/100; return {text:`A bicycle wheel has a diameter of <b>${d} cm</b>. How far does the bike move, in <b>metres</b>, when the wheel turns ${n} times?`, units:['m','m²','cm²'], ans:dist, dp:1, pi:true, unit:'m', hint:`${F.circ}<br>100 cm = 1 m`, fig:'',
-      work:[`One turn: π × ${d} cm`,`${n} turns: π × ${d} × ${n} = π × ${d*n} = ${f(Math.PI*d*n,2)}… cm`,`÷ 100 = ${f(dist,4)}… ≈ ${f(dist,1)} m`]}; }
+      work:[`One turn: π × ${d} cm`,`${n} turns: π × ${d} × ${n} = ${d*n}π cm`,`In metres: ${d*n}π ÷ 100 = ${f(d*n/100)}π ≈ ${f(dist,1)} m`]}; }
   ];
   window.AVQ.perim=perim; window.AVQ.circum=circum;
 })();
