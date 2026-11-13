@@ -5,8 +5,8 @@
   const E=window.Engine, h=E.h, $=(s,el=document)=>el.querySelector(s);
 
   /* ---------- colour code: the same quantity always has the same colour ---------- */
-  const COL={ b:'#2563eb', h:'#ea580c', w:'#059669', r:'#7c3aed', c:'#0d9488', a:'#0d9488', g:'#7a7366' };
-  const SOFT={ b:'#dbeafe', h:'#ffedd5', w:'#d1fae5', r:'#ede9fe', c:'#ccfbf1', a:'#ccfbf1', g:'#efe9dc' };
+  const COL={ b:'#2f4fa2', h:'#bf5a32', w:'#3a7a57', r:'#6a4c93', c:'#2d7f86', a:'#2d7f86', g:'#7a7366' };
+  const SOFT={ b:'#e3e9f6', h:'#f7e6dc', w:'#dcece2', r:'#ebe5f3', c:'#d5eaea', a:'#d5eaea', g:'#efe9dc' };
   const v=(k,t)=>`<i class="v v-${k}">${t}</i>`;               // coloured variable in a formula
 
   /* ---------- numbers ---------- */
@@ -214,7 +214,7 @@
   function unitWhy(u){ return /³/.test(u)?'This is a volume, so the unit is cubed.':/²/.test(u)?'This is an area, so the unit is squared.':'This is a length, so the unit is not squared or cubed.'; }
 
   /* ---------- page: nav + lesson tabs ---------- */
-  const LCOL=['#2563eb','#ea580c','#059669','#db2777','#7c3aed','#0d9488','#ca8a04','#4f46e5','#dc2626','#0891b2'];
+  const LCOL=['#2f4fa2','#bf5a32','#3a7a57','#a8436b','#6a4c93','#2d7f86','#a07a1f','#4b55a3','#b4322a','#2b7a99'];
   let T, ALL;
   const dots=n=>`<span class="dots">${[0,1,2].map(i=>`<i class="${i<n?'f':''}"></i>`).join('')}</span>`;
   const sid=l=>T.id+'-'+l.id;
@@ -223,8 +223,8 @@
     T.groups.forEach(g=>{ n.appendChild(h('div',{class:'grp'},g.name));
       g.lessons.forEach(l=>{ n.appendChild(h('a',{href:'#'+l.id,class:cur===l.id?'on':'',style:`--lc:${l.accent}`},`<span class="num">${l.code}</span><span class="micon">${shapeIcon(l.icon,20)}</span><span class="nm">${l.short}</span>${dots(E.Store.stars(sid(l)))}`)); }); });
     n.appendChild(h('div',{class:'sep'}));
-    n.appendChild(h('a',{href:'#mixed',class:cur==='mixed'?'on':'',style:'--lc:#7c3aed'},`<span class="num">ALL</span><span class="nm">Mixed practice</span>${dots(E.Store.stars(T.id+'-mixed'))}`));
-    n.appendChild(h('a',{href:'#formulas',class:cur==='formulas'?'on':'',style:'--lc:#0d9488'},`<span class="num">f(x)</span><span class="nm">${T.sheetTitle||'Formula sheet'}</span>`));
+    n.appendChild(h('a',{href:'#mixed',class:cur==='mixed'?'on':'',style:'--lc:#6a4c93'},`<span class="num">ALL</span><span class="nm">Mixed practice</span>${dots(E.Store.stars(T.id+'-mixed'))}`));
+    n.appendChild(h('a',{href:'#formulas',class:cur==='formulas'?'on':'',style:'--lc:#2d7f86'},`<span class="num">f(x)</span><span class="nm">${T.sheetTitle||'Formula sheet'}</span>`));
     const on=n.querySelector('.on'); if(on&&innerWidth<900) on.scrollIntoView({inline:'center',block:'nearest'});
     $('#xp').innerHTML=`<b>★</b> ${E.Store.total()} stars`;
   }
@@ -252,13 +252,13 @@
     ],tab,l.id);
   }
   function renderMixed(){
-    const m=$('#main'); m.innerHTML=''; const c=h('div',{class:'content'}); m.appendChild(c); setAccent('#7c3aed');
+    const m=$('#main'); m.innerHTML=''; const c=h('div',{class:'content'}); m.appendChild(c); setAccent('#6a4c93');
     const last=ALL[ALL.length-1];
     header(c,'Whole topic','Mixed practice',T.mixedHook||'Ten questions from every lesson, mixed up. You need to decide which formula to use.',null,[last.id,last.short],['formulas','Formula sheet'],'mixed');
     const gens=[].concat(...ALL.map(l=>l.practice)); const d=h('div',{class:'card'}); c.appendChild(d); practice(d,gens,T.id+'-mixed',10,()=>nav('mixed'));
   }
   function renderFormulas(){
-    const m=$('#main'); m.innerHTML=''; const c=h('div',{class:'content'}); m.appendChild(c); setAccent('#0d9488');
+    const m=$('#main'); m.innerHTML=''; const c=h('div',{class:'content'}); m.appendChild(c); setAccent('#2d7f86');
     header(c,'Summary',T.sheetTitle||'Formula sheet',T.sheetHook||'Every formula from this topic on one page. Tap a card to open its lesson.',null,['mixed','Mixed practice'],null,'formulas');
     T.groups.forEach(g=>{ c.appendChild(h('h2',{class:'fgrp'},g.name)); const grid=h('div',{class:'fsheet'});
       g.lessons.forEach(l=>grid.appendChild(h('a',{class:'fcard',href:'#'+l.id,style:`--lc:${l.accent}`},`<span class="fi">${shapeIcon(l.icon,30)}</span><div><b>${l.short}</b>${l.formula}${l.remember?`<span class="hint">${l.remember}</span>`:''}</div>`)));

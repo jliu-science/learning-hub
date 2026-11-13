@@ -2,7 +2,7 @@
 window.AV=window.AV||{};
 (function(){
   const W=560, H=380;
-  const LAYER=[['#bfdbfe','#dbeafe','#93c5fd'],['#a7f3d0','#d1fae5','#6ee7b7'],['#fed7aa','#ffedd5','#fdba74'],['#ddd6fe','#ede9fe','#c4b5fd'],['#fbcfe8','#fce7f3','#f9a8d4'],['#fde68a','#fef3c7','#fcd34d']];
+  const LAYER=[['#dbe3f4','#e3e9f6','#93c5fd'],['#d3e8da','#dcece2','#6ee7b7'],['#f4dccd','#f7e6dc','#e9c3ae'],['#ddd6fe','#ebe5f3','#c4b5fd'],['#fbcfe8','#fce7f3','#f9a8d4'],['#fde68a','#fef3c7','#fcd34d']];
   const DK=.5, DA=35, dxk=Math.cos(DA*Math.PI/180)*DK, dyk=Math.sin(DA*Math.PI/180)*DK;
 
   /* ================= V1 cuboid ================= */
@@ -28,7 +28,7 @@ window.AV=window.AV||{};
         {t:`<p>Now stack more layers until the box is full. It is ${K.v('h','3')} cm high, so there are ${K.v('h','3')} layers.</p><p>12 × ${K.v('h','3')} = <b>36 cubes</b>, so the volume is <b>36 cm³</b>.</p>`},
         {t:`<p>Cubes in one layer × number of layers gives:</p>${K.formula(`Volume = ${K.v('b','l')} × ${K.v('w','w')} × ${K.v('h','h')}<small>or area of the base × height</small>`)}<p class="mnote">The unit is <b>cubed</b> (cm³, m³) because we are counting cubes.</p>`}
       ],(i)=>{ stop();
-        if(i===0) st.draw(cuboidDraw(K,l,w,h,1,lab)+`<text class="dl" x="${W/2-60}" y="${H-22}" style="fill:#2563eb">one cube = 1 cm³</text>`);
+        if(i===0) st.draw(cuboidDraw(K,l,w,h,1,lab)+`<text class="dl" x="${W/2-60}" y="${H-22}" style="fill:#2f4fa2">one cube = 1 cm³</text>`);
         if(i===1) stop=fillTo(K,st,l,w,h,1,l*w,1500,lab);
         if(i===2) stop=fillTo(K,st,l,w,h,l*w,l*w*h,1800,lab);
         if(i===3) st.draw(cuboidDraw(K,l,w,h,l*w*h,lab));
@@ -60,7 +60,7 @@ window.AV=window.AV||{};
     let out='';
     pts.forEach(([u,v])=>out+=K.line(P(u,0,v),P(u,L,v),'edge'));
     const step=o.solid?0.08:1;
-    for(let d=L;d>0.0001;d=+(d-step).toFixed(3)){ const k=Math.round(d); out+=K.poly(at(d),o.solid?'':'slice',o.solid?'fill:#99f6e4;stroke:none':`fill:${k%2?'#ccfbf1':'#e6fbf6'}`); }
+    for(let d=L;d>0.0001;d=+(d-step).toFixed(3)){ const k=Math.round(d); out+=K.poly(at(d),o.solid?'':'slice',o.solid?'fill:#99f6e4;stroke:none':`fill:${k%2?'#d5eaea':'#e6fbf6'}`); }
     if(o.solid) pts.forEach(([u,v])=>out+=K.line(P(u,0,v),P(u,L,v),'edge','opacity:.5'));
     out+=K.poly(at(0),'slice front','fill:#5eead4');
     const cx=pts.reduce((a,p)=>a+p[0],0)/pts.length, cz=pts.reduce((a,p)=>a+p[1],0)/pts.length; const C=P(cx,0,cz);
@@ -148,10 +148,10 @@ window.AV=window.AV||{};
         {t:`<p>A 1 cm cube is 10 mm long, 10 mm wide and 10 mm high.</p><p>10 × 10 × 10 = <b>1000</b> tiny cubes.</p>${K.formula('1 cm³ = 1000 mm³')}`},
         {t:`<p>For liquids we use litres and millilitres.</p>${K.formula('1 ml = 1 cm³<small>and</small>1 litre = 1000 cm³')}<p>A cube 10 cm × 10 cm × 10 cm holds exactly 1 litre.</p>`}
       ],(i)=>{
-        if(i===0) st.draw(gridSq(180,50,200,10,'#ccfbf1')+K.dim([180,250],[380,250],'1 cm = 10 mm','b',22)+K.dim([180,250],[180,50],'1 cm = 10 mm','w',22)+`<rect x="180" y="50" width="20" height="20" fill="#0d9488"/>`+`<text class="dl" x="470" y="62" style="fill:#0d9488;font-size:14px">1 mm²</text><line x1="200" y1="60" x2="440" y2="60" stroke="#0d9488" stroke-width="1"/>`);
-        if(i===1) st.draw(gridSq(170,40,220,10,'#ede9fe')+K.dim([170,260],[390,260],'1 m = 100 cm','b',22)+K.dim([170,260],[170,40],'1 m = 100 cm','w',22)+`<text class="dl" x="280" y="350" style="fill:#3d3a33;font-size:13px">each small square here is 10 cm × 10 cm = 100 cm²</text>`);
-        if(i===2) st.draw(gridCube(K,170,300,200,10,['#bfdbfe','#dbeafe','#93c5fd'])+K.dim([170,300],[370,300],'10 mm','b',20)+K.dim([170,100],[170,300],'10 mm','h',20));
-        if(i===3) st.draw(gridCube(K,170,300,200,10,['#a7f3d0','#d1fae5','#6ee7b7'])+K.dim([170,300],[370,300],'10 cm','b',20)+K.dim([170,100],[170,300],'10 cm','h',20)+`<text class="big-a" x="270" y="200">1 litre</text><text class="dl" x="270" y="232" style="fill:#3d3a33;font-size:13px">each little cube is 1 cm³ = 1 ml</text>`);
+        if(i===0) st.draw(gridSq(180,50,200,10,'#d5eaea')+K.dim([180,250],[380,250],'1 cm = 10 mm','b',22)+K.dim([180,250],[180,50],'1 cm = 10 mm','w',22)+`<rect x="180" y="50" width="20" height="20" fill="#2d7f86"/>`+`<text class="dl" x="470" y="62" style="fill:#2d7f86;font-size:14px">1 mm²</text><line x1="200" y1="60" x2="440" y2="60" stroke="#2d7f86" stroke-width="1"/>`);
+        if(i===1) st.draw(gridSq(170,40,220,10,'#ebe5f3')+K.dim([170,260],[390,260],'1 m = 100 cm','b',22)+K.dim([170,260],[170,40],'1 m = 100 cm','w',22)+`<text class="dl" x="280" y="350" style="fill:#3d3a33;font-size:13px">each small square here is 10 cm × 10 cm = 100 cm²</text>`);
+        if(i===2) st.draw(gridCube(K,170,300,200,10,['#dbe3f4','#e3e9f6','#93c5fd'])+K.dim([170,300],[370,300],'10 mm','b',20)+K.dim([170,100],[170,300],'10 mm','h',20));
+        if(i===3) st.draw(gridCube(K,170,300,200,10,['#d3e8da','#dcece2','#6ee7b7'])+K.dim([170,300],[370,300],'10 cm','b',20)+K.dim([170,100],[170,300],'10 cm','h',20)+`<text class="big-a" x="270" y="200">1 litre</text><text class="dl" x="270" y="232" style="fill:#3d3a33;font-size:13px">each little cube is 1 cm³ = 1 ml</text>`);
       }); },
     explore(p,K){ const {stage,panel}=K.split(p); const st=K.stage(stage,W,H); const S=40, OX=64, OY=326, C=12, Rw=7; let l=3,w=2,u='cm';
       const X=a=>OX+a*S, Y=b=>OY-b*S; const c=K.calc();

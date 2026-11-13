@@ -66,36 +66,36 @@ window.AVQ=(function(){
   const TRIPLES=[[3,4,5],[6,8,10],[5,12,13],[8,15,17],[9,12,15],[12,16,20]];
   const tri=[
     R=>{ const u=pickU(R), b=R.int(4,14), h=R.int(3,10), a=R.int(1,b-1); const sl=f(Math.hypot(b-a,h),1); return {text:'Find the area of this triangle.', base:u, ans:b*h/2, unit:u+'²', hint:F.tri,
-      fig:fig({pts:[[0,0],[b,0],[a,h]],dash:[[[a,0],[a,h]]],ra:[[[a,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:`${b} ${u}`,k:'b'},{a:[b,0],b:[a,h],t:`${sl} ${u}`,k:'g',off:12,arrows:false}],extra:m=>{ const p=m([a,h/2]); return `<text class="dl" x="${p[0]-6}" y="${p[1]}" style="fill:#ea580c;text-anchor:end">${h} ${u}</text>`; }}),
+      fig:fig({pts:[[0,0],[b,0],[a,h]],dash:[[[a,0],[a,h]]],ra:[[[a,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:`${b} ${u}`,k:'b'},{a:[b,0],b:[a,h],t:`${sl} ${u}`,k:'g',off:12,arrows:false}],extra:m=>{ const p=m([a,h/2]); return `<text class="dl" x="${p[0]-6}" y="${p[1]}" style="fill:#bf5a32;text-anchor:end">${h} ${u}</text>`; }}),
       work:[`A = ½ × ${v('b','b')} × ${v('h','h')}`,`= ½ × ${v('b',b)} × ${v('h',h)} = ${f(b*h/2)} ${u}²`,`The ${sl} ${u} side slopes, so it is not the height.`]}; },
     R=>{ const t=R.pick(TRIPLES), [b,h,c]=R.int(0,1)?[t[0],t[1],t[2]]:[t[1],t[0],t[2]]; return {text:'Find the area of this right-angled triangle.', base:'cm', ans:b*h/2, unit:'cm²', hint:F.tri,
       fig:fig({pts:[[0,0],[b,0],[0,h]],ra:[[[0,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:`${b} cm`,k:'b'},{a:[0,h],b:[0,0],t:`${h} cm`,k:'h'},{a:[b,0],b:[0,h],t:`${c} cm`,k:'g',off:12,arrows:false}]}),
       work:['In a right-angled triangle, the two sides that meet at the right angle are the base and the height.',`A = ½ × ${v('b',b)} × ${v('h',h)} = ${f(b*h/2)} cm²`]}; },
     R=>{ const b=R.even(4,14), h=R.int(3,10); const A=b*h/2; return {text:`A triangle has an area of <b>${f(A)} cm²</b> and a base of <b>${b} cm</b>. What is its perpendicular height?`, base:'cm', ans:h, unit:'cm', hint:F.tri,
-      fig:fig({pts:[[0,0],[b,0],[b*.35,h]],dash:[[[b*.35,0],[b*.35,h]]],ra:[[[b*.35,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:`${b} cm`,k:'b'}],extra:m=>{ const p=m([b*.35,h/2]); return `<text class="dl" x="${p[0]+8}" y="${p[1]}" style="fill:#ea580c;text-anchor:start">?</text>`; }}),
+      fig:fig({pts:[[0,0],[b,0],[b*.35,h]],dash:[[[b*.35,0],[b*.35,h]]],ra:[[[b*.35,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:`${b} cm`,k:'b'}],extra:m=>{ const p=m([b*.35,h/2]); return `<text class="dl" x="${p[0]+8}" y="${p[1]}" style="fill:#bf5a32;text-anchor:start">?</text>`; }}),
       work:[`½ × ${v('b',b)} × ${v('h','h')} = ${f(A)}`,`${b/2} × ${v('h','h')} = ${f(A)}`,`${v('h','h')} = ${f(A)} ÷ ${b/2} = ${h} cm`]}; }
   ];
 
   /* ---------- A3 parallelograms ---------- */
   const para=[
     R=>{ const u=pickU(R), b=R.int(5,14), h=R.int(3,9), o=R.int(2,4); const sl=f(Math.hypot(o,h),1); return {text:'Find the area of this parallelogram.', base:u, ans:b*h, unit:u+'²', hint:F.para,
-      fig:fig({pts:[[0,0],[b,0],[b+o,h],[o,h]],dash:[[[o,0],[o,h]]],ra:[[[o,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:`${b} ${u}`,k:'b'},{a:[b,0],b:[b+o,h],t:`${sl} ${u}`,k:'g',off:12,arrows:false}],extra:m=>{ const p=m([o,h/2]); return `<text class="dl" x="${p[0]+7}" y="${p[1]}" style="fill:#ea580c;text-anchor:start">${h} ${u}</text>`; }}),
+      fig:fig({pts:[[0,0],[b,0],[b+o,h],[o,h]],dash:[[[o,0],[o,h]]],ra:[[[o,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:`${b} ${u}`,k:'b'},{a:[b,0],b:[b+o,h],t:`${sl} ${u}`,k:'g',off:12,arrows:false}],extra:m=>{ const p=m([o,h/2]); return `<text class="dl" x="${p[0]+7}" y="${p[1]}" style="fill:#bf5a32;text-anchor:start">${h} ${u}</text>`; }}),
       work:[`A = ${v('b','b')} × ${v('h','h')} = ${v('b',b)} × ${v('h',h)} = ${b*h} ${u}²`,`Ignore the sloping side (${sl} ${u}).`]}; },
     R=>{ const b=R.half(3,9), h=R.int(2,6), o=R.int(1,3); return {text:`A parallelogram-shaped patio has a base of <b>${f(b)} m</b> and a perpendicular height of <b>${h} m</b>. Find its area.`, base:'m', ans:b*h, unit:'m²', hint:F.para,
-      fig:fig({pts:[[0,0],[b,0],[b+o,h],[o,h]],dash:[[[o,0],[o,h]]],ra:[[[o,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:`${f(b)} m`,k:'b'}],extra:m=>{ const p=m([o,h/2]); return `<text class="dl" x="${p[0]+7}" y="${p[1]}" style="fill:#ea580c;text-anchor:start">${h} m</text>`; }}),
+      fig:fig({pts:[[0,0],[b,0],[b+o,h],[o,h]],dash:[[[o,0],[o,h]]],ra:[[[o,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:`${f(b)} m`,k:'b'}],extra:m=>{ const p=m([o,h/2]); return `<text class="dl" x="${p[0]+7}" y="${p[1]}" style="fill:#bf5a32;text-anchor:start">${h} m</text>`; }}),
       work:[`A = ${v('b',f(b))} × ${v('h',h)} = ${f(b*h)} m²`]}; },
     R=>{ const h=R.int(3,9), b=R.int(4,12); const A=b*h; return {text:`A parallelogram has an area of <b>${A} cm²</b> and a perpendicular height of <b>${h} cm</b>. How long is its base?`, base:'cm', ans:b, unit:'cm', hint:F.para,
-      fig:fig({pts:[[0,0],[b,0],[b+2,h],[2,h]],dash:[[[2,0],[2,h]]],ra:[[[2,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:'?',k:'b'}],extra:m=>{ const p=m([2,h/2]); return `<text class="dl" x="${p[0]+7}" y="${p[1]}" style="fill:#ea580c;text-anchor:start">${h} cm</text>`; }}),
+      fig:fig({pts:[[0,0],[b,0],[b+2,h],[2,h]],dash:[[[2,0],[2,h]]],ra:[[[2,0],[1,0],[0,1]]],dims:[{a:[0,0],b:[b,0],t:'?',k:'b'}],extra:m=>{ const p=m([2,h/2]); return `<text class="dl" x="${p[0]+7}" y="${p[1]}" style="fill:#bf5a32;text-anchor:start">${h} cm</text>`; }}),
       work:[`${v('b','b')} × ${v('h',h)} = ${A}`,`${v('b','b')} = ${A} ÷ ${h} = ${b} cm`]}; }
   ];
 
   /* ---------- A4 trapezia ---------- */
   const trap=[
     R=>{ const u=pickU(R), a=R.int(3,8), b=a+R.int(2,6), h=R.int(2,8), o=R.int(0,b-a); return {text:'Find the area of this trapezium.', base:u, ans:(a+b)*h/2, unit:u+'²', hint:F.trap,
-      fig:fig({pts:[[0,0],[b,0],[o+a,h],[o,h]],dash:[[[o,0],[o,h]]],ra:[[[o,0],[1,0],[0,1]]],dims:[{a:[o,h],b:[o+a,h],t:`${a} ${u}`,k:'b',off:-14},{a:[0,0],b:[b,0],t:`${b} ${u}`,k:'w'}],extra:m=>{ const p=m([o,h/2]); return `<text class="dl" x="${p[0]+(o===0?-7:7)}" y="${p[1]}" style="fill:#ea580c;text-anchor:${o===0?'end':'start'}">${h} ${u}</text>`; }}),
+      fig:fig({pts:[[0,0],[b,0],[o+a,h],[o,h]],dash:[[[o,0],[o,h]]],ra:[[[o,0],[1,0],[0,1]]],dims:[{a:[o,h],b:[o+a,h],t:`${a} ${u}`,k:'b',off:-14},{a:[0,0],b:[b,0],t:`${b} ${u}`,k:'w'}],extra:m=>{ const p=m([o,h/2]); return `<text class="dl" x="${p[0]+(o===0?-7:7)}" y="${p[1]}" style="fill:#bf5a32;text-anchor:${o===0?'end':'start'}">${h} ${u}</text>`; }}),
       work:[`A = ½ (${v('b','a')} + ${v('w','b')}) × ${v('h','h')}`,`= ½ × (${v('b',a)} + ${v('w',b)}) × ${v('h',h)}`,`= ½ × ${a+b} × ${h} = ${f((a+b)*h/2)} ${u}²`]}; },
     R=>{ const a=R.int(4,9), b=a+R.int(3,7), h=R.even(2,8), o=R.int(1,b-a-1); const sl=f(Math.hypot(b-a-o,h),1); return {text:'Find the area of this trapezium. Not every length is needed.', base:'cm', ans:(a+b)*h/2, unit:'cm²', hint:F.trap,
-      fig:fig({pts:[[0,0],[b,0],[o+a,h],[o,h]],dash:[[[o,0],[o,h]]],ra:[[[o,0],[1,0],[0,1]]],dims:[{a:[o,h],b:[o+a,h],t:`${a} cm`,k:'b',off:-14},{a:[0,0],b:[b,0],t:`${b} cm`,k:'w'},{a:[b,0],b:[o+a,h],t:`${sl} cm`,k:'g',off:12,arrows:false}],extra:m=>{ const p=m([o,h/2]); return `<text class="dl" x="${p[0]+7}" y="${p[1]}" style="fill:#ea580c;text-anchor:start">${h} cm</text>`; }}),
+      fig:fig({pts:[[0,0],[b,0],[o+a,h],[o,h]],dash:[[[o,0],[o,h]]],ra:[[[o,0],[1,0],[0,1]]],dims:[{a:[o,h],b:[o+a,h],t:`${a} cm`,k:'b',off:-14},{a:[0,0],b:[b,0],t:`${b} cm`,k:'w'},{a:[b,0],b:[o+a,h],t:`${sl} cm`,k:'g',off:12,arrows:false}],extra:m=>{ const p=m([o,h/2]); return `<text class="dl" x="${p[0]+7}" y="${p[1]}" style="fill:#bf5a32;text-anchor:start">${h} cm</text>`; }}),
       work:[`½ × (${v('b',a)} + ${v('w',b)}) × ${v('h',h)} = ½ × ${a+b} × ${h} = ${f((a+b)*h/2)} cm²`,`The ${sl} cm side slopes, so it is not used.`]}; },
     R=>{ const a=R.int(2,6), b=a+R.int(1,4), h=R.half(1.5,5); return {text:`A flower bed is a trapezium. Its parallel sides are <b>${a} m</b> and <b>${b} m</b>, and they are <b>${f(h)} m</b> apart. Find the area of the flower bed.`, base:'m', ans:(a+b)*h/2, unit:'m²', hint:F.trap,
       fig:'', work:[`½ × (${v('b',a)} + ${v('w',b)}) × ${v('h',f(h))} = ½ × ${a+b} × ${f(h)} = ${f((a+b)*h/2,2)} m²`,'"Apart" means the perpendicular distance between them, which is the height.']}; }
@@ -104,10 +104,10 @@ window.AVQ=(function(){
   /* ---------- A5 circles ---------- */
   const circ=[
     R=>{ const r=R.int(2,15), u=pickU(R); return {text:'Find the area of this circle.', base:u, ans:Math.PI*r*r, dp:1, pi:true, unit:u+'²', hint:F.circ,
-      fig:fig({circles:[{c:[0,0],r:1}],extra:(m,s)=>{ const c=m([0,0]); return `<line x1="${c[0]}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#7c3aed" stroke-width="2"/><text class="dl" x="${c[0]+s/2}" y="${c[1]-12}" style="fill:#7c3aed">${r} ${u}</text>`; }}),
+      fig:fig({circles:[{c:[0,0],r:1}],extra:(m,s)=>{ const c=m([0,0]); return `<line x1="${c[0]}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#6a4c93" stroke-width="2"/><text class="dl" x="${c[0]+s/2}" y="${c[1]-12}" style="fill:#6a4c93">${r} ${u}</text>`; }}),
       work:[`A = π${v('r','r')}² = π × ${v('r',r)}² = π × ${r*r}`,`≈ ${f(Math.PI*r*r,1)} ${u}² (1 d.p.)`]}; },
     R=>{ const d=R.even(4,20); const r=d/2; return {text:'Find the area of this circle.', base:'cm', ans:Math.PI*r*r, dp:1, pi:true, unit:'cm²', hint:F.circ,
-      fig:fig({circles:[{c:[0,0],r:1}],extra:(m,s)=>{ const c=m([0,0]); return `<line x1="${c[0]-s}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#2563eb" stroke-width="2"/><text class="dl" x="${c[0]}" y="${c[1]-12}" style="fill:#2563eb">${d} cm</text>`; }}),
+      fig:fig({circles:[{c:[0,0],r:1}],extra:(m,s)=>{ const c=m([0,0]); return `<line x1="${c[0]-s}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#2f4fa2" stroke-width="2"/><text class="dl" x="${c[0]}" y="${c[1]-12}" style="fill:#2f4fa2">${d} cm</text>`; }}),
       work:[`This is the diameter, so the radius is ${d} ÷ 2 = ${v('r',r)} cm.`,`A = π × ${v('r',r)}² = π × ${r*r} ≈ ${f(Math.PI*r*r,1)} cm²`]}; },
     R=>{ const d=R.even(6,20), r=d/2; return {text:'Find the area of this semicircle.', base:'cm', ans:Math.PI*r*r/2, dp:1, pi:true, unit:'cm²', hint:F.circ,
       fig:fig({pts:Array.from({length:31},(_,i)=>[Math.cos(Math.PI*i/30),Math.sin(Math.PI*i/30)]),dims:[{a:[1,0],b:[-1,0],t:`${d} cm`,k:'b',off:-0.001}]}),
@@ -125,7 +125,7 @@ window.AVQ=(function(){
         work:[`Missing lengths: ${Wd} − ${Wd-cw} = ${cw} cm and ${Ht} − ${Ht-ch} = ${ch} cm.`,`Big rectangle − corner: ${Wd} × ${Ht} − ${cw} × ${ch}`,`= ${Wd*Ht} − ${cw*ch} = ${A} cm²`]}; },
     R=>{ const b=R.even(6,12), hr=R.int(3,7), ht=R.int(2,5); const A=b*hr+b*ht/2;
       return {text:'This shape is a rectangle with a triangle on top. Find its total area.', base:'cm', ans:A, unit:'cm²', hint:`${F.rect}<br>${F.tri}`,
-        fig:fig({pts:[[0,0],[b,0],[b,hr],[b/2,hr+ht],[0,hr]],dash:[[[0,hr],[b,hr]],[[b/2,hr],[b/2,hr+ht]]],dims:[{a:[0,0],b:[b,0],t:`${b} cm`,k:'b'},{a:[b,0],b:[b,hr],t:`${hr} cm`,k:'h'}],extra:m=>{ const p=m([b/2,hr+ht/2]); return `<text class="dl" x="${p[0]+7}" y="${p[1]}" style="fill:#ea580c;text-anchor:start;font-size:13px">${ht} cm</text>`; }}),
+        fig:fig({pts:[[0,0],[b,0],[b,hr],[b/2,hr+ht],[0,hr]],dash:[[[0,hr],[b,hr]],[[b/2,hr],[b/2,hr+ht]]],dims:[{a:[0,0],b:[b,0],t:`${b} cm`,k:'b'},{a:[b,0],b:[b,hr],t:`${hr} cm`,k:'h'}],extra:m=>{ const p=m([b/2,hr+ht/2]); return `<text class="dl" x="${p[0]+7}" y="${p[1]}" style="fill:#bf5a32;text-anchor:start;font-size:13px">${ht} cm</text>`; }}),
         work:[`Rectangle: ${b} × ${hr} = ${b*hr} cm²`,`Triangle: ½ × ${b} × ${ht} = ${f(b*ht/2)} cm²`,`Total: ${b*hr} + ${f(b*ht/2)} = ${f(A)} cm²`]}; },
     R=>{ const Wd=R.int(9,15), Ht=R.int(6,10), s=R.int(2,Math.min(4,Ht-3)); const A=Wd*Ht-s*s;
       return {text:`A metal plate is a rectangle with a square hole cut out. The hole is ${s} cm by ${s} cm. Find the area of the metal that is left.`, base:'cm', ans:A, unit:'cm²', hint:F.rect,
@@ -163,7 +163,7 @@ window.AVQ=(function(){
       work:[`Cross-section: ½ × ${s} × ${s-1} = ${f(s*(s-1)/2)} cm²`,`V = ${f(s*(s-1)/2)} × ${L} = ${f(s*(s-1)/2*L)} cm³`]}; }
   ];
   // put the height label on the triangle / trapezium prisms
-  prism.forEach((g,i)=>{ if(i===0||i===2){ prism[i]=R=>{ const q=g(R); q.fig=q.fig.replace('</svg>',''); const m=q.fig.match(/class="hgt"[^>]*x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)"/); if(m){ const x=(+m[1]+ +m[3])/2+6, y=(+m[2]+ +m[4])/2; q.fig+=`<text class="dl" x="${x}" y="${y}" style="fill:#ea580c;text-anchor:start">${q._h} cm</text>`; } q.fig+='</svg>'; return q; }; } });
+  prism.forEach((g,i)=>{ if(i===0||i===2){ prism[i]=R=>{ const q=g(R); q.fig=q.fig.replace('</svg>',''); const m=q.fig.match(/class="hgt"[^>]*x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)"/); if(m){ const x=(+m[1]+ +m[3])/2+6, y=(+m[2]+ +m[4])/2; q.fig+=`<text class="dl" x="${x}" y="${y}" style="fill:#bf5a32;text-anchor:start">${q._h} cm</text>`; } q.fig+='</svg>'; return q; }; } });
 
   /* ---------- V3 cylinders ---------- */
   const cyl=[

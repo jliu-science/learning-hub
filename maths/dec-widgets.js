@@ -20,7 +20,7 @@ window.AV=window.AV||{};
   AV.f2d={
     explore(p,K){ const st=K.stage(full(p,K),W,H); const GX=50, GY=74, C=26, LX=380, LW=340, NY=330;
       let d=8, n=3, touched=false;
-      const draw=()=>{ let o=txt(GX,30,'bottom number:'); DEN.forEach((k,j)=>o+=btn('d'+k,GX+122+j*42,10,36,k,k===d));
+      const draw=()=>{ let o=txt(GX,30,'denominator','klab'); DEN.forEach((k,j)=>o+=btn('d'+k,GX+122+j*42,10,36,k,k===d));
         /* hundred grid, filled one column (one tenth) at a time */
         const sq=n/d*100, full_=Math.floor(sq+1e-9), part=sq-full_;
         o+=`<rect x="${GX}" y="${GY}" width="${10*C}" height="${10*C}" fill="${PAPER}"/>`;
@@ -28,15 +28,15 @@ window.AV=window.AV||{};
         if(part>1e-6&&full_<100){ const cx=Math.floor(full_/10), cy=full_%10; o+=`<rect x="${GX+cx*C}" y="${GY+cy*C}" width="${C*part}" height="${C}" fill="${BLUES}"/>`; }
         let g=''; for(let k=1;k<10;k++) g+=`M${GX+k*C} ${GY}v${10*C}M${GX} ${GY+k*C}h${10*C}`; o+=`<path d="${g}" stroke="#b9ad94" stroke-width="1"/>`;
         for(let k=1;k<10;k++) o+=`<line x1="${GX+k*C}" y1="${GY}" x2="${GX+k*C}" y2="${GY+10*C}" stroke="#7a7366" stroke-width="1.2"/>`;
-        o+=`<rect x="${GX}" y="${GY}" width="${10*C}" height="${10*C}" fill="none" stroke="${INK}" stroke-width="2"/>`;
-        o+=txt(GX,GY+10*C+24,'100 small squares = 1 whole','sums')+txt(GX,GY+10*C+44,'each column = 1 tenth = 0.1','sums');
+        o+=`<rect x="${GX}" y="${GY}" width="${10*C}" height="${10*C}" fill="none" stroke="${INK}" stroke-width="1.3"/>`;
+        o+=txt(GX,GY+10*C+24,'100 squares = 1 whole · 1 column = 0.1','sums');
         /* the numbers */
         o+=expr(LX,104,[{v:[n,d],c:BLUE},'=',`${n} ÷ ${d}`,'='],{size:30});
         o+=decSvg(LX,182,n,d,40,GRN);
         const hs=simp(n*100,d,true); o+=expr(LX,222,['shaded:',{v:hs,c:BLUE},'squares out of 100'],{size:16,col:'#7a7366'});
         const P=decParts(n,d); o+=txt(LX,266,n===0||n===d?'':P.rep<0?'The division stops, so the decimal ends.':'The digits repeat for ever: a recurring decimal.',P.rep<0?'sums':'goodt',P.rep<0?'font-size:15px':'');
         /* number line 0 to 1 */
-        o+=`<line x1="${LX}" y1="${NY}" x2="${LX+LW}" y2="${NY}" stroke="${INK}" stroke-width="2"/>`;
+        o+=`<line x1="${LX}" y1="${NY}" x2="${LX+LW}" y2="${NY}" stroke="${INK}" stroke-width="1.3"/>`;
         for(let k=0;k<=10;k++){ const x=LX+k*LW/10; o+=`<line x1="${x}" y1="${NY}" x2="${x}" y2="${NY+(k%5?8:12)}" stroke="${INK}" stroke-width="${k%5?1.2:2}"/>`; if(k%5===0||k===1) o+=txt(x,NY+30,k===0?'0':k===10?'1':(k/10).toFixed(1),'tick'); }
         for(let k=0;k<=d;k++){ const x=LX+k*LW/d; o+=`<line x1="${x}" y1="${NY-9}" x2="${x}" y2="${NY}" stroke="${ORA}" stroke-width="1.6"/>`; }
         o+=txt(LX,NY-20,`orange marks: ${d} equal steps from 0 to 1`,'sums','font-size:12px;fill:'+ORA);
@@ -48,11 +48,11 @@ window.AV=window.AV||{};
 
     see(p,K){ const {stage,panel}=top(p,K); const st=K.stage(stage,W,H); let stop=()=>{};
       const grid=(x,y,c,k,col=BLUES)=>{ let o=`<rect x="${x}" y="${y}" width="${10*c}" height="${10*c}" fill="${PAPER}"/>`; for(let i=0;i<k;i++) o+=`<rect x="${x+Math.floor(i/10)*c}" y="${y+(i%10)*c}" width="${c}" height="${c}" fill="${col}"/>`;
-        let g=''; for(let i=1;i<10;i++) g+=`M${x+i*c} ${y}v${10*c}M${x} ${y+i*c}h${10*c}`; return o+`<path d="${g}" stroke="#b9ad94"/><rect x="${x}" y="${y}" width="${10*c}" height="${10*c}" fill="none" stroke="${INK}" stroke-width="2"/>`; };
+        let g=''; for(let i=1;i<10;i++) g+=`M${x+i*c} ${y}v${10*c}M${x} ${y+i*c}h${10*c}`; return o+`<path d="${g}" stroke="#b9ad94"/><rect x="${x}" y="${y}" width="${10*c}" height="${10*c}" fill="none" stroke="${INK}" stroke-width="1.3"/>`; };
       /* bus-stop division 3 ÷ 8 */
       const bus=t=>{ const x0=300, cwid=36, y0=210; let o=`<g style="font:600 34px 'IBM Plex Mono',monospace">`;
         '3.000'.split('').forEach((c,i)=>o+=`<text x="${x0+i*cwid}" y="${y0}" style="fill:${INK}">${c}</text>`);
-        o+=`<text x="${x0-50}" y="${y0}" style="fill:${ORA}">8</text><path d="M${x0-12} ${y0+8}q10 -24 0 -46h${5*cwid+10}" fill="none" stroke="${INK}" stroke-width="2.5"/>`;
+        o+=`<text x="${x0-50}" y="${y0}" style="fill:${ORA}">8</text><path d="M${x0-12} ${y0+8}q10 -24 0 -46h${5*cwid+10}" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
         const q='0.375'.split(''), carry=['','','6','4','']; const show=Math.floor(t);
         q.forEach((c,i)=>{ if(i<=show) o+=`<text x="${x0+i*cwid}" y="${y0-50}" style="fill:${GRN}">${c}</text>`; });
         o+=`</g>`; [[2,'3',1],[3,'6',2],[4,'4',3]].forEach(([k,c,after])=>{ if(show>=after) o+=`<text x="${x0+k*cwid-13}" y="${y0-22}" style="font:600 16px Inter,sans-serif;fill:${RED}">${c}</text>`; });
@@ -149,10 +149,10 @@ window.AV=window.AV||{};
     const step=Math.pow(10,4-m), lo=Math.floor(v/step)*step, hi=lo+step, half=lo+step/2, X0=110, X1=650, NY=o.y||250;
     const X=t=>X0+(t-lo)/step*(X1-X0), up=v-lo>=step/2, f=t=>(t/1e4).toFixed(m); let s='';
     s+=`<rect x="${X0}" y="${NY-16}" width="${(X1-X0)/2}" height="32" fill="${BLUES}" opacity="${up?.35:.9}"/><rect x="${(X0+X1)/2}" y="${NY-16}" width="${(X1-X0)/2}" height="32" fill="${ORAS}" opacity="${up?.9:.35}"/>`;
-    s+=`<line x1="${X0}" y1="${NY}" x2="${X1}" y2="${NY}" stroke="${INK}" stroke-width="2"/>`;
+    s+=`<line x1="${X0}" y1="${NY}" x2="${X1}" y2="${NY}" stroke="${INK}" stroke-width="1.3"/>`;
     for(let k=0;k<=10;k++){ const x=X0+k*(X1-X0)/10, big=k===0||k===10, mid=k===5; s+=`<line x1="${x}" y1="${NY-(big?22:mid?18:8)}" x2="${x}" y2="${NY+(big?22:mid?18:8)}" stroke="${mid?RED:INK}" stroke-width="${big?2.5:mid?2:1.2}"/>`; }
     s+=txt(X0,NY+52,f(lo),'sumt','text-anchor:middle;fill:'+BLUE)+txt(X1,NY+52,f(hi),'sumt','text-anchor:middle;fill:'+ORA)+txt((X0+X1)/2,NY+46,'halfway '+(half/1e4).toFixed(m+1),'sums','text-anchor:middle;fill:'+RED);
-    const px=X(v), tx=up?X1:X0; s+=`<path d="M${px} ${NY-30}Q${(px+tx)/2} ${NY-80} ${tx} ${NY-30}" fill="none" stroke="${up?ORA:BLUE}" stroke-width="2.5" marker-end="url(#ar)"/>`;
+    const px=X(v), tx=up?X1:X0; s+=`<path d="M${px} ${NY-30}Q${(px+tx)/2} ${NY-80} ${tx} ${NY-30}" fill="none" stroke="${up?ORA:BLUE}" stroke-width="1.6" marker-end="url(#ar)"/>`;
     s=`<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="${up?ORA:BLUE}"/></marker></defs>`+s;
     return {svg:s,px,NY,up,r:up?hi:lo,f}; }
   /* the number with the deciding digit boxed */

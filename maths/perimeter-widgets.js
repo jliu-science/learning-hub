@@ -6,7 +6,7 @@ window.AV=window.AV||{};
   const X=u=>OX+u*S, Y=v=>OY-v*S, P=([u,v])=>[X(u),Y(v)];
   const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
   const SX=OX+COLS*S+34;                                            // left edge of the on-diagram sum column
-  const SIDE=['#2563eb','#059669','#ea580c','#7c3aed','#db2777','#0891b2'];
+  const SIDE=['#2f4fa2','#3a7a57','#bf5a32','#6a4c93','#a8436b','#2b7a99'];
   const bg=K=>K.grid(OX,OY-ROWS*S,COLS,ROWS,S);
   const hdl=(n,x,y,k,pulse)=>`<g class="hdl${pulse?' pulse':''}" data-h="${n}" transform="translate(${x},${y})" style="--hc:${k}"><circle class="hit" r="20"/><circle class="ring" r="11"/><circle class="dot" r="5"/></g>`;
   const tag=(x,y,t,anchor='start')=>`<g class="pcue"><text x="${x}" y="${y}" style="text-anchor:${anchor}">${t}</text></g>`;
@@ -59,8 +59,8 @@ window.AV=window.AV||{};
         if(r.done&&mode==='rect') s+=`<text class="sums" x="${SX}" y="${Y(ROWS)+64+4*28+56}">shortcut: 2 × (${l} + ${w}) = ${2*(l+w)}</text>`;
         if(r.done) s+=`<text class="sums" x="${SX}" y="${Y(ROWS)+64+pts.length*28+(mode==='rect'?84:46)}">area = ${mode==='rect'?l*w:Wd*Ht-cw*ch} cm² (a different thing)</text>`;
         s+=btn('rect',OX,8,110,'Rectangle',mode==='rect')+btn('L',OX+118,8,90,'L-shape',mode==='L')+btn('walk',OX+COLS*S-140,8,140,'Walk round',false);
-        if(mode==='rect') s+=hdl('c',X(l),Y(w),'#2563eb',!cued);
-        else s+=hdl('c',X(Wd),Y(Ht-ch),'#ea580c',!cued)+hdl('d',X(Wd-cw),Y(Ht),'#2563eb',!cued);
+        if(mode==='rect') s+=hdl('c',X(l),Y(w),'#2f4fa2',!cued);
+        else s+=hdl('c',X(Wd),Y(Ht-ch),'#bf5a32',!cued)+hdl('d',X(Wd-cw),Y(Ht),'#2f4fa2',!cued);
         if(!cued){ const hx=mode==='rect'?X(l):X(Wd), hy=mode==='rect'?Y(w):Y(Ht-ch); s+=tag(hx+18,hy-14,'drag a corner'); s+=`<g class="pcue"><text x="${OX+COLS*S-70}" y="56" style="text-anchor:middle">then press</text></g>`; }
         st.draw(s); };
       st.svg.addEventListener('pointerdown',()=>{ if(!cued){ cued=true; } });
@@ -76,7 +76,7 @@ window.AV=window.AV||{};
 
     see(p,K){ const {stage,panel}=top(p,K); const st=K.stage(stage,W,H); let stop=()=>{};
       const R=[[0,0],[6,0],[6,4],[0,4]], Lsh=[[0,0],[10,0],[10,5],[6,5],[6,8],[0,8]];
-      const pair=['#2563eb','#059669','#2563eb','#059669'];
+      const pair=['#2f4fa2','#3a7a57','#2f4fa2','#3a7a57'];
       const walk=(pts,o,ms)=>{ const tot=sideLens(pts).reduce((a,b)=>a+b,0); stop=K.tween(0,tot,ms,d=>{ const r=walkDraw(K,pts,d>=tot?Infinity:d,o); st.draw(bg(K)+r.svg+sumColumn(K,r.L,r.k,r.done,{...o,walking:d>0})+(o.extra||'')); }); };
       K.steps(panel,[
         {t:`<p>The <b>perimeter</b> is the total distance all the way round the edge of a shape.</p><p>Walk round and add up every side.</p>`},
@@ -102,23 +102,23 @@ window.AV=window.AV||{};
     out+=`<line x1="30" y1="${GY}" x2="${W-20}" y2="${GY}" stroke="#1d1b16" stroke-width="2"/>`;
     /* diameter rods laid along the ground */
     if(o.rods!==false){ for(let k=0;k<4;k++){ const a=X0+k*d, b=Math.min(X0+(k+1)*d,X0+C); if(a>=X0+C) break; const full=b-a>d-0.5;
-      out+=`<rect x="${a+1}" y="${GY+14}" width="${b-a-2}" height="12" fill="${full?'#bfdbfe':'#fdba74'}" stroke="${full?'#2563eb':'#ea580c'}"/>`;
-      out+=`<text class="rodl" x="${(a+b)/2}" y="${GY+44}" style="fill:${full?'#2563eb':'#ea580c'}">${full?'d':'a bit'}</text>`; }
-      out+=`<line x1="${X0+C}" y1="${GY-6}" x2="${X0+C}" y2="${GY+32}" stroke="#dc2626" stroke-width="2" stroke-dasharray="4 3"/>`;
-      out+=`<text class="rodl" x="${X0+C}" y="${GY+62}" style="fill:#dc2626">one turn</text>`; }
+      out+=`<rect x="${a+1}" y="${GY+14}" width="${b-a-2}" height="12" fill="${full?'#dbe3f4':'#e9c3ae'}" stroke="${full?'#2f4fa2':'#bf5a32'}"/>`;
+      out+=`<text class="rodl" x="${(a+b)/2}" y="${GY+44}" style="fill:${full?'#2f4fa2':'#bf5a32'}">${full?'d':'a bit'}</text>`; }
+      out+=`<line x1="${X0+C}" y1="${GY-6}" x2="${X0+C}" y2="${GY+32}" stroke="#b4322a" stroke-width="2" stroke-dasharray="4 3"/>`;
+      out+=`<text class="rodl" x="${X0+C}" y="${GY+62}" style="fill:#b4322a">one turn</text>`; }
     /* paint left on the ground by the rim */
-    out+=`<line x1="${X0}" y1="${GY}" x2="${cx}" y2="${GY}" stroke="#dc2626" stroke-width="6" stroke-linecap="round"/>`;
+    out+=`<line x1="${X0}" y1="${GY}" x2="${cx}" y2="${GY}" stroke="#b4322a" stroke-width="6" stroke-linecap="round"/>`;
     /* the wheel */
     out+=`<g transform="translate(${cx},${cy}) rotate(${ang*180/Math.PI})">`;
     out+=`<circle r="${R}" fill="#fffdf8" stroke="#1d1b16" stroke-width="2.5"/>`;
     for(let k=0;k<6;k++){ const a=k*Math.PI/3; out+=`<line x1="0" y1="0" x2="${R*Math.cos(a)}" y2="${R*Math.sin(a)}" stroke="#d6ccb6" stroke-width="1.5"/>`; }
     const left=Math.max(0,2*Math.PI-ang);   // rim not yet painted (red arc shrinking)
     if(left>0.001){ const a0=Math.PI/2, a1=a0+left; const p0=[R*Math.cos(a0),R*Math.sin(a0)], p1=[R*Math.cos(a1),R*Math.sin(a1)];
-      out+=left>=2*Math.PI-0.001?`<circle r="${R}" fill="none" stroke="#dc2626" stroke-width="5"/>`:`<path d="M${p0[0]} ${p0[1]}A${R} ${R} 0 ${left>Math.PI?1:0} 1 ${p1[0]} ${p1[1]}" fill="none" stroke="#dc2626" stroke-width="5"/>`; }
-    out+=`<circle cx="0" cy="${R}" r="5" fill="#dc2626"/>`;
+      out+=left>=2*Math.PI-0.001?`<circle r="${R}" fill="none" stroke="#b4322a" stroke-width="5"/>`:`<path d="M${p0[0]} ${p0[1]}A${R} ${R} 0 ${left>Math.PI?1:0} 1 ${p1[0]} ${p1[1]}" fill="none" stroke="#b4322a" stroke-width="5"/>`; }
+    out+=`<circle cx="0" cy="${R}" r="5" fill="#b4322a"/>`;
     out+=`</g>`;
-    out+=`<line x1="${cx-R}" y1="${cy}" x2="${cx+R}" y2="${cy}" stroke="#2563eb" stroke-width="2.5"/><circle cx="${cx}" cy="${cy}" r="3"/>`;
-    out+=`<text class="dl" x="${cx}" y="${cy-Math.max(22,R*.45)}" style="fill:#2563eb">d = ${K.fmt(2*r)} cm</text>`;
+    out+=`<line x1="${cx-R}" y1="${cy}" x2="${cx+R}" y2="${cy}" stroke="#2f4fa2" stroke-width="2.5"/><circle cx="${cx}" cy="${cy}" r="3"/>`;
+    out+=`<text class="dl" x="${cx}" y="${cy-Math.max(22,R*.45)}" style="fill:#2f4fa2">d = ${K.fmt(2*r)} cm</text>`;
     return {svg:out, cx, cy, R, C};
   }
   AV.circum={
@@ -126,14 +126,14 @@ window.AV=window.AV||{};
       const box=K.h('div',{class:'mleft mfull'}); p.appendChild(box); const st=K.stage(box,W,H);
       let r=1.5, s=0, cued=false;
       const draw=()=>{ const w=wheelDraw(K,r,s); let o=w.svg; const dist=s/S, turns=s/w.C, done=s>=w.C-0.5;
-        o+=hdl('roll',w.cx,w.cy,'#dc2626',!cued);
-        if(s===0) o+=hdl('r',w.cx,w.cy-w.R,'#2563eb',!cued);
+        o+=hdl('roll',w.cx,w.cy,'#b4322a',!cued);
+        if(s===0) o+=hdl('r',w.cx,w.cy-w.R,'#2f4fa2',!cued);
         if(!cued){ o+=tag(w.cx+w.R+14,w.cy+4,'roll me →')+tag(w.cx+16,w.cy-w.R-12,'drag to resize'); }
         /* live sum, on the diagram */
         o+=`<text class="sumh" x="${W-30}" y="40" style="text-anchor:end">${done?'One full turn':'Rolled'}</text>`;
         o+=`<text class="sumt" x="${W-30}" y="76" style="text-anchor:end">${K.fmt(dist,2)} cm</text>`;
         o+=`<text class="sums" x="${W-30}" y="102" style="text-anchor:end">${K.fmt(turns,2)} ${Math.abs(turns-1)<1e-9?'turn':'turns'}</text>`;
-        if(done) o+=`<text class="sums" x="${W-30}" y="134" style="text-anchor:end;fill:#1d1b16">${K.fmt(dist,2)} ÷ ${K.fmt(2*r)} ≈ <tspan style="font-weight:700;fill:#dc2626">3.14</tspan></text><text class="sums" x="${W-30}" y="160" style="text-anchor:end">The rim is π × d long, whatever the size.</text>`;
+        if(done) o+=`<text class="sums" x="${W-30}" y="134" style="text-anchor:end;fill:#1d1b16">${K.fmt(dist,2)} ÷ ${K.fmt(2*r)} ≈ <tspan style="font-weight:700;fill:#b4322a">3.14</tspan></text><text class="sums" x="${W-30}" y="160" style="text-anchor:end">The rim is π × d long, whatever the size.</text>`;
         o+=btn('reset',30,8,80,'Reset',false);
         st.draw(o); };
       st.svg.addEventListener('pointerdown',()=>{ cued=true; });
@@ -145,12 +145,12 @@ window.AV=window.AV||{};
       draw(); },
 
     see(p,K){ const {stage,panel}=top(p,K); const st=K.stage(stage,W,H); let stop=()=>{}; const r=2, R=r*S, C=2*Math.PI*R;
-      const parts=()=>{ const cx=250, cy=200; return `<circle cx="${cx}" cy="${cy}" r="${R*2}" fill="#fffdf8" stroke="#dc2626" stroke-width="5"/>`
-        +`<line x1="${cx}" y1="${cy}" x2="${cx+R*2*Math.cos(-.6)}" y2="${cy+R*2*Math.sin(-.6)}" stroke="#7c3aed" stroke-width="3"/>`
-        +`<line x1="${cx-R*2}" y1="${cy}" x2="${cx+R*2}" y2="${cy}" stroke="#2563eb" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="3"/>`
-        +K.label(cx+20,cy-62,'radius r','r')+K.label(cx,cy+22,'diameter d = 2r','b')+K.label(cx+R*2+90,cy,'circumference','#dc2626')+K.label(cx+R*2+90,cy+22,'(the edge)','#dc2626'); };
-      const semi=()=>{ const cx=380, cy=270, Rr=130; return `<path d="M${cx-Rr} ${cy}A${Rr} ${Rr} 0 0 1 ${cx+Rr} ${cy}" fill="#fde7d6" stroke="#dc2626" stroke-width="5"/><line x1="${cx-Rr}" y1="${cy}" x2="${cx+Rr}" y2="${cy}" stroke="#2563eb" stroke-width="5"/>`
-        +K.label(cx,cy-Rr-16,'curved edge = ½ × π × d','#dc2626')+K.label(cx,cy+26,'straight edge = d','b')+`<text class="sumt" x="${cx}" y="${cy+76}" style="text-anchor:middle">perimeter = ½πd + d</text>`; };
+      const parts=()=>{ const cx=250, cy=200; return `<circle cx="${cx}" cy="${cy}" r="${R*2}" fill="#fffdf8" stroke="#b4322a" stroke-width="5"/>`
+        +`<line x1="${cx}" y1="${cy}" x2="${cx+R*2*Math.cos(-.6)}" y2="${cy+R*2*Math.sin(-.6)}" stroke="#6a4c93" stroke-width="3"/>`
+        +`<line x1="${cx-R*2}" y1="${cy}" x2="${cx+R*2}" y2="${cy}" stroke="#2f4fa2" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="3"/>`
+        +K.label(cx+20,cy-62,'radius r','r')+K.label(cx,cy+22,'diameter d = 2r','b')+K.label(cx+R*2+90,cy,'circumference','#b4322a')+K.label(cx+R*2+90,cy+22,'(the edge)','#b4322a'); };
+      const semi=()=>{ const cx=380, cy=270, Rr=130; return `<path d="M${cx-Rr} ${cy}A${Rr} ${Rr} 0 0 1 ${cx+Rr} ${cy}" fill="#f6e3d6" stroke="#b4322a" stroke-width="5"/><line x1="${cx-Rr}" y1="${cy}" x2="${cx+Rr}" y2="${cy}" stroke="#2f4fa2" stroke-width="5"/>`
+        +K.label(cx,cy-Rr-16,'curved edge = ½ × π × d','#b4322a')+K.label(cx,cy+26,'straight edge = d','b')+`<text class="sumt" x="${cx}" y="${cy+76}" style="text-anchor:middle">perimeter = ½πd + d</text>`; };
       K.steps(panel,[
         {t:`<p>The perimeter of a circle has its own name: the <b>circumference</b>.</p><p>The <b>radius</b> ${K.v('r','r')} goes from the centre to the edge. The <b>diameter</b> ${K.v('b','d')} goes right across, so d = 2r.</p>`},
         {t:`<p>Roll the circle along the ground for exactly <b>one turn</b>. The red line it leaves is as long as its circumference.</p>`},
