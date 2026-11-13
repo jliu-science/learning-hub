@@ -243,6 +243,8 @@
 
   /* ---------- shape icons (line drawings, currentColor) ---------- */
   const SI={
+    perim:'<path d="M4 18V8h9v-3h7v13z"/><circle cx="4" cy="18" r="1.6" fill="currentColor"/>',
+    circum:'<circle cx="9" cy="11" r="5.5"/><path d="M2 18.5h20"/><path d="M9 16.5h8" stroke-dasharray="2 2"/>',
     rect:'<rect x="3.5" y="6" width="17" height="12"/><path d="M3.5 10h17M3.5 14h17M8 6v12M12 6v12M16 6v12" opacity=".35"/>',
     tri:'<path d="M3 19h18L9 5z"/><path d="M9 5v14" stroke-dasharray="2 2"/>',
     para:'<path d="M3 18h13l5-12H8z"/><path d="M8 6v12" stroke-dasharray="2 2"/>',
