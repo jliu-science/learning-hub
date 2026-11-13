@@ -170,6 +170,9 @@
         if(q.kind==='frac') return checkFrac();
         if(isNaN(val)){ fb.className='fb show bad'; fb.innerHTML='Type just the number, for example <b>42</b> or <b>12.5</b>.'; return; }
         if(!unit&&!noUnit){ fb.className='fb show warn'; fb.innerHTML='Now pick the unit too. Is it a length, an area or a volume?'; return; }
+        const typedDp=(inp.value.trim().split('.')[1]||'').length;
+        if(q.places!==undefined&&typedDp!==q.places&&checkNum(val,q)==='ok'){ done=true; log.push([q.text,false]); inp.classList.add('no'); inp.disabled=true; fb.className='fb show bad';
+          fb.innerHTML=`<b>Right value, but write it to ${q.places===0?'a whole number':q.places+' decimal place'+(q.places>1?'s':'')}.</b>${q.places>0?' Keep any final 0: it shows how accurate the answer is.':''} Answer: <b>${q.show}</b><div class="work">${q.work.map(x=>`<div>${x}</div>`).join('')}</div>`; nxt.disabled=false; nxt.focus(); return; }
         done=true; const r=checkNum(val,q), uok=noUnit||unit===q.unit; const nok=r==='ok'||r==='ok314'; const ok=nok&&uok;
         if(ok) score++; log.push([q.text,ok]);
         inp.classList.add(nok?'ok':'no'); inp.disabled=true;

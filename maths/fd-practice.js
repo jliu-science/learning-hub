@@ -10,7 +10,7 @@ window.AVQ=window.AVQ||{};
   const red=(n,d)=>{ const g=gcd(n,d); return [n/g,d/g]; };
   const M=(n,d)=>{ const [a,b]=red(n,d); return K().mixed(a,b); };            // simplest form, mixed if > 1
   const I=(n,d)=>{ const [a,b]=red(n,d); return F(a,b); };                    // simplest form, improper
-  const frq=(o,n,d,mixed=true)=>Object.assign({kind:'frac',ans:red(n,d),simplest:true,form:mixed?'mixed':undefined,show:mixed?M(n,d):I(n,d),fig:''},o);
+  const frq=(o,n,d,mixed=true)=>{ const q=Object.assign({kind:'frac',ans:red(n,d),simplest:true,show:mixed?M(n,d):I(n,d),fig:''},o); if(q.unitShow) q.show+=q.unitShow; return q; };
   const num=(o)=>Object.assign({units:[],fig:''},o,{show:o.show!==undefined?o.show:String(parseFloat(o.ans.toFixed(6)))});
   const coprime=(R,dens)=>{ for(;;){ const d=R.pick(dens), n=R.int(1,d-1); if(gcd(n,d)===1) return [n,d]; } };
   const trunc=(x,k)=>(Math.floor(x*Math.pow(10,k)+1e-9)/Math.pow(10,k)).toFixed(k);   // cut off, not rounded, before a '…'
@@ -38,7 +38,7 @@ window.AVQ=window.AVQ||{};
   /* ---------- F2 mixed numbers ---------- */
   const mixfr=[
     R=>{ let n,d; do{ d=R.pick([2,3,4,5,6,8]); n=R.int(d+1,5*d); }while(n%d===0||gcd(n,d)>1); const w=Math.floor(n/d), r=n%d;
-      return frq({text:`Write ${F(n,d)} as a mixed number.`, hint:'Divide the top by the bottom. The remainder goes over the bottom.',
+      return frq({text:`Write ${F(n,d)} as a mixed number.`, form:'mixed', hint:'Divide the top by the bottom. The remainder goes over the bottom.',
         work:[`${n} ÷ ${d} = ${w} remainder ${r}`,`So ${F(n,d)} = ${w}${F(r,d)}`]},n,d,true); },
     R=>{ let w,r,d; do{ d=R.pick([2,3,4,5,6,8,10]); w=R.int(1,6); r=R.int(1,d-1); }while(gcd(r,d)>1); const n=w*d+r;
       return frq({text:`Write ${w}${F(r,d)} as an improper fraction.`, form:'improper', hint:'Multiply the whole number by the bottom, then add the top.',
@@ -47,7 +47,7 @@ window.AVQ=window.AVQ||{};
       return num({text:`How many ${nm} are there in ${w}${F(r,d)}?`, ans:w*d+r, hint:`Each whole has ${d} ${nm}.`,
         work:[`${w} wholes = ${w} × ${d} = ${w*d} ${nm}`,`${w*d} + ${r} = ${w*d+r} ${nm}`]}); },
     R=>{ const d=R.pick([6,8,10,12]); let n; do{ n=R.int(d+1,3*d); }while(n%d===0||gcd(n,d)>1); const w=Math.floor(n/d), r=n%d;
-      return frq({text:`Each slice is ${F(1,d)} of a pizza. There are ${n} slices left. How many pizzas is that? Give a mixed number.`, hint:`${d} slices make one whole pizza.`,
+      return frq({text:`Each slice is ${F(1,d)} of a pizza. There are ${n} slices left. How many pizzas is that? Give a mixed number.`, form:'mixed', hint:`${d} slices make one whole pizza.`,
         work:[`${n} slices = ${F(n,d)} of a pizza`,`${n} ÷ ${d} = ${w} remainder ${r}, so ${w}${F(r,d)} pizzas`]},n,d,true); }
   ];
 
@@ -66,7 +66,7 @@ window.AVQ=window.AVQ||{};
     R=>{ const [A,B]=pairD(R,false), w1=R.int(1,3), w2=R.int(1,3); const L=lcm(A[1],B[1]), a=A[0]*L/A[1], b=B[0]*L/B[1], tot=(w1+w2)*L+a+b;
       const lines=[`Add the whole numbers: ${w1} + ${w2} = ${w1+w2}`,`Add the fractions: ${F(a,L)} + ${F(b,L)} = ${F(a+b,L)}`];
       if(a+b>=L) lines.push(`${F(a+b,L)} is more than 1: it is ${M(a+b,L)}`); lines.push(`${w1+w2} + ${M(a+b,L)} = ${M(tot,L)}`);
-      return frq({text:`Work out ${w1}${F(...A)} + ${w2}${F(...B)}. Give your answer as a mixed number in its simplest form.`, hint:'Add the whole numbers, then add the fractions.', work:lines},tot,L,true); },
+      return frq({text:`Work out ${w1}${F(...A)} + ${w2}${F(...B)}. Give your answer as a mixed number in its simplest form.`, form:'mixed', hint:'Add the whole numbers, then add the fractions.', work:lines},tot,L,true); },
     R=>{ const [A,B]=pairD(R,false); const L=lcm(A[1],B[1]), a=A[0]*L/A[1], b=B[0]*L/B[1]; if(a+b>=L) return addfr[1](R);
       return frq({text:`Sam eats ${F(...A)} of a cake and Ali eats ${F(...B)} of it. What fraction of the cake is left?`, hint:'The whole cake is 1. Add what they ate, then take it from 1.',
         work:[`Eaten: ${F(...A)} + ${F(...B)} = ${F(a,L)} + ${F(b,L)} = ${F(a+b,L)}`,`Left: 1 − ${F(a+b,L)} = ${F(L,L)} − ${F(a+b,L)} = ${F(L-a-b,L)}`].concat(gcd(L-a-b,L)>1?[simpLine(L-a-b,L)]:[])},L-a-b,L,true); }
@@ -84,8 +84,8 @@ window.AVQ=window.AVQ||{};
       return num({text:`Find ${F(a,b)} of ${item[0]}${N}${item[1]}.`, ans:a*k, show:`${item[0]}${a*k}${item[1]}`, hint:'Divide by the bottom, then multiply by the top.',
         work:[`${N} ÷ ${b} = ${k}`,`${k} × ${a} = ${a*k}, so the answer is ${item[0]}${a*k}${item[1]}`]}); },
     R=>{ const A=coprime(R,[2,3,4,5]), B=coprime(R,[3,4,5,6]); const n=A[0]*B[0], d=A[1]*B[1], s=simpLine(n,d);
-      return frq({text:`A rectangle is ${F(...A)} m long and ${F(...B)} m wide. Find its area in m².`, hint:'Area = length × width. Multiply the tops, multiply the bottoms.',
-        work:[`Area = ${F(...A)} × ${F(...B)} = ${F(n,d)} m²`].concat(s?[s+' m²']:[])},n,d,true); }
+      return frq({text:`A rectangle is ${F(...A)} m long and ${F(...B)} m wide. Find its area in m².`, unitShow:' m²', hint:'Area = length × width. Multiply the tops, multiply the bottoms.',
+        work:[`Area = ${F(...A)} × ${F(...B)} = ${F(n,d)} m²`].concat(s?[s,`Area = ${M(n,d)} m²`]:[])},n,d,true); }
   ];
 
   /* ---------- F5 dividing ---------- */
@@ -111,7 +111,7 @@ window.AVQ=window.AVQ||{};
     R=>{ const k=R.pick([1,2]); let t; do{ t=R.int(1,k===1?9:99); }while(t%10===0&&k===2); const D=k===1?10:100, [a,b]=red(t,D);
       return frq({text:`Write ${dstr(t/D)} as a fraction in its simplest form.`, hint:`The last digit is in the ${k===1?'tenths':'hundredths'} column.`,
         work:[`${dstr(t/D)} = ${F(t,D)}`,a===t?`${F(t,D)} is already in its simplest form.`:`${F(t,D)} = ${F(a,b)} (÷ ${gcd(t,D)})`]},a,b,false); },
-    R=>{ const [n,d]=R.pick([[1,3],[2,3],[1,6],[5,6],[1,9],[4,9],[7,9],[2,11],[5,12],[1,7]]), dp=R.pick([2,3]);      const x=n/d; return num({text:`Write ${F(n,d)} as a decimal, correct to ${dp} decimal places.`, ans:x, dp, show:x.toFixed(dp), hint:'Divide the top by the bottom, then round.',
+    R=>{ const [n,d]=R.pick([[1,3],[2,3],[1,6],[5,6],[1,9],[4,9],[7,9],[2,11],[5,12],[1,7]]), dp=R.pick([2,3]);      const x=n/d; return num({text:`Write ${F(n,d)} as a decimal, correct to ${dp} decimal places.`, ans:x, dp, places:dp, show:x.toFixed(dp), hint:'Divide the top by the bottom, then round.',
         work:[`${n} ÷ ${d} = ${trunc(x,dp+3)}… (the digits keep going)`,`Correct to ${dp} d.p.: ${x.toFixed(dp)}`]}); },
     R=>{ let a,b; do{ a=R.int(1,9)/10; b=R.int(11,99)/100; }while(Math.abs(a-b)<1e-9||Math.floor(a*10)===Math.floor(b*10));
       const big=Math.max(a,b); return num({text:`Which is bigger, ${dstr(a)} or ${dstr(b)}? Type the bigger number.`, ans:big, show:dstr(big), hint:'Line up the decimal points and compare the tenths first.',
@@ -145,13 +145,13 @@ window.AVQ=window.AVQ||{};
   const rword=m=>m===0?'the nearest whole number':m===1?'1 decimal place':'2 decimal places';
   const roundQ=(R,m,v)=>{ v=v||R.int(10001,99999); if(v%10===0) v+=R.int(1,9); const r=rnd(v,m), x=parseFloat((v/1e4).toFixed(4)), ans=r/1e4, sh=ans.toFixed(m);
     const s=String(x), dot=s.indexOf('.'), dec=+s[dot+m+1]||0, lo=Math.floor(v/Math.pow(10,4-m))*Math.pow(10,4-m);
-    return num({text:`Round ${x} to ${rword(m)}.`, ans, show:sh, hint:'Look at the next digit along: 5 or more rounds up.',
+    return num({text:`Round ${x} to ${rword(m)}.`, ans, places:m, show:sh, hint:'Look at the next digit along: 5 or more rounds up.',
       work:[`${x} is between ${(lo/1e4).toFixed(m)} and ${((lo+Math.pow(10,4-m))/1e4).toFixed(m)}.`,`The next digit is ${dec}, ${dec>=5?'5 or more, so round up':'less than 5, so round down'}: ${sh}`].concat(/0$/.test(sh)&&m>0?['Keep the final 0: it shows the answer is to '+m+' d.p.']:[])}); };
   const rounding=[
     R=>roundQ(R,1), R=>roundQ(R,2), R=>roundQ(R,0),
     R=>{ const w=R.int(1,9), v=w*10000+R.pick([9600,9700,9800,9900])+R.int(1,9)*10+R.int(0,9); return roundQ(R,1,v); },
     R=>{ const ends=d=>{ while(d%2===0) d/=2; while(d%5===0) d/=5; return d===1; }; let a,b; do{ a=R.int(2,40); b=R.pick([3,6,7,9,11,12]); }while(ends(b/gcd(a,b))); const x=a/b;
-      return num({text:`Work out ${a} ÷ ${b}. Give your answer correct to 2 decimal places.`, ans:x, dp:2, show:x.toFixed(2), hint:'Use every digit from the division, then round once at the end.',
+      return num({text:`Work out ${a} ÷ ${b}. Give your answer correct to 2 decimal places.`, ans:x, dp:2, places:2, show:x.toFixed(2), hint:'Use every digit from the division, then round once at the end.',
         work:[`${a} ÷ ${b} = ${trunc(x,5)}…`,`Correct to 2 d.p.: ${x.toFixed(2)}`]}); }
   ];
 
