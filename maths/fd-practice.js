@@ -15,7 +15,7 @@ window.AVQ=window.AVQ||{};
   const coprime=(R,dens)=>{ for(;;){ const d=R.pick(dens), n=R.int(1,d-1); if(gcd(n,d)===1) return [n,d]; } };
   const trunc=(x,k)=>(Math.floor(x*Math.pow(10,k)+1e-9)/Math.pow(10,k)).toFixed(k);   // cut off, not rounded, before a '…'
   const dstr=x=>String(parseFloat(x.toFixed(6)));                               // plain decimal string, no grouping commas
-  const bars=(n,s)=>{ const w=300/n; let o=''; for(let i=0;i<n;i++) o+=`<rect x="${10+i*w}" y="40" width="${w}" height="50" fill="${i<s?'#bfdbfe':'#fffdf8'}" stroke="#1d1b16" stroke-width="1.5"/>`; return `<svg class="qfig" viewBox="0 0 320 130">${o}</svg>`; };
+  const bars=(n,s)=>{ const w=300/n; let o=''; for(let i=0;i<n;i++) o+=`<rect x="${10+i*w}" y="40" width="${w}" height="50" fill="${i<s?'#dbe3f4':'#fffdf8'}" stroke="#1d1b16" stroke-width="1.5"/>`; return `<svg class="qfig" viewBox="0 0 320 130">${o}</svg>`; };
   const simpLine=(n,d)=>{ const g=gcd(n,d); if(g===1&&n<=d) return ''; let s=''; if(g>1) s+=`${F(n,d)} = ${F(n/g,d/g)} (÷ ${g})`; const a=n/g, b=d/g; if(a>b&&b>1) s+=`${g>1?' ':F(n,d)+' '}= ${K().mixed(a,b)}`; else if(b===1&&g===1) s+=` = ${a}`; return s; };
 
   /* ---------- F1 equivalent fractions ---------- */

@@ -52,13 +52,13 @@ window.AV=window.AV||{};
   function triDraw(K,b,h,a,o={}){
     let s=bg(K); const BL=[0,0],BR=[b,0],A=[a,h],F=[a,0],TL=[0,h],TR=[b,h];
     if(o.rect) s+=K.poly([BL,BR,TR,TL].map(P),'shape ghost');
-    if(o.halves){ s+=K.poly([BL,F,A].map(P),'shape','fill:#dbeafe;stroke:none')+K.poly([F,BR,A].map(P),'shape','fill:#d1fae5;stroke:none'); }
+    if(o.halves){ s+=K.poly([BL,F,A].map(P),'shape','fill:#e3e9f6;stroke:none')+K.poly([F,BR,A].map(P),'shape','fill:#dcece2;stroke:none'); }
     else s+=K.poly([BL,BR,A].map(P),'shape','stroke:none');
     if(o.out!==undefined){ const t=o.out; // outside pieces rotate onto the inside pieces
       const rot=(pts,c,ang)=>pts.map(([x,y])=>{ const dx=x-c[0],dy=y-c[1],ca=Math.cos(ang),sa=Math.sin(ang); return [c[0]+dx*ca-dy*sa,c[1]+dx*sa+dy*ca]; });
       const m1=[(BL[0]+A[0])/2,(BL[1]+A[1])/2], m2=[(BR[0]+A[0])/2,(BR[1]+A[1])/2];
-      s+=K.poly(rot([BL,A,TL],m1,Math.PI*t).map(P),'shape','fill:#93c5fd;fill-opacity:.55;stroke:#2563eb;stroke-width:1.4');
-      s+=K.poly(rot([A,TR,BR],m2,Math.PI*t).map(P),'shape','fill:#6ee7b7;fill-opacity:.55;stroke:#059669;stroke-width:1.4'); }
+      s+=K.poly(rot([BL,A,TL],m1,Math.PI*t).map(P),'shape','fill:#93c5fd;fill-opacity:.55;stroke:#2f4fa2;stroke-width:1.4');
+      s+=K.poly(rot([A,TR,BR],m2,Math.PI*t).map(P),'shape','fill:#6ee7b7;fill-opacity:.55;stroke:#3a7a57;stroke-width:1.4'); }
     const ext=a<0?[a,0]:a>b?[a,0]:null; if(ext) s+=K.line(P(a<0?[a,0]:[b,0]),P(a<0?[0,0]:[a,0]),'hgt','stroke:#b9ad94');
     s+=K.poly([BL,BR,A].map(P),'shape','fill:none');
     s+=K.line(P(A),P(F),'hgt')+K.ra(P(F),[a>b/2||a>b?-1:1,0],[0,-1]);
@@ -191,7 +191,7 @@ window.AV=window.AV||{};
       const tx=up?X0+chord/2+j*chord:X0+chord+j*chord, ty=up?Yt:Yt+R*Math.cos(th/2); let phi1=up?Math.PI/2:-Math.PI/2;
       while(phi1-phi0>Math.PI) phi1-=2*Math.PI; while(phi0-phi1>Math.PI) phi1+=2*Math.PI;
       const ax=C[0]+(tx-C[0])*t, ay=C[1]+(ty-C[1])*t, ph=phi0+(phi1-phi0)*t;
-      s+=`<path class="shape" d="${sector([ax,ay],R,ph,th)}" style="fill:${k%2?'#ede9fe':'#ccfbf1'};stroke-width:1.4"/>`;
+      s+=`<path class="shape" d="${sector([ax,ay],R,ph,th)}" style="fill:${k%2?'#ebe5f3':'#d5eaea'};stroke-width:1.4"/>`;
     }
     if(lab&&t>=1){ const yb=Yt+R*Math.cos(th/2);
       s+=K.dim([X0+chord/2,Yt-8],[X0+chord*(n+1)/2-chord/2+chord/2,Yt-8],'half the circumference = πr','b',-16);
@@ -223,7 +223,7 @@ window.AV=window.AV||{};
       const bt=K.h('button',{class:'tg on'},'Show r × r squares'); bt.onclick=()=>{ sq=!sq; bt.classList.toggle('on',sq); draw(); }; tg.appendChild(bt);
       panel.append(K.h('p',{class:'hint',style:'margin:0'},'Drag the handle on the edge to change the radius.'),c,tg,n);
       const draw=()=>{ const R=r*S; let s=bg(K);
-        if(sq){ [[0,-1],[-1,-1],[-1,0],[0,0]].forEach(([dx,dy],k)=>s+=`<rect x="${C[0]+dx*R}" y="${C[1]+dy*R}" width="${R}" height="${R}" fill="${k===0?'#ede9fe':'none'}" stroke="${K.COL.r}" stroke-dasharray="${k===0?'':'5 4'}" stroke-width="1.3"/>`); }
+        if(sq){ [[0,-1],[-1,-1],[-1,0],[0,0]].forEach(([dx,dy],k)=>s+=`<rect x="${C[0]+dx*R}" y="${C[1]+dy*R}" width="${R}" height="${R}" fill="${k===0?'#ebe5f3':'none'}" stroke="${K.COL.r}" stroke-dasharray="${k===0?'':'5 4'}" stroke-width="1.3"/>`); }
         s+=`<circle class="shape" cx="${C[0]}" cy="${C[1]}" r="${R}" style="fill-opacity:.75"/><circle cx="${C[0]}" cy="${C[1]}" r="3"/>`;
         s+=K.dim(C,[C[0]+R,C[1]],`r = ${K.fmt(r)} cm`,'r',-1,false)+K.handle('r',C[0]+R,C[1],'r');
         st.draw(s);
@@ -238,11 +238,11 @@ window.AV=window.AV||{};
   /* L-shape: W×H rectangle with a cw×ch notch cut from the top-right corner */
   function compDraw(K,Wd,Ht,cw,ch,method,o={}){
     let s=bg(K); const A=[0,0],B=[Wd,0],C=[Wd,Ht-ch],D=[Wd-cw,Ht-ch],E=[Wd-cw,Ht],F=[0,Ht];
-    const blue='fill:#dbeafe;stroke:none', green='fill:#d1fae5;stroke:none';
+    const blue='fill:#e3e9f6;stroke:none', green='fill:#dcece2;stroke:none';
     const part=(pts,st,txt)=>{ let r=K.poly(pts.map(P),'shape',st); if(o.parts!==false&&txt){ const cx=pts.reduce((a,p)=>a+p[0],0)/pts.length, cy=pts.reduce((a,p)=>a+p[1],0)/pts.length; r+=`<text class="dl" x="${X(cx)}" y="${Y(cy)}" style="fill:#3d3a33;font-size:14px">${txt}</text>`; } return r; };
     if(method==='down'){ s+=part([A,[Wd-cw,0],E,F],blue,`${Wd-cw} × ${Ht} = ${(Wd-cw)*Ht}`)+part([[Wd-cw,0],B,C,D],green,`${cw} × ${Ht-ch} = ${cw*(Ht-ch)}`); s+=K.line(P([Wd-cw,0]),P(D),'hgt','stroke:#3d3a33'); }
     else if(method==='across'){ s+=part([A,B,C,[0,Ht-ch]],blue,`${Wd} × ${Ht-ch} = ${Wd*(Ht-ch)}`)+part([[0,Ht-ch],D,E,F],green,`${Wd-cw} × ${ch} = ${(Wd-cw)*ch}`); s+=K.line(P([0,Ht-ch]),P(D),'hgt','stroke:#3d3a33'); }
-    else if(method==='minus'){ s+=K.poly([A,B,C,D,E,F].map(P),'shape',blue); s+=K.poly([D,C,[Wd,Ht],E].map(P),'shape','fill:#fde7d6;stroke:#c2410c;stroke-dasharray:5 4'); if(o.parts!==false) s+=`<text class="dl" x="${X(Wd-cw/2)}" y="${Y(Ht)-14}" style="fill:#c2410c;font-size:14px">corner: ${cw} × ${ch} = ${cw*ch}</text>`; s+=`<text class="dl" x="${X(Wd/2)}" y="${Y(Ht/2)-4}" style="fill:#3d3a33;font-size:14px">${o.parts===false?'':`${Wd} × ${Ht} = ${Wd*Ht}`}</text>`; }
+    else if(method==='minus'){ s+=K.poly([A,B,C,D,E,F].map(P),'shape',blue); s+=K.poly([D,C,[Wd,Ht],E].map(P),'shape','fill:#f6e3d6;stroke:#a8492a;stroke-dasharray:5 4'); if(o.parts!==false) s+=`<text class="dl" x="${X(Wd-cw/2)}" y="${Y(Ht)-14}" style="fill:#a8492a;font-size:14px">corner: ${cw} × ${ch} = ${cw*ch}</text>`; s+=`<text class="dl" x="${X(Wd/2)}" y="${Y(Ht/2)-4}" style="fill:#3d3a33;font-size:14px">${o.parts===false?'':`${Wd} × ${Ht} = ${Wd*Ht}`}</text>`; }
     else s+=K.poly([A,B,C,D,E,F].map(P),'shape');
     s+=K.poly([A,B,C,D,E,F].map(P),'shape','fill:none');
     const q=k=>o.hide&&o.hide.includes(k);

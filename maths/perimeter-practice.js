@@ -28,8 +28,8 @@
   ];
 
   const cfig=(t,k,dia)=>fig({circles:[{c:[0,0],r:1}],extra:(m,s)=>{ const c=m([0,0]); return dia
-    ?`<line x1="${c[0]-s}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#2563eb" stroke-width="2"/><text class="dl" x="${c[0]}" y="${c[1]-12}" style="fill:#2563eb">${t}</text>`
-    :`<line x1="${c[0]}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#7c3aed" stroke-width="2"/><text class="dl" x="${c[0]+s/2}" y="${c[1]-12}" style="fill:#7c3aed">${t}</text>`; }});
+    ?`<line x1="${c[0]-s}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#2f4fa2" stroke-width="2"/><text class="dl" x="${c[0]}" y="${c[1]-12}" style="fill:#2f4fa2">${t}</text>`
+    :`<line x1="${c[0]}" y1="${c[1]}" x2="${c[0]+s}" y2="${c[1]}" stroke="#6a4c93" stroke-width="2"/><text class="dl" x="${c[0]+s/2}" y="${c[1]-12}" style="fill:#6a4c93">${t}</text>`; }});
   const circum=[
     R=>{ const d=R.int(3,20), u=pickU(R); const C=Math.PI*d; return {text:'Find the circumference of this circle.', base:u, ans:C, dp:1, pi:true, unit:u, hint:F.circ,
       fig:cfig(`${d} ${u}`,'b',true), work:[`C = π${v('b','d')} = π × ${v('b',d)}`,`≈ ${f(C,1)} ${u} (1 d.p.)`]}; },
