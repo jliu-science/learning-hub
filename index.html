@@ -59,7 +59,7 @@
   </div>
 
   <h2>Maths</h2>
-  <p class="lead" style="margin-bottom:12px">Not for the assessment. One topic at a time, to understand where the formulas come from.</p>
+  <p class="lead" style="margin-bottom:12px">Not for the assessment. One topic at a time, to understand how the maths works.</p>
   <div class="subjects">
     <a class="subject maths" href="maths/area-volume.html">
       <div class="tile" style="background:#7c3aed">Ma</div>
@@ -69,6 +69,15 @@
         <li>Perimeter and circumference</li><li>Rectangles, triangles, parallelograms, trapezia</li><li>Circles and compound shapes</li><li>Cuboids, prisms, cylinders</li><li>Converting units</li>
       </ul>
       <div class="bar"><i id="maths-bar" style="width:0;background:#7c3aed"></i></div>
+    </a>
+    <a class="subject maths" href="maths/fractions-decimals.html">
+      <div class="tile" style="background:#0d9488">Ma</div>
+      <span class="status" style="color:#0d9488">Maths</span>
+      <h2>Fractions &amp; decimals</h2>
+      <ul class="topic-list">
+        <li>Equivalent fractions and mixed numbers</li><li>Adding, subtracting, multiplying, dividing fractions</li><li>Fractions and decimals, recurring decimals</li><li>× and ÷ by 10, 100, 1000</li><li>Rounding decimals</li>
+      </ul>
+      <div class="bar"><i id="fd-bar" style="width:0;background:#0d9488"></i></div>
     </a>
   </div>
 </main>
@@ -85,6 +94,7 @@
     document.getElementById('force-bar').style.width=Math.min(100,Engine.Store.total('contact-forces')/12*100)+'%';
     document.getElementById('mag-bar').style.width=Math.min(100,Engine.Store.total('magnetism')/12*100)+'%';
     document.getElementById('maths-bar').style.width=Math.min(100,Engine.Store.total('area-volume')/39*100)+'%';
+    document.getElementById('fd-bar').style.width=Math.min(100,Engine.Store.total('fractions-decimals')/27*100)+'%';
     document.getElementById('xp').innerHTML=`<b>★</b> ${Engine.Store.total()} stars`;
   })();
 </script>
