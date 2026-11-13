@@ -114,6 +114,18 @@
   const calc=()=>h('div',{class:'mcalc'});
 
   /* ---------- practice: one question at a time, number + unit checked separately ---------- */
+  /* ---------- fractions ---------- */
+  const gcd=(a,b)=>{ a=Math.abs(a); b=Math.abs(b); while(b){ [a,b]=[b,a%b]; } return a||1; };
+  const lcm=(a,b)=>a/gcd(a,b)*b;
+  const fr=(n,d)=>d===1?`${n}`:`<span class="fr"><i>${n}</i><i>${d}</i></span>`;
+  const mixed=(n,d)=>{ const w=Math.floor(n/d), r=n%d; return w&&r?`${w}${fr(r,d)}`:w?`${w}`:fr(r,d); };
+  /* "3/4", "1 2/3", "2", "0.5" → {n,d,form:'frac'|'mixed'|'int'|'dec'} or null */
+  function parseFrac(s){ s=String(s).trim().replace(/\s+/g,' ');
+    let m=s.match(/^(-?\d+) (\d+) ?\/ ?(\d+)$/); if(m&&+m[3]) return {n:+m[1]*+m[3]+(+m[1]<0?-1:1)*+m[2],d:+m[3],form:'mixed',fn:+m[2],fd:+m[3]};
+    m=s.match(/^(-?\d+) ?\/ ?(\d+)$/); if(m&&+m[2]) return {n:+m[1],d:+m[2],form:'frac',fn:+m[1],fd:+m[2]};
+    m=s.match(/^-?\d+$/); if(m) return {n:+s,d:1,form:'int'};
+    m=s.match(/^-?\d*\.\d+$/); if(m){ const k=s.split('.')[1].length, d=Math.pow(10,k); return {n:Math.round(parseFloat(s)*d),d,form:'dec'}; }
+    return null; }
   function parseNum(s){ s=String(s).trim().replace(/,/g,'').replace(/\s+/g,''); if(!/^-?\d*\.?\d+$/.test(s)) return NaN; return parseFloat(s); }
   function checkNum(val,q){
     if(!Number.isFinite(val)) return 'bad';
@@ -136,15 +148,15 @@
       el.innerHTML='';
       if(i>=qs.length) return finish();
       const q=qs[i]; let unit=null, done=false;
-      const units=q.units||[q.base||'cm',(q.base||'cm')+'²',(q.base||'cm')+'³'];
+      const units=q.kind==='frac'?[]:(q.units||[q.base||'cm',(q.base||'cm')+'²',(q.base||'cm')+'³']); const noUnit=!units.length;
       const w=h('div',{class:'mprac'});
       w.innerHTML=`<div class="qtop"><span>Question ${i+1} of ${qs.length}</span><div class="prog"><i style="width:${i/qs.length*100}%"></i></div><span>Score ${score}</span></div>
         <div class="pgrid${q.fig?'':' nofig'}"><div class="pfig">${q.fig||''}${q.fig?'<div class="hint nts">Not drawn to scale</div>':''}</div>
         <div class="pq"><div class="qtext">${q.text}</div>
-          <div class="ansrow"><input class="num" type="text" inputmode="decimal" autocomplete="off" placeholder="Answer" aria-label="Your answer">
-          <div class="seg units">${units.map(u=>`<button data-u="${u}">${u}</button>`).join('')}</div></div>
+          <div class="ansrow"><input class="num${q.kind==='frac'?' wide':''}" type="text" inputmode="${q.kind==='frac'?'text':'decimal'}" autocomplete="off" placeholder="${q.kind==='frac'?'e.g. 3/4 or 1 2/3':'Answer'}" aria-label="Your answer">
+          ${noUnit?'':`<div class="seg units">${units.map(u=>`<button data-u="${u}">${u}</button>`).join('')}</div>`}</div>${q.kind==='frac'?'<div class="hint">Type a fraction with /, for example <b>5/8</b>, or a mixed number with a space, for example <b>2 1/4</b>.</div>':''}
           ${q.dp?`<div class="hint">Round to ${q.dp} decimal place${q.dp>1?'s':''}.${q.pi?' Use the π button on your calculator.':''}</div>`:''}
-          <div class="row" style="margin-top:12px"><button class="btn ck">Check</button>${q.hint?'<button class="btn ghost small hb">Show the formula</button>':''}</div>
+          <div class="row" style="margin-top:12px"><button class="btn ck">Check</button>${q.hint?`<button class="btn ghost small hb">${(T&&T.hintLabel)||'Show the formula'}</button>`:''}</div>
           <div class="hintbox">${q.hint||''}</div>
           <div class="fb"></div>
           <div class="qnav"><span></span><button class="btn accent nxt" disabled>${i===qs.length-1?'See results':'Next →'}</button></div></div></div>`;
@@ -155,16 +167,34 @@
       const check=()=>{
         if(done) return; const val=parseNum(inp.value);
         if(inp.value.trim()===''){ inp.focus(); return; }
+        if(q.kind==='frac') return checkFrac();
         if(isNaN(val)){ fb.className='fb show bad'; fb.innerHTML='Type just the number, for example <b>42</b> or <b>12.5</b>.'; return; }
-        if(!unit){ fb.className='fb show warn'; fb.innerHTML='Now pick the unit too. Is it a length, an area or a volume?'; return; }
-        done=true; const r=checkNum(val,q), uok=unit===q.unit; const nok=r==='ok'||r==='ok314'; const ok=nok&&uok;
+        if(!unit&&!noUnit){ fb.className='fb show warn'; fb.innerHTML='Now pick the unit too. Is it a length, an area or a volume?'; return; }
+        done=true; const r=checkNum(val,q), uok=noUnit||unit===q.unit; const nok=r==='ok'||r==='ok314'; const ok=nok&&uok;
         if(ok) score++; log.push([q.text,ok]);
         inp.classList.add(nok?'ok':'no'); inp.disabled=true;
         w.querySelectorAll('.units button').forEach(b=>{ b.disabled=true; if(b.dataset.u===q.unit) b.classList.add('right'); else if(b.dataset.u===unit) b.classList.add('wrong'); });
-        let msg = ok ? '<b>Correct.</b>' : nok ? `<b>Right number, wrong unit.</b> ${unitWhy(q.unit)}` : uok ? (r==='close'?'<b>Very close.</b> Check your rounding.':'<b>Not quite.</b> The unit is right, the number is not.') : '<b>Not quite.</b>';
+        let msg = ok ? '<b>Correct.</b>' : nok ? `<b>Right number, wrong unit.</b> ${unitWhy(q.unit)}` : uok ? (r==='close'?'<b>Very close.</b> Check your rounding.':noUnit?'<b>Not quite.</b>':'<b>Not quite.</b> The unit is right, the number is not.') : '<b>Not quite.</b>';
         if(r==='ok314') msg+=' (You used 3.14 for π. That is fine, but the π button is more accurate.)';
         fb.className='fb show '+(ok?'good':'bad');
-        fb.innerHTML=`${msg} Answer: <b>${fmt(q.ans,q.dp)} ${q.unit}</b><div class="work">${q.work.map(x=>`<div>${x}</div>`).join('')}</div>`;
+        fb.innerHTML=`${msg} Answer: <b>${q.show||fmt(q.ans,q.dp)}${q.unit?' '+q.unit:''}</b><div class="work">${q.work.map(x=>`<div>${x}</div>`).join('')}</div>`;
+        nxt.disabled=false; nxt.focus();
+      };
+      /* fraction answers: value must match exactly; q.simplest needs lowest terms, q.form:'mixed' needs a mixed number */
+      const checkFrac=()=>{
+        const a=parseFrac(inp.value);
+        if(!a){ fb.className='fb show bad'; fb.innerHTML='Write it like <b>3/4</b>, <b>2 1/3</b> or a whole number.'; return; }
+        if(a.form==='dec'&&!q.allowDec){ fb.className='fb show warn'; fb.innerHTML='Give your answer as a fraction, not a decimal.'; return; }
+        done=true; const [N,D]=q.ans; const equal=a.n*D===N*a.d;
+        const lowest=(a.form==='frac'||a.form==='mixed')?gcd(a.fn,a.fd)===1:true;
+        const wantMixed=q.form==='mixed'&&Math.abs(N)>D&&N%D!==0, wantImp=q.form==='improper'&&Math.abs(N)>D&&N%D!==0;
+        const formOk=(!wantMixed||a.form==='mixed')&&(!wantImp||a.form==='frac'); const proper=a.form!=='mixed'||a.fn<a.fd;
+        const ok=equal&&(!q.simplest||lowest)&&formOk&&proper;
+        if(ok) score++; log.push([q.text,ok]);
+        inp.classList.add(ok?'ok':'no'); inp.disabled=true;
+        let msg=ok?'<b>Correct.</b>':!equal?'<b>Not quite.</b>':!lowest?'<b>Right value, but not in its simplest form.</b> Divide the top and bottom by a common factor.':!formOk?(wantImp?'<b>Right value.</b> The question asks for an improper fraction.':'<b>Right value.</b> The question asks for a mixed number.'):'<b>Right value.</b> The fraction part of a mixed number should be less than 1.';
+        fb.className='fb show '+(ok?'good':'bad');
+        fb.innerHTML=`${msg} Answer: <b>${q.show}</b><div class="work">${q.work.map(x=>`<div>${x}</div>`).join('')}</div>`;
         nxt.disabled=false; nxt.focus();
       };
       $('.ck',w).onclick=check; inp.addEventListener('keydown',e=>{ if(e.key==='Enter') done?nxt.click():check(); });
@@ -194,7 +224,7 @@
       g.lessons.forEach(l=>{ n.appendChild(h('a',{href:'#'+l.id,class:cur===l.id?'on':'',style:`--lc:${l.accent}`},`<span class="num">${l.code}</span><span class="micon">${shapeIcon(l.icon,20)}</span><span class="nm">${l.short}</span>${dots(E.Store.stars(sid(l)))}`)); }); });
     n.appendChild(h('div',{class:'sep'}));
     n.appendChild(h('a',{href:'#mixed',class:cur==='mixed'?'on':'',style:'--lc:#7c3aed'},`<span class="num">ALL</span><span class="nm">Mixed practice</span>${dots(E.Store.stars(T.id+'-mixed'))}`));
-    n.appendChild(h('a',{href:'#formulas',class:cur==='formulas'?'on':'',style:'--lc:#0d9488'},`<span class="num">f(x)</span><span class="nm">Formula sheet</span>`));
+    n.appendChild(h('a',{href:'#formulas',class:cur==='formulas'?'on':'',style:'--lc:#0d9488'},`<span class="num">f(x)</span><span class="nm">${T.sheetTitle||'Formula sheet'}</span>`));
     const on=n.querySelector('.on'); if(on&&innerWidth<900) on.scrollIntoView({inline:'center',block:'nearest'});
     $('#xp').innerHTML=`<b>★</b> ${E.Store.total()} stars`;
   }
@@ -210,7 +240,7 @@
     const show=id=>{ defs.forEach(t=>t.btn.classList.toggle('on',t.id===id)); panel.innerHTML=''; (defs.find(t=>t.id===id)||defs[0]).render(panel); };
     c.append(bar,panel); show(active||defs[0].id);
   }
-  const K={ COL, SOFT, v, R, fmt, round, tween, stage, handle, grid, poly, line, label, dim, ra, oblique, cubes, boxFrame, figure, split, formula, steps, slider, seg, calc, h, $, toast:E.toast, shuffle:E.shuffle };
+  const K={ gcd, lcm, fr, mixed, COL, SOFT, v, R, fmt, round, tween, stage, handle, grid, poly, line, label, dim, ra, oblique, cubes, boxFrame, figure, split, formula, steps, slider, seg, calc, h, $, toast:E.toast, shuffle:E.shuffle };
   function renderLesson(l,tab){
     const m=$('#main'); m.innerHTML=''; const c=h('div',{class:'content'}); m.appendChild(c);
     const k=ALL.indexOf(l), pv=ALL[k-1], nx=ALL[k+1]; setAccent(l.accent);
@@ -224,12 +254,12 @@
   function renderMixed(){
     const m=$('#main'); m.innerHTML=''; const c=h('div',{class:'content'}); m.appendChild(c); setAccent('#7c3aed');
     const last=ALL[ALL.length-1];
-    header(c,'Whole topic','Mixed practice','Ten questions from every lesson, mixed up. You need to decide which formula to use.',null,[last.id,last.short],['formulas','Formula sheet'],'mixed');
+    header(c,'Whole topic','Mixed practice',T.mixedHook||'Ten questions from every lesson, mixed up. You need to decide which formula to use.',null,[last.id,last.short],['formulas','Formula sheet'],'mixed');
     const gens=[].concat(...ALL.map(l=>l.practice)); const d=h('div',{class:'card'}); c.appendChild(d); practice(d,gens,T.id+'-mixed',10,()=>nav('mixed'));
   }
   function renderFormulas(){
     const m=$('#main'); m.innerHTML=''; const c=h('div',{class:'content'}); m.appendChild(c); setAccent('#0d9488');
-    header(c,'Summary','Formula sheet','Every formula from this topic on one page. Tap a card to open its lesson.',null,['mixed','Mixed practice'],null,'formulas');
+    header(c,'Summary',T.sheetTitle||'Formula sheet',T.sheetHook||'Every formula from this topic on one page. Tap a card to open its lesson.',null,['mixed','Mixed practice'],null,'formulas');
     T.groups.forEach(g=>{ c.appendChild(h('h2',{class:'fgrp'},g.name)); const grid=h('div',{class:'fsheet'});
       g.lessons.forEach(l=>grid.appendChild(h('a',{class:'fcard',href:'#'+l.id,style:`--lc:${l.accent}`},`<span class="fi">${shapeIcon(l.icon,30)}</span><div><b>${l.short}</b>${l.formula}${l.remember?`<span class="hint">${l.remember}</span>`:''}</div>`)));
       c.appendChild(grid); });
@@ -243,6 +273,14 @@
 
   /* ---------- shape icons (line drawings, currentColor) ---------- */
   const SI={
+    equiv:'<rect x="3" y="5" width="18" height="5"/><path d="M9 5v5M15 5v5"/><rect x="3" y="14" width="18" height="5"/><path d="M6 14v5M9 14v5M12 14v5M15 14v5M18 14v5" opacity=".6"/>',
+    mixfr:'<rect x="2.5" y="8" width="8" height="8"/><rect x="13.5" y="8" width="8" height="8"/><path d="M17.5 8v8M13.5 12h8" opacity=".6"/><path d="M2.5 8l8 8M2.5 12l4 4" opacity=".35"/>',
+    addfr:'<rect x="3" y="4" width="18" height="5"/><path d="M12 4v5"/><path d="M12 12v6M9 15h6"/><rect x="3" y="20" width="18" height="0.1"/>',
+    mulfr:'<rect x="4" y="4" width="16" height="16"/><path d="M9.3 4v16M14.6 4v16M4 12h16"/><path d="M4 12h10.6V20H4z" fill="currentColor" opacity=".25"/>',
+    divfr:'<path d="M3 9h18"/><path d="M3 15h4.5M8.5 15H13M14 15h4.5" stroke-width="3"/><path d="M3 6v6M21 6v6"/>',
+    f2d:'<rect x="3" y="4" width="18" height="5"/><path d="M12 4v5"/><path d="M12 4h-9v5h9z" fill="currentColor" opacity=".25"/><path d="M3 17h18M3 14.5v5M21 14.5v5M12 15v4"/><circle cx="12" cy="17" r="1.5" fill="currentColor"/><path d="M12 10.5v3" stroke-dasharray="1.5 1.5"/>',
+    p10:'<path d="M3 6h18v12H3zM9 6v12M15 6v12"/><circle cx="15" cy="15" r="1" fill="currentColor"/><path d="M13 3l-3 0M10 3l1.5-1.2M10 3l1.5 1.2"/>',
+    rounding:'<path d="M3 15h18M3 12v6M21 12v6M12 13.5v3"/><path d="M15 15c0-5 4-7 6-7" /><circle cx="15" cy="15" r="1.6" fill="currentColor"/><path d="M19 7l2 1-1 2"/>',
     perim:'<path d="M4 18V8h9v-3h7v13z"/><circle cx="4" cy="18" r="1.6" fill="currentColor"/>',
     circum:'<circle cx="9" cy="11" r="5.5"/><path d="M2 18.5h20"/><path d="M9 16.5h8" stroke-dasharray="2 2"/>',
     rect:'<rect x="3.5" y="6" width="17" height="12"/><path d="M3.5 10h17M3.5 14h17M8 6v12M12 6v12M16 6v12" opacity=".35"/>',
@@ -260,6 +298,6 @@
   };
   function shapeIcon(k,size=22){ return `<svg class="svgi" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SI[k]||SI.rect}</svg>`; }
 
-  window.MathsEngine={ K, practice, start(t){ T=t; ALL=[].concat(...t.groups.map(g=>g.lessons)); ALL.forEach((l,i)=>l.accent=l.accent||LCOL[i%LCOL.length]);
+  window.MathsEngine={ K, practice, parseFrac, start(t){ T=t; ALL=[].concat(...t.groups.map(g=>g.lessons)); ALL.forEach((l,i)=>l.accent=l.accent||LCOL[i%LCOL.length]);
     document.title=t.title+' · Maths'; addEventListener('hashchange',route); route(); } };
 })();
