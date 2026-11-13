@@ -123,3 +123,30 @@ svg.qfig{width:100%;height:auto;max-height:44vh}
 }
 @media (max-width:560px){ .mslider{grid-template-columns:80px 1fr 54px} .lhead .hformula{white-space:normal} }
 .pgrid.nofig{grid-template-columns:minmax(0,680px)}
+
+/* ===== perimeter & circumference (on-diagram cues and sums) ===== */
+.mfull{margin-bottom:6px}
+.mfull svg.mstage{max-height:68vh}
+.pside{stroke-width:6;stroke-linecap:round}
+.walker{fill:#dc2626;stroke:#fffdf8;stroke-width:3}
+.pcue text{font:600 15px "Inter","Segoe UI",sans-serif;fill:#b45309;animation:cuewig 1.2s ease-in-out infinite}
+@keyframes cuewig{0%,100%{opacity:1}50%{opacity:.35}}
+.sbtn{cursor:pointer}
+.sbtn rect{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+.sbtn text{font:600 14px "Inter","Segoe UI",sans-serif;fill:var(--ink);text-anchor:middle}
+.sbtn:hover rect{stroke:var(--accent)}
+.sbtn.on rect{fill:var(--accent-soft);stroke:var(--accent)}
+.sbtn.on text{fill:var(--accent)}
+.sumh{font:600 20px "Fraunces",Georgia,serif;fill:var(--ink)}
+.sums{font:500 14px "Inter","Segoe UI",sans-serif;fill:var(--muted)}
+.sumv{font:700 20px "Inter","Segoe UI",sans-serif;text-anchor:end}
+.sumt{font:600 24px "Fraunces",Georgia,serif;fill:var(--ink)}
+
+.rodl{font:700 13px "Inter","Segoe UI",sans-serif;text-anchor:middle}
+.mtopsteps .msteps{display:grid;grid-template-columns:auto 1fr auto;gap:6px 18px;align-items:center;padding:10px 14px;margin-bottom:8px}
+.mtopsteps .snav{margin:0}.mtopsteps .snav .hint{display:none}
+.mtopsteps .stext{min-height:0;font-size:.95rem}.mtopsteps .stext p{margin:.1em 0}
+.mtopsteps .stext .formula{margin:4px 0;font-size:1.15rem;padding:4px 12px}
+.mtopsteps .row{flex-wrap:nowrap}
+.mtopsteps+.mfull svg.mstage{max-height:calc(100vh - 420px);min-height:300px}
+@media (max-width:900px){.mtopsteps .msteps{grid-template-columns:1fr}}

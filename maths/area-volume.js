@@ -3,7 +3,11 @@
 (function(){
   const v=(k,t)=>`<i class="v v-${k}">${t}</i>`;
   const L=(id,code,short,title,icon,hook,formula,remember,w,q)=>({id,code,short,title,icon,hook,formula,remember,see:AV[w].see,explore:AV[w].explore,practice:AVQ[q]});
-  MathsEngine.start({ id:'area-volume', subject:'Maths', title:'Area & volume', groups:[
+  MathsEngine.start({ id:'area-volume', subject:'Maths', title:'Perimeter, area & volume', groups:[
+    {name:'Perimeter', lessons:[
+      L('perimeter','P1','Perimeter','Perimeter','perim','Walk all the way round the edge and add up every side.',`P = 2(${v('b','l')} + ${v('w','w')})`,'Perimeter is a length: cm, not cm².','perim','perim'),
+      L('circumference','P2','Circumference','Circumference of a circle','circum','Roll a circle one turn: the distance is just over 3 diameters.',`C = π${v('b','d')} = 2π${v('r','r')}`,'Semicircle: half the circumference + the diameter.','circum','circum')
+    ]},
     {name:'Area', lessons:[
       L('rectangle','A1','Rectangles','Area of a rectangle','rect','Area means counting squares. Rows of squares lead straight to the formula.',`A = ${v('b','l')} × ${v('w','w')}`,'Area units are squared: cm², m², mm².','rect','rect'),
       L('triangle','A2','Triangles','Area of a triangle','tri','Every triangle is exactly half of a rectangle.',`A = ½ ${v('b','b')}${v('h','h')}`,'Use the perpendicular height, not a sloping side.','tri','tri'),
