@@ -47,7 +47,7 @@ window.AVQ=window.AVQ||{};
       return num({text:`How many ${nm} are there in ${w}${F(r,d)}?`, ans:w*d+r, hint:`Each whole has ${d} ${nm}.`,
         work:[`${w} wholes = ${w} × ${d} = ${w*d} ${nm}`,`${w*d} + ${r} = ${w*d+r} ${nm}`]}); },
     R=>{ const d=R.pick([6,8,10,12]); let n; do{ n=R.int(d+1,3*d); }while(n%d===0||gcd(n,d)>1); const w=Math.floor(n/d), r=n%d;
-      return frq({text:`Each slice is ${F(1,d)} of a pizza. There are ${n} slices left. How many pizzas is that? Give a mixed number.`, form:'mixed', hint:`${d} slices make one whole pizza.`,
+      return frq({text:`A pizza is cut into ${d} equal slices. There are ${n} slices left. How many pizzas is that? Write it as a mixed number.`, form:'mixed', hint:`${d} slices make one whole pizza.`,
         work:[`${n} slices = ${F(n,d)} of a pizza`,`${n} ÷ ${d} = ${w} remainder ${r}, so ${w}${F(r,d)} pizzas`]},n,d,true); }
   ];
 
@@ -68,7 +68,7 @@ window.AVQ=window.AVQ||{};
       if(a+b>=L) lines.push(`${F(a+b,L)} is more than 1: it is ${M(a+b,L)}`); lines.push(`${w1+w2} + ${M(a+b,L)} = ${M(tot,L)}`);
       return frq({text:`Work out ${w1}${F(...A)} + ${w2}${F(...B)}. Give your answer as a mixed number in its simplest form.`, form:'mixed', hint:'Add the whole numbers, then add the fractions.', work:lines},tot,L,true); },
     R=>{ const [A,B]=pairD(R,false); const L=lcm(A[1],B[1]), a=A[0]*L/A[1], b=B[0]*L/B[1]; if(a+b>=L) return addfr[1](R);
-      return frq({text:`Sam eats ${F(...A)} of a cake and Ali eats ${F(...B)} of it. What fraction of the cake is left?`, hint:'The whole cake is 1. Add what they ate, then take it from 1.',
+      return frq({text:`Sam eats ${F(...A)} of a cake. Ali eats ${F(...B)} of the same cake. How much of the cake is left?`, hint:'The whole cake is 1. Add what they ate, then take it from 1.',
         work:[`Eaten: ${F(...A)} + ${F(...B)} = ${F(a,L)} + ${F(b,L)} = ${F(a+b,L)}`,`Left: 1 − ${F(a+b,L)} = ${F(L,L)} − ${F(a+b,L)} = ${F(L-a-b,L)}`].concat(gcd(L-a-b,L)>1?[simpLine(L-a-b,L)]:[])},L-a-b,L,true); }
   ];
 
@@ -84,7 +84,7 @@ window.AVQ=window.AVQ||{};
       return num({text:`Find ${F(a,b)} of ${item[0]}${N}${item[1]}.`, ans:a*k, show:`${item[0]}${a*k}${item[1]}`, hint:'Divide by the bottom, then multiply by the top.',
         work:[`${N} ÷ ${b} = ${k}`,`${k} × ${a} = ${a*k}, so the answer is ${item[0]}${a*k}${item[1]}`]}); },
     R=>{ const A=coprime(R,[2,3,4,5]), B=coprime(R,[3,4,5,6]); const n=A[0]*B[0], d=A[1]*B[1], s=simpLine(n,d);
-      return frq({text:`A rectangle is ${F(...A)} m long and ${F(...B)} m wide. Find its area in m².`, unitShow:' m²', hint:'Area = length × width. Multiply the tops, multiply the bottoms.',
+      return frq({text:`A rectangle measures ${F(...A)} m by ${F(...B)} m. What is its area in m²?`, unitShow:' m²', hint:'Area = length × width. Multiply the tops, multiply the bottoms.',
         work:[`Area = ${F(...A)} × ${F(...B)} = ${F(n,d)} m²`].concat(s?[s,`Area = ${M(n,d)} m²`]:[])},n,d,true); }
   ];
 
@@ -99,7 +99,7 @@ window.AVQ=window.AVQ||{};
       return frq({text:`Work out ${F(a,b)} ÷ ${n}. Give your answer in its simplest form.`, hint:`÷ ${n} is the same as × ${F(1,n)}.`,
         work:[`${F(a,b)} ÷ ${n} = ${F(a,b)} × ${F(1,n)} = ${F(a,b*n)}`].concat(s?[s]:[])},a,b*n,true); },
     R=>{ const d=R.pick([2,4,5]), w=R.int(2,5); let r; do{ r=R.int(1,d-1); }while(gcd(r,d)>1); const tot=w*d+r;
-      return frq({text:`A jug holds ${w}${F(r,d)} litres. How many ${F(1,d)}-litre glasses can it fill?`, hint:`How many ${F(1,d)}s fit into ${w}${F(r,d)}?`,
+      return frq({text:`You have ${w}${F(r,d)} litres of juice. Each glass holds ${F(1,d)} of a litre. How many glasses can you fill?`, hint:`How many lots of ${F(1,d)} fit into ${w}${F(r,d)}?`,
         work:[`${w}${F(r,d)} = ${F(tot,d)}`,`${F(tot,d)} ÷ ${F(1,d)} = ${F(tot,d)} × ${d} = ${tot}`]},tot,1,true); }
   ];
 
