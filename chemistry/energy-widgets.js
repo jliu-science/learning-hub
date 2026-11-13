@@ -119,7 +119,7 @@ window.EnergyWidgets = (function(){
       else { firstTry=false; b.disabled=true; b.className='no'; note(`Not ${b.dataset.t==='exo'?'exothermic':'endothermic'}. ${c.why}`,RED,RY-52); } });
     K.svgDrag($('#lbp'),svg,{move:(x,y)=>{ if(!picked||done) return;
         const want=c.type==='exo'?1:-1, d=(y-RY)*want;
-        if(d<0){ py=RY; draw(); note(c.type==='exo'?'Exothermic: the products go down, not up.':'Endothermic: the products go up, not down.',RED,c.type==='exo'?RY+64:RY-52); return; }
+        if(d<0){ firstTry=false; py=RY; draw(); note(c.type==='exo'?'Exothermic: the products go down, not up.':'Endothermic: the products go up, not down.',RED,c.type==='exo'?RY+64:RY-52); return; }
         py=RY+want*Math.min(d,76); draw(); },
       end:()=>{ if(!picked||done) return; const d=Math.abs(py-RY);
         if(d>=40&&Math.sign(py-RY)===(c.type==='exo'?1:-1)){ done=true; note(''); tw(c.type==='exo'?EXO:ENDO,250,()=>{ results[i]=firstTry; if(firstTry) score++; list_();
@@ -283,7 +283,7 @@ window.EnergyWidgets = (function(){
 
   /* ---------------- 6.4.3 What is a bond? Pull a molecule apart ---------------- */
   const EL={C:['#1f8a4c','#fff'],O:['#dc4a3d','#fff'],H:['#fff',INK]};
-  const BE={'C–H':412,'O=O':496,'C=O':803,'O–H':463};
+  const BE={'C–H':412,'O=O':496,'C=O':803,'O–H':463}; // internal only: sets how far a bond stretches before it snaps; never shown (not in the textbook)
   const bname=(a,b,o)=>{ const k1=a+(o===2?'=':'–')+b, k2=b+(o===2?'=':'–')+a; return BE[k1]?k1:k2; };
   const atomSvg=(a,r)=>`<circle r="${r}" fill="${EL[a][0]}" stroke="${INK}" stroke-width="1.5"/><text y="${(r*.36).toFixed(1)}" text-anchor="middle" font-size="${Math.round(r*.95)}" font-weight="700" fill="${EL[a][1]}">${a}</text>`;
   function bondSvg(p,q,o,col,w,gap){ const L=Math.hypot(q[0]-p[0],q[1]-p[1])||1, nx=-(q[1]-p[1])/L, ny=(q[0]-p[0])/L;
@@ -315,9 +315,9 @@ window.EnergyWidgets = (function(){
       svg.querySelector('#pb').innerHTML=B.map(b=>{ if(b.broken) return ''; const p=A[b.i], q=A[b.j]; const f=Math.min(1,(b.s||0)/b.T);
         return bondSvg([p.x,p.y],[q.x,q.y],b.o,f>.05?BL:INK,4-2*f,5); }).join('');
       const pb=B.find(b=>!b.broken&&b.s>2), ng=svg.querySelector('#pnote');
-      if(pb){ clearTimeout(ng._t); ng._t=0; ng.innerHTML=`<rect x="12" y="38" width="404" height="44" fill="#fff" stroke="${BL}" stroke-dasharray="4 3"/><text x="22" y="56" font-size="14" font-weight="700" fill="${BL}">Pulling a ${pb.k} ${pb.o===2?'double':'single'} bond</text><text x="22" y="74" font-size="13" fill="${INK}">Energy needed to break it: ${pb.e} kJ/mol</text><rect x="300" y="64" width="100" height="10" fill="#fff" stroke="${BL}"/><rect x="300" y="64" width="${100*Math.min(1,pb.s/pb.T)}" height="10" fill="${BL}"/>`; }
+      if(pb){ clearTimeout(ng._t); ng._t=0; ng.innerHTML=`<rect x="12" y="38" width="404" height="44" fill="#fff" stroke="${BL}" stroke-dasharray="4 3"/><text x="22" y="56" font-size="14" font-weight="700" fill="${BL}">Pulling a ${pb.k} ${pb.o===2?'double':'single'} bond</text><text x="22" y="74" font-size="13" fill="${INK}">Breaking a bond needs <tspan font-weight="700">energy in</tspan></text><rect x="300" y="64" width="100" height="10" fill="#fff" stroke="${BL}"/><rect x="300" y="64" width="${100*Math.min(1,pb.s/pb.T)}" height="10" fill="${BL}"/>`; }
       else if(!ng._t) ng.innerHTML='';
-      svg.querySelector('#ptot').innerHTML=broke.length?`Energy taken in: ${broke.map(b=>b.e).join(' + ')} = <tspan font-weight="700">${total} kJ/mol</tspan>`:'Pull an outside atom away from the molecule';
+      svg.querySelector('#ptot').innerHTML=broke.length?`Bonds broken: <tspan font-weight="700">${broke.length} of ${B.length}</tspan>. Each one took energy in.`:'Pull an outside atom away from the molecule';
       A.forEach(a=>{ a.el.setAttribute('transform',`translate(${a.x},${a.y})`); const r=a.el.querySelector('.ring'); if(r) r.style.display=a.free?'none':''; });
     }
     function build(){
@@ -328,7 +328,7 @@ window.EnergyWidgets = (function(){
         K.svgDrag(g,svg,{start(){ cueOff(); b0=B.find(b=>!b.broken&&(b.i===k||b.j===k)); },
           move(x,y){ a.x=Math.max(20,Math.min(500,x)); a.y=Math.max(100,Math.min(312,y)); if(b0){ const o=other(b0);
             b0.s=Math.max(0,Math.hypot(a.x-o.x,a.y-o.y)-b0.L);
-            if(b0.s>=b0.T){ b0.broken=true; total+=b0.e; broke.push(b0); a.free=!B.some(b=>!b.broken&&(b.i===k||b.j===k)); burst(svg.parentNode,'0 0 520 350',(a.x+other(b0).x)/2,(a.y+other(b0).y)/2,BL,'+'+b0.e+' in'); b0=null; calc(true); note(); } }
+            if(b0.s>=b0.T){ b0.broken=true; total+=b0.e; broke.push(b0); a.free=!B.some(b=>!b.broken&&(b.i===k||b.j===k)); burst(svg.parentNode,'0 0 520 350',(a.x+other(b0).x)/2,(a.y+other(b0).y)/2,BL,'energy in'); b0=null; calc(true); note(); } }
             redraw(); },
           end(){ if(b0&&!b0.broken){ const bb=b0, o=other(bb), ux=a.x-o.x, uy=a.y-o.y, L=Math.hypot(ux,uy)||1, fx=a.x, fy=a.y, tx=o.x+ux/L*bb.L, ty=o.y+uy/L*bb.L;
               if(bb.s>4) setTimeout(()=>{ const g=svg.querySelector('#pnote'); g.innerHTML=`<rect x="12" y="38" width="404" height="44" fill="#fff" stroke="${MUTED}" stroke-dasharray="4 3"/><text x="22" y="56" font-size="14" font-weight="700">Not enough energy</text><text x="22" y="74" font-size="13">The bond pulled the atom back. Pull further.</text>`; clearTimeout(g._t); g._t=setTimeout(()=>{ g._t=0; g.innerHTML=''; },2500); },320);
@@ -341,13 +341,10 @@ window.EnergyWidgets = (function(){
     }
     function cueOff(){ svg.querySelector('#pcue').innerHTML=''; svg.querySelectorAll('.wig').forEach(w=>w.classList.remove('wig')); }
     function note(){ const b=broke[broke.length-1], g=svg.querySelector('#pnote');
-      g.innerHTML=`<g class="fadein"><rect x="12" y="38" width="404" height="44" fill="#e0f2fe" stroke="${BL}"/><text x="22" y="56" font-size="14" font-weight="700" fill="${BL}">Snap! ${b.k} bond broken</text><text x="22" y="74" font-size="13" fill="${INK}">${b.o===2?'double bond (two lines)':'single bond (one line)'}: ${b.e} kJ/mol taken in</text></g>`;
+      g.innerHTML=`<g class="fadein"><rect x="12" y="38" width="404" height="44" fill="#e0f2fe" stroke="${BL}"/><text x="22" y="56" font-size="14" font-weight="700" fill="${BL}">Snap! ${b.k} bond broken</text><text x="22" y="74" font-size="13" fill="${INK}">${b.o===2?'double bond (two lines)':'single bond (one line)'}: energy was taken in</text></g>`;
       clearTimeout(g._t); g._t=setTimeout(()=>{ g._t=0; g.innerHTML=''; },3500); }
     let raf=0; const redraw=()=>{ if(raf) return; raf=requestAnimationFrame(()=>{ raf=0; draw(); }); };
-    function calc(snap){ const last=broke[broke.length-1];
-      $('#pcalc').innerHTML=(last?`${snap?'Snap! ':''}You broke a <b>${last.k}</b> bond (${last.o===2?'double bond: two lines':'single bond: one line'}). It took <b style="color:${BL}">${last.e} kJ/mol</b> in.<br>`:'Bonds broken: none yet.<br>')+
-        `Energy taken in so far: <b style="color:${BL}">${broke.length?broke.map(b=>b.e).join(' + ')+' = ':''}${total} kJ/mol</b>`+
-        (broke.length&&broke.length===B.length?`<br><b>All bonds broken.</b> Now the atoms are separate.`:''); }
+    function calc(){}
     function setup(k){ M=MOLS[k]; total=0; broke=[]; $('#psub').innerHTML=`<p><b>${M.n}</b>: ${M.info}</p><div class="ghsrow">${M.ghs.length?M.ghs.map(ghsSvg).join(''):'<span class="hint">No hazard symbol</span>'}</div>`;
       A=M.atoms.map(([a,x,y])=>({a,x:CX+x,y:CY+y}));
       B=M.bonds.map(([i,j,o])=>{ const k2=bname(A[i].a,A[j].a,o), e=BE[k2]; return {i,j,o,k:k2,e,L:Math.hypot(A[i].x-A[j].x,A[i].y-A[j].y),T:e/6,s:0}; });
@@ -359,7 +356,7 @@ window.EnergyWidgets = (function(){
 
   /* ---------------- 6.4.3 Burning methane on the energy diagram (class notes example) ---------------- */
   function methane(el,U){
-    const S=.085, TOP=100, IN=2640, OUT=3458, yR=TOP+IN*S, yP=TOP+OUT*S, BL='#0284c7', PU='#7c3aed';
+    const TOP=100, yR=TOP+224, yP=TOP+294, BL='#0284c7', PU='#7c3aed';
     // atoms: 0 C, 1-4 H, 5-8 O
     const KIND=['C','H','H','H','H','O','O','O','O'];
     const POS={
@@ -369,7 +366,7 @@ window.EnergyWidgets = (function(){
       P:[[544,yP-70],[486,yP-12],[534,yP-12],[576,yP-12],[624,yP-12],[500,yP-70],[588,yP-70],[510,yP-30],[600,yP-30]]};
     const RB=[[0,1,1],[0,2,1],[0,3,1],[0,4,1],[5,6,2],[7,8,2]].map(([i,j,o])=>({i,j,o,k:bname(KIND[i],KIND[j],o)}));
     const PB=[[0,5,2],[0,6,2],[7,1,1],[7,2,1],[8,3,1],[8,4,1]].map(([i,j,o])=>({i,j,o,k:bname(KIND[i],KIND[j],o)}));
-    let c=0; RB.forEach(b=>{ c+=BE[b.k]; b.cum=c; }); c=0; PB.forEach(b=>{ c+=BE[b.k]; b.cum=c; });
+    RB.forEach((b,k)=>b.f=(k+1)/RB.length); PB.forEach((b,k)=>b.f=(k+1)/PB.length);
     let step, t1, t2, pos, nIn=0, nOut=0, cmp=0;
     el.innerHTML=`<div class="sim bond-sim"><div class="ctl">
         <ol class="steps-list" id="msteps" style="margin-top:0"><li><span>Break the bonds <span class="hint">energy in</span></span></li><li><span>Make new bonds <span class="hint">energy out</span></span></li><li><span>Compare</span></li></ol>
@@ -380,24 +377,23 @@ window.EnergyWidgets = (function(){
     const lerp=(A,B2,t)=>A.map((p,i)=>[p[0]+(B2[i][0]-p[0])*t,p[1]+(B2[i][1]-p[1])*t]);
     const level=(x1,x2,y,l)=>`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${INK}" stroke-width="4"/><text x="${(x1+x2)/2}" y="${y+18}" text-anchor="middle" font-size="12" fill="${MUTED}">${l}</text>`;
     function draw(){
-      const bIn=RB.filter(b=>t1*IN>=b.cum-1), bOut=PB.filter(b=>t2*OUT>=b.cum-1);
-      if(bIn.length>nIn){ const b=bIn[bIn.length-1]; burst(svg.parentNode,'0 0 680 440',200,yR-(yR-TOP)*t1+52,BL,'+'+BE[b.k]); } nIn=bIn.length;
-      if(bOut.length>nOut){ const b=bOut[bOut.length-1]; burst(svg.parentNode,'0 0 680 440',500,TOP+(yP-TOP)*t2+48,RED,'+'+BE[b.k]); } nOut=bOut.length;
-      const eIn=bIn.length?bIn[bIn.length-1].cum:0, eOut=bOut.length?bOut[bOut.length-1].cum:0;
+      const bIn=RB.filter(b=>t1>=b.f-.001), bOut=PB.filter(b=>t2>=b.f-.001);
+      if(bIn.length>nIn){ const b=bIn[bIn.length-1]; burst(svg.parentNode,'0 0 680 440',200,yR-(yR-TOP)*t1+52,BL,'in'); } nIn=bIn.length;
+      if(bOut.length>nOut){ const b=bOut[bOut.length-1]; burst(svg.parentNode,'0 0 680 440',500,TOP+(yP-TOP)*t2+48,RED,'out'); } nOut=bOut.length;
       let h=`<line x1="40" y1="415" x2="40" y2="14" stroke="${INK}" stroke-width="2" marker-end="url(#mah)"/><line x1="40" y1="415" x2="672" y2="415" stroke="${INK}" stroke-width="2" marker-end="url(#mah)"/>
         <text x="22" y="220" transform="rotate(-90 22 220)" text-anchor="middle" font-size="14" fill="${MUTED}">energy in chemicals</text>
         <text x="360" y="434" text-anchor="middle" font-size="12" fill="${MUTED}">progress of reaction</text>
         <text x="56" y="24" font-size="14" fill="${INK}">methane + oxygen → carbon dioxide + water</text>`+level(60,225,yR,'methane + oxygen');
       const n=(arr,k)=>arr.filter(b=>b.k===k).length, T2=(x,y,t,o)=>`<text x="${x}" y="${y}" font-size="${o&&o.b?14:12.5}" ${o&&o.b?'font-weight="700"':''} ${o&&o.end?'text-anchor="end"':''} fill="${o&&o.c||INK}">${t}</text>`;
-      const inLines=(x,y,end)=>T2(x,y,`C–H: 412 × ${n(bIn,'C–H')} = ${412*n(bIn,'C–H')}`,{c:BL,end})+T2(x,y+17,`O=O: 496 × ${n(bIn,'O=O')} = ${496*n(bIn,'O=O')}`,{c:BL,end})+T2(x,y+36,`energy in = ${eIn} kJ/mol`,{c:BL,b:1,end});
-      const outLines=(x,y,end)=>T2(x,y,`C=O: 803 × ${n(bOut,'C=O')} = ${803*n(bOut,'C=O')}`,{c:RED,end})+T2(x,y+17,`O–H: 463 × ${n(bOut,'O–H')} = ${463*n(bOut,'O–H')}`,{c:RED,end})+T2(x,y+36,`energy out = ${eOut} kJ/mol`,{c:RED,b:1,end});
+      const inLines=(x,y,end)=>T2(x,y,`C–H bonds broken: ${n(bIn,'C–H')} of 4`,{c:BL,end})+T2(x,y+17,`O=O bonds broken: ${n(bIn,'O=O')} of 2`,{c:BL,end})+T2(x,y+36,'energy taken in',{c:BL,b:1,end});
+      const outLines=(x,y,end)=>T2(x,y,`C=O bonds made: ${n(bOut,'C=O')} of 2`,{c:RED,end})+T2(x,y+17,`O–H bonds made: ${n(bOut,'O–H')} of 4`,{c:RED,end})+T2(x,y+36,'energy given out',{c:RED,b:1,end});
       if(t1>0) h+=K.arrow(232,yR,232,yR-(yR-TOP)*t1,BL,4,11);
       if(t1>=1) h+=level(232,458,TOP,step===0?'separate atoms':'')+(step===0?inLines(244,TOP+40):inLines(222,TOP+30,1));
       else if(t1>0) h+=inLines(244,yR-(yR-TOP)*t1+20);
       if(t2>0&&t2<1){ const ty=TOP+(yP-TOP)*t2; h+=K.arrow(458,TOP,458,ty,RED,4,11)+outLines(468,ty-52); }
       if(t2>=1) h+=K.arrow(458,TOP,458,yP,RED,4,11)+level(458,650,yP,'carbon dioxide + water')+outLines(450,TOP+150,1);
       if(step===0&&!t1) h+=T2(262,yR-110,'Bonds must break before new bonds are made.',{c:MUTED});
-      if(step===2&&cmp>0) h+=T2(250,52,`energy in (${IN}) is less than energy out (${OUT})`,{b:1})+(cmp>1?T2(250,72,`so the reaction is EXOTHERMIC: ${OUT-IN} kJ/mol given out`,{b:1,c:PU})+`<text x="657" y="${(yR+yP)/2-2}" font-size="12" font-weight="700" fill="${PU}">${OUT-IN}</text><text x="657" y="${(yR+yP)/2+12}" font-size="12" font-weight="700" fill="${PU}">out</text>`:'');
+      if(step===2&&cmp>0) h+=T2(250,52,'energy in (blue) is less than energy out (red)',{b:1})+(cmp>1?T2(250,72,'so overall energy is given out: the reaction is EXOTHERMIC',{b:1,c:PU})+`<text x="657" y="${(yR+yP)/2+5}" font-size="12" font-weight="700" fill="${PU}">out</text>`:'');
       if(step===2) h+=`<line x1="225" y1="${yR}" x2="470" y2="${yR}" stroke="${MUTED}" stroke-dasharray="5 4" stroke-width="1.5"/><line x1="612" y1="${yR}" x2="660" y2="${yR}" stroke="${MUTED}" stroke-dasharray="5 4" stroke-width="1.5"/>${K.arrow(652,yR+2,652,yP-2,PU,3,9)}`;
       // bonds
       const bs=[...RB.filter(b=>!bIn.includes(b)),...bOut];
@@ -410,17 +406,14 @@ window.EnergyWidgets = (function(){
       svg.innerHTML=`<defs><marker id="mah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${INK}"/></marker></defs>`+h;
       calc(bIn,bOut);
     }
-    function calc(bIn,bOut){ const n=(arr,k)=>arr.filter(b=>b.k===k).length;
-      let h=`<span style="color:${BL}">Energy in (break bonds):<br>C–H 412 × ${n(bIn,'C–H')} = ${412*n(bIn,'C–H')}<br>O=O 496 × ${n(bIn,'O=O')} = ${496*n(bIn,'O=O')}<br>Total in = <b>${412*n(bIn,'C–H')+496*n(bIn,'O=O')} kJ/mol</b></span>`;
-      if(step>=1) h+=`<br><span style="color:${RED}">Energy out (make bonds):<br>C=O 803 × ${n(bOut,'C=O')} = ${803*n(bOut,'C=O')}<br>O–H 463 × ${n(bOut,'O–H')} = ${463*n(bOut,'O–H')}<br>Total out = <b>${803*n(bOut,'C=O')+463*n(bOut,'O–H')} kJ/mol</b></span>`;
-      }
+    function calc(){}
     let drag=null;
     svg.addEventListener('pointerdown',e=>{ const g=e.target.closest('#mgrab'); if(!g) return; e.preventDefault(); svg.setPointerCapture(e.pointerId);
       const p=K.pt(svg,e); drag={y0:p.y,t0:step===0?t1:t2}; });
     svg.addEventListener('pointermove',e=>{ if(!drag) return; const y=K.pt(svg,e).y;
-      if(step===0){ t1=Math.max(t1,Math.min(1,drag.t0+(drag.y0-y)/(yR-TOP))); if(t1>.97) t1=1; const dy=(TOP-yR)*t1, gone=RB.filter(x=>t1*IN>=x.cum-1);
+      if(step===0){ t1=Math.max(t1,Math.min(1,drag.t0+(drag.y0-y)/(yR-TOP))); if(t1>.97) t1=1; const dy=(TOP-yR)*t1, gone=RB.filter(x=>t1>=x.f-.001);
         pos=POS.R.map((r,i)=>{ const mine=RB.filter(x=>x.i===i||x.j===i), k=mine.every(x=>gone.includes(x))?1:0, T=POS.T[i]; return [r[0]+(T[0]-r[0])*k, r[1]+dy+(T[1]-r[1]-(TOP-yR))*k]; }); }
-      else { t2=Math.max(t2,Math.min(1,drag.t0+(y-drag.y0)/(yP-TOP))); if(t2>.97) t2=1; const dy=(yP-TOP)*t2, made=PB.filter(x=>t2*OUT>=x.cum-1);
+      else { t2=Math.max(t2,Math.min(1,drag.t0+(y-drag.y0)/(yP-TOP))); if(t2>.97) t2=1; const dy=(yP-TOP)*t2, made=PB.filter(x=>t2>=x.f-.001);
         pos=POS.T.map((T,i)=>{ const mine=PB.filter(x=>x.i===i||x.j===i), k=mine.some(x=>made.includes(x))?1:0, Q=POS.Q[i]; return [T[0]+(Q[0]-T[0])*k, T[1]+(Q[1]-T[1])*k+dy]; }); }
       draw(); if(step===0&&t1>=1){ drag=null; brokeAll(); } else if(step===1&&t2>=1){ drag=null; const from=pos.map(q=>[...q]); tween(600,e=>{ pos=lerp(from,POS.P,e); draw(); },madeAll); } });
     const stop=()=>{ drag=null; }; svg.addEventListener('pointerup',stop); svg.addEventListener('pointercancel',stop);
@@ -432,7 +425,7 @@ window.EnergyWidgets = (function(){
     function madeAll(){ $('#mtxt').innerHTML='All new bonds made';
       $('#mnext').textContent='Next: compare →'; $('#mnext').style.display=''; $('#mnext').onclick=compare; }
     function compare(){ setStep(2); draw(); $('#mtxt').innerHTML='Step 3: compare';
-      ask(`Energy taken to break the bonds (<b>${IN}</b>) is ____ the energy given out making the bonds (<b>${OUT}</b>).`,['more than','less than'],1,`Which is smaller, ${IN} or ${OUT}?`,()=>{ cmp=1; draw();
+      ask('The energy taken in to break the bonds (<b>blue arrow</b>) is ____ the energy given out making the new bonds (<b>red arrow</b>).',['more than','less than'],1,'Compare the lengths of the blue and red arrows.',()=>{ cmp=1; draw();
       ask('So the reaction is…',['endothermic','exothermic'],1,'More energy comes out than goes in.',()=>{ cmp=2; draw(); }); }); }
     function ask(q,opts,right,hint,next){ const box=U.h('div',{},`<p style="margin:10px 0 6px">${q}</p><div class="ch"></div>`); $('#mq').appendChild(box);
       const bs=opts.map((o,i)=>{ const b=U.h('button',{type:'button'},o); b.onclick=()=>{ if(box.dataset.done) return;
