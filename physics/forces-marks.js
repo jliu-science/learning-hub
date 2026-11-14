@@ -24,7 +24,8 @@ window.MARKS = {
   l2:[
     [ [['shape','deform','squash','flatten','change']], [['compress','squash']] ],
     [ [['bond','particle']], [['compress','push','squash','together','weight']], [['push back','reaction','support','pushes back','push up','pushes up','force back']] ],
-    [ [['12']], [['double','twice','2 times','two times','x2','proportion']], permanent ]
+    [ [['12']], [['double','twice','2 times','two times','x2','proportion']], permanent ],
+    [ [['extension','extend','stretch']], [['original','minus','take away','takeaway','subtract','difference','take off']], [['1 n','known','each newton','per newton','compare','divide','2 cm','one newton']] ]
   ],
   l3:[
     [ [['5'],['0 75','0.75','75']], {check:answer=>/\b3[.,]75\s*(?:n\s*[·⋅*.]?\s*m|newton[ -]*(?:metres?|meters?))\b/i.test(answer)} ],

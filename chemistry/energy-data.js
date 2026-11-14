@@ -24,8 +24,9 @@ const L1 = {
   ],
   summary:[
     ['reaction','All chemical reactions involve <b>energy transfers</b>. Changes of state and dissolving do too.'],
-    ['exo','<b>Exothermic</b>: energy is transferred <b>to</b> the surroundings, so the <b>temperature increases</b>. Examples: combustion, freezing, condensing, some dissolving.'],
-    ['endo','<b>Endothermic</b>: energy is transferred <b>from</b> the surroundings, so the <b>temperature decreases</b>. Examples: some reactions, melting, boiling, some dissolving.'],
+    ['exo','<b>Exothermic</b>: energy is transferred <b>to</b> the surroundings, so the <b>temperature increases</b>. Examples: combustion, <b>respiration</b>, <b>rusting</b>, <b>neutralisation</b>, freezing, condensing, some dissolving.'],
+    ['endo','<b>Endothermic</b>: energy is transferred <b>from</b> the surroundings, so the <b>temperature decreases</b>. Examples: <b>photosynthesis</b>, <b>thermal decomposition</b>, some other reactions, melting, <b>evaporation</b>, boiling, some dissolving.'],
+    ['reaction','When ice melts it is <b>not</b> a chemical reaction. It is a <b>physical change</b> (a change of state).'],
     ['endo','A <b>cold pack</b>: ammonium nitrate dissolves in water. This takes in energy from the injury, so the injury cools down.'],
     ['endo','Tom mixed citric acid with sodium hydrogen carbonate: the temperature of the mixture fell from 20 °C to <b>10 °C</b>, an <b>endothermic</b> reaction.'],
     ['exo','Zoe mixed sulfuric acid with sodium hydroxide: the temperature of the mixture rose from 20 °C to <b>30 °C</b>, an <b>exothermic</b> reaction.'],
@@ -38,10 +39,10 @@ const L1 = {
     {title:'Sort the changes',intro:'Drag each change into the right box.',render:(el,U)=>U.sorter(el,{
       bins:[{id:'x',label:'Exothermic: energy out',t:'exo'},{id:'n',label:'Endothermic: energy in',t:'endo'}],
       items:[
-        {label:'Burning a candle',bin:'x',why:'combustion gives out heat and light'},{label:'A hand warmer warming up',bin:'x'},{label:'Water freezing into ice',bin:'x',why:'freezing gives out energy'},
+        {label:'Burning a candle',bin:'x',why:'combustion gives out heat and light'},{label:'Respiration',bin:'x'},{label:'Rusting',bin:'x'},{label:'Neutralisation',bin:'x'},{label:'Water freezing into ice',bin:'x',why:'freezing gives out energy'},
         {label:'Steam condensing on a window',bin:'x'},{label:'Sulfuric acid + sodium hydroxide (20 → 30 °C)',bin:'x'},{label:'Calcium chloride dissolving (20 → 35 °C)',bin:'x'},
         {label:'A cold pack on an injury',bin:'n',why:'it takes energy from the injury'},{label:'Ice melting in a drink',bin:'n',why:'melting takes in energy'},{label:'Water boiling in a kettle',bin:'n'},
-        {label:'Citric acid + sodium hydrogen carbonate (20 → 10 °C)',bin:'n'},{label:'Potassium chloride dissolving (20 → 10 °C)',bin:'n'}
+        {label:'Citric acid + sodium hydrogen carbonate (20 → 10 °C)',bin:'n'},{label:'Photosynthesis',bin:'n'},{label:'Thermal decomposition',bin:'n'},{label:'Evaporation',bin:'n'}
       ]})},
     {title:'Spell it',intro:'Read the clue and type the key word. The spelling has to be exact, just like in the test.',render:(el,U)=>K.spell(el,U,[
       {word:'exothermic',clue:'A change that transfers energy <b>to</b> the surroundings.'},
@@ -56,6 +57,8 @@ const L1 = {
     {q:'In an <b>endothermic</b> change, the temperature of the surroundings…',options:['decreases','increases','stays the same','doubles'],answer:0},
     {q:'Which of these is an <b>exothermic</b> change?',options:['Combustion of a fuel','Melting ice','Boiling water','A cold pack working'],answer:0},
     {q:'Which of these is an <b>endothermic</b> change?',options:['Melting','Freezing','Condensing','Burning'],answer:0,explain:'Melting and boiling take in energy. Freezing and condensing give it out.'},
+    {q:'Which of these reactions is <b>endothermic</b>?',options:['Photosynthesis','Respiration','Rusting','Neutralisation'],answer:0,explain:'Photosynthesis and thermal decomposition take in energy. Respiration, rusting, combustion and neutralisation give it out.'},
+    {q:'Ice melts in a glass. This is…',options:['a physical change, not a chemical reaction','an exothermic chemical reaction','a combustion reaction','a neutralisation reaction'],answer:0},
     {q:'Tom mixes citric acid and sodium hydrogen carbonate. The temperature of the mixture goes from 20 °C to 10 °C. The reaction is…',options:['endothermic','exothermic','not a chemical reaction','neither'],answer:0},
     {q:'Zoe mixes dilute sulfuric acid with sodium hydroxide. The temperature of the mixture goes from 20 °C to 30 °C. What does this show?',options:['The reaction is exothermic','The reaction is endothermic','Energy was taken in from the surroundings','The thermometer is broken'],answer:0},
     {type:'fill',q:'A cold pack contains ammonium nitrate and water. When they mix, the pack gets cold. This is an ________ change.',answers:['endothermic']},

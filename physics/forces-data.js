@@ -2,6 +2,7 @@
    Lessons follow the textbook pages 1.3.1–1.3.3. */
 (function(){
 const W = window.ForcesWidgets, K = window.Kit;
+const HW = window.HookeWidgets || {};
 
 const TONES = {
   pal:{ friction:['#b45309','#fef3c7','#78350f'], drag:['#0284c7','#e0f2fe','#075985'], balance:['#4f46e5','#e0e7ff','#3730a3'],
@@ -111,12 +112,18 @@ const L2 = {
     ['spring','Bungee cords, springs and lift cables all stretch when you exert a force. The amount they stretch is the <b>extension</b>.'],
     ['spring','<b>Double</b> the force on a spring and the extension will <b>double</b>. Remove the force and it goes back to its original length.'],
     ['spring','Past its <b>elastic limit</b> a spring will not go back. Trampoline springs are designed never to go past it.'],
-    ['spring','<b>Hooke’s Law</b>: extension doubles when force doubles (up to the <b>elastic limit</b>). The graph is a straight line through (0,0): a <b>linear relationship</b>. Not everything does this, e.g. an elastic band or poly(ethene).']
+    ['spring','<b>Hooke’s Law</b>: extension doubles when force doubles (up to the <b>elastic limit</b>). The graph is a straight line through (0,0): a <b>linear relationship</b>. Not everything does this, e.g. an elastic band or poly(ethene).'],
+    ['spring','<b>Extension = measured length − original length.</b> E.g. an elastic band 50 mm long is stretched to 75 mm: extension = 75 − 50 = <b>25 mm</b>. With no force, the extension is 0.'],
+    ['spring','You can use the <b>extension</b> of a spring to <b>measure the size of a force</b>. If 1 N stretches it 2 cm and a force stretches it 6 cm, the force is 3 N.'],
+    ['spring','If results don’t follow Hooke’s Law, check for: the spring going <b>over its elastic limit</b>, an <b>incorrect weight</b>, <b>incorrect maths</b>, or <b>incorrect use of equipment</b>.']
   ],
   memory:'<b>Squash → compression. Stretch → tension.</b> Straight line through zero → Hooke’s Law.',
   fact:['','Foul fact: when a footballer heads a ball, the forces deform both the ball and the footballer’s head.'],
   widgets:[
     {title:'Spring lab',intro:'Hang weights on the spring, plot the graph, then go past the elastic limit and see what happens.',render:W.springLab},
+    {title:'Measure a force',intro:'Your teacher asked: <b>how would you use this fact to measure a force?</b> Find out what 1 N does, then weigh three mystery boxes.',render:HW.measure},
+    {title:'Elastic band results',intro:'Your class experiment. Add the weights one at a time and work out each <b>extension</b>.',render:HW.band},
+    {title:'Results detective',intro:'Four experiments that went wrong. Find the reason for each one.',render:HW.detective},
     {title:'Squashed or stretched?',intro:'<b>How:</b> press and hold an example card, drag it into the right box, then let go.',render:(el,U)=>U.sorter(el,{
       bins:[{id:'c',label:'Compression (squashed)',t:'squash'},{id:'t',label:'Tension (stretched)',t:'spring'}],
       items:[
@@ -137,7 +144,11 @@ const L2 = {
     {q:'A spring is 4 cm long. A 3 N force stretches it to 6 cm. What is the extension?',options:['2 cm','6 cm','10 cm','4 cm'],answer:0},
     {q:'That same spring: what would the extension be if you doubled the force to 6 N?',options:['4 cm','2 cm','8 cm','12 cm'],answer:0},
     {type:'fill',q:'Stretch a spring past its ________ limit and it will not go back to its original length.',answers:['elastic']},
-    {q:'A force–extension graph is a straight line through (0,0). This shows…',options:['a linear relationship','the elastic limit has been passed','no extension','a non-linear relationship'],answer:0}
+    {q:'A force–extension graph is a straight line through (0,0). This shows…',options:['a linear relationship','the elastic limit has been passed','no extension','a non-linear relationship'],answer:0},
+    {q:'An elastic band is 50 mm long. With 3 N hanging on it, it is 130 mm long. What is the extension?',options:['80 mm','130 mm','180 mm','50 mm'],answer:0},
+    {q:'1 N stretches a spring by 2 cm. A box stretches it by 8 cm. What force does the box exert?',options:['4 N','8 N','16 N','2 N'],answer:0},
+    {q:'A results table says: 0 N, measured length 50 mm, original length 50 mm, extension 25 mm. What went wrong?',options:['incorrect maths','the spring went over its elastic limit','the spring obeys Hooke’s Law','the weights were too light'],answer:0},
+    {q:'Halfway through an experiment the ruler slipped. Which reason for bad results is this?',options:['incorrect use of equipment','incorrect weight','incorrect maths','over the elastic limit'],answer:0}
   ],
   apply:[
     {scenario:'A tennis ball hits the ground and bounces.',question:'Describe what happens to the ball when it hits the ground, using the key words.',marks:2,
@@ -149,7 +160,10 @@ const L2 = {
       points:['Particles joined by bonds','Weight compresses the bonds / pushes particles together','Bonds push back: reaction / support force']},
     {scenario:'Using a spring that obeys Hooke’s Law, you measure an extension of 6 cm with a force of 3 N.',question:'What extension would you expect with 6 N? Explain using Hooke’s Law, and say what would happen if you went past the elastic limit.',marks:3,
       model:'12 cm. The force has doubled, and Hooke’s Law says that if you double the force the extension doubles. If you stretch it past its elastic limit, it will not go back to its original length when the force is removed (and the graph stops being a straight line).',
-      points:['12 cm','Double the force, double the extension','Past the elastic limit it won’t go back to its original length']}
+      points:['12 cm','Double the force, double the extension','Past the elastic limit it won’t go back to its original length']},
+    {scenario:'Your teacher asks: “If you double the force on a spring the extension will double. How would you use this fact to measure a force?”',question:'Explain how you would use a spring to measure the size of a force.',marks:3,
+      model:'Hang a known force, such as a 1 N weight, on the spring and measure the extension (measured length − original length). Then hang the unknown force and measure its extension. Because the extension doubles when the force doubles, the extension tells you the size of the force: e.g. if 1 N gives 2 cm and the unknown gives 6 cm, the force is 3 N.',
+      points:['Measure the extension of the spring','Extension = measured length − original length','Compare with a known force (e.g. 1 N) to work out the force']}
   ]
 };
 
