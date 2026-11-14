@@ -38,12 +38,13 @@ window.HookeWidgets = (function(){
      fill the extension with bricks to count the newtons. Then build a force scale on the ruler and read box D straight off it. */
   function measure(el){
     const L0=5, PER=2, PX=13, TOP=44, CX=236, RX=70, BX=140, BW=26;
+    const CAL='#0f766e';
     const BOX=[{id:'A',f:3,col:'#7c3aed'},{id:'B',f:6,col:'#0e7490'},{id:'C',f:5,col:'#b45309'},{id:'D',f:4,col:'#be185d'}];
     let st='cal', bi=0, len=L0, hung=null, reading=0, moved=false, bricks=0, tags=0, found={};
     el.innerHTML=`<div class="stage" style="padding:6px"><svg viewBox="0 0 680 440" id="mfsvg" style="max-height:min(660px,82vh)" aria-label="A spring and a ruler used to measure forces">
       <rect x="10" y="426" width="290" height="10" rx="2" fill="#57534e"/><rect x="18" y="14" width="7" height="414" fill="#78716c"/><rect x="18" y="16" width="${CX-4}" height="7" rx="2" fill="#78716c"/>
       <path d="M${CX} 23 L${CX} ${TOP}" stroke="${INK}" stroke-width="2.5"/>
-      <g id="mfruler"></g><g id="mfscale"></g><g id="mforig"></g><g id="mfgap"></g><g id="mfbricks"></g><g id="mfspring"></g><g id="mfhook"></g><g id="mfcalc"></g>
+      <g id="mfruler"></g><g id="mfscale"></g><g id="mforig"></g><g id="mfgap"></g><g id="mfbricks"></g><g id="mfspring"></g><g id="mfhook"></g><g id="mfcal"></g><g id="mfcalc"></g>
       <rect x="470" y="400" width="200" height="8" rx="2" fill="#a8a29e"/><g id="mfpile" class="hk-grab"></g><g id="mftags"></g>
       <g id="mfptr" class="hk-grab"></g><g id="mfitems"></g><g id="mfban"></g><g id="mfbtn"></g></svg></div>
       <p class="hint" style="margin:6px 0 0"><b>Estimated values:</b> this demo spring is <b>set</b> to stretch <b>2 cm per newton</b>. Real springs are different.</p>`;
@@ -54,7 +55,7 @@ window.HookeWidgets = (function(){
     $('#mforig').innerHTML=`<line x1="${RX}" y1="${yOf(L0)}" x2="${CX+40}" y2="${yOf(L0)}" stroke="${OK}" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${CX+22}" y="${yOf(L0)-7}" font-size="13" font-weight="700" fill="${OK}" ${halo}>original length 5 cm</text>`;
     // prompt on the diagram (top right)
     function ban(html,bad){ $('#mfban').innerHTML=`<foreignObject x="290" y="2" width="384" height="84"><div xmlns="http://www.w3.org/1999/xhtml" style="font:15px/1.4 Inter,'Segoe UI',sans-serif;color:${bad?BAD:INK};border-left:4px solid ${bad?BAD:'var(--accent)'};background:${bad?'#fef2f2':'var(--accent-soft)'};padding:7px 10px">${html}</div></foreignObject>`; }
-    function button(label,fn){ $('#mfbtn').innerHTML=label?`<g class="hk-btn" id="mfgo"><rect x="300" y="314" width="150" height="34" rx="3" fill="${BLUE}"/><text x="375" y="336" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">${label}</text></g>`:''; if(label) $('#mfgo').onclick=fn; }
+    function button(label,fn){ if(!label) return; const f=$('#mfban div'); f.insertAdjacentHTML('beforeend',` <button class="btn small" id="mfgo" style="margin-left:6px">${label}</button>`); $('#mfgo').onclick=fn; }
     // things on the shelf
     const HOME={w:{x:495,y:366}}; BOX.forEach((b,i)=>HOME[b.id]={x:i<3?545+i*45:495,y:360});
     const items={};
@@ -77,18 +78,26 @@ window.HookeWidgets = (function(){
         +(moved?'':`<text x="${RX+60}" y="${y-18}" font-size="14" font-weight="700" fill="${BLUE}" ${halo}>drag me ↓</text>`); }
     K.svgDrag(ptr,svg,{move(x,y){ if(st!=='read') return; moved=true; reading=Math.max(0,Math.min(25,Math.round((y-TOP)/PX))); drawPtr(); },
       end(){ if(st!=='read'||!moved) return; const L=L0+box().f*PER;
-        if(reading===L){ st='fill'; ptr.innerHTML=''; drawRead(); prompt(); }
+        if(reading===L){ st='fill'; ptr.innerHTML=''; drawRead(); prompt(); setTimeout(()=>drawCal(true),400); }
         else ban(reading<L?'Too high. Line the pointer up with the <b>blue line at the bottom</b> of the spring.':'Too low. Line the pointer up with the <b>blue line at the bottom</b> of the spring.',true); }});
     // the measured length and the extension sum, beside the spring
+    // step 1 result stays on the diagram: where 2 cm per N comes from
+    function drawCal(flash){ if(!found.cal&&st!=='calshow'){ $('#mfcal').innerHTML=''; return; }
+      $('#mfcal').innerHTML=`<g id="mfcalg"><rect x="290" y="112" width="300" height="72" rx="3" fill="#f0fdfa" stroke="${CAL}" stroke-width="1.8"/>
+        <text x="302" y="131" font-size="12" class="mono" fill="${CAL}">STEP 1 · A KNOWN FORCE: 1 N</text>
+        <text x="302" y="152" font-size="14">extension = <tspan fill="${BLUE}">7</tspan> − <tspan fill="${OK}">5</tspan> = <tspan font-weight="700">2 cm</tspan></text>
+        <text x="302" y="173" font-size="15" font-weight="700" fill="${CAL}">so 1 N stretches it 2 cm: 2 cm per N</text></g>`;
+      if(flash) $('#mfcalg').animate([{opacity:.25},{opacity:1},{opacity:.4},{opacity:1}],{duration:1100}); }
     function drawRead(){ const b=box(), e=b.f*PER, L=L0+e, y=yOf(L);
       let s=`<line x1="${RX}" y1="${y}" x2="${CX-12}" y2="${y}" stroke="${BLUE}" stroke-width="2"/><path d="M${RX} ${y} l12 -9 h30 v18 h-30 z" fill="${BLUE}"/><text x="${RX+27}" y="${y+5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">${L}</text>`;
-      const cy=Math.max(yOf(L0)+20,(yOf(L0)+y)/2-34), x=CX+44;
-      s+=`<g transform="translate(${x} ${cy})"><text x="0" y="0" font-size="15">measured length <tspan font-weight="700" fill="${BLUE}">${L} cm</tspan></text>
-        <text x="0" y="22" font-size="15">− original length <tspan font-weight="700" fill="${OK}">${L0} cm</tspan></text><line x1="0" y1="30" x2="200" y2="30" stroke="${INK}"/>
-        <text x="0" y="50" font-size="16" font-weight="700" fill="${OK}">= extension ${e} cm</text>`
-        +`<text x="0" y="82" font-size="15">force = extension ÷ <tspan font-weight="700" fill="${OK}">2 cm per N</tspan></text>`
-        +(bricks===b.f?`<text x="0" y="106" font-size="16" font-weight="700">= ${e} ÷ 2 = <tspan fill="${b.col}">${b.f} N</tspan></text><text x="0" y="136" font-size="19" font-weight="700" fill="${b.col}">Box ${b.id} = ${b.f} N</text>`
-          :`<text x="0" y="106" font-size="16">= ${e} ÷ 2 = <tspan font-weight="700" fill="${OK}">?</tspan></text><text x="0" y="130" font-size="13" fill="${MUTED}">${bricks?`${bricks} brick${bricks>1?'s':''} = ${bricks*PER} cm = ${bricks} N so far`:'count the 1 N bricks to check'}</text>`)+`</g>`;
+      const cy=Math.max(206,(yOf(L0)+y)/2-60), x=CX+52, hd=(yy,t)=>`<text x="0" y="${yy}" font-size="12" class="mono" fill="${MUTED}">${t}</text>`;
+      s+=`<g transform="translate(${x} ${cy})">`+hd(0,`STEP 2 · BOX ${b.id}: MEASURE THE EXTENSION`)
+        +`<text x="0" y="22" font-size="14">extension = measured length − original length</text>
+        <text x="0" y="46" font-size="17" font-weight="700">= <tspan fill="${BLUE}">${L}</tspan> − <tspan fill="${OK}">${L0}</tspan> = <tspan fill="${OK}">${e} cm</tspan></text>`
+        +hd(78,'STEP 3 · WORK OUT THE FORCE')
+        +`<text x="0" y="100" font-size="14">force = extension ÷ <tspan font-weight="700" fill="${CAL}">2 cm per N</tspan> <tspan fill="${CAL}" font-size="12">(from step 1)</tspan></text>`
+        +(bricks===b.f?`<text x="0" y="126" font-size="18" font-weight="700">= ${e} ÷ 2 = <tspan fill="${b.col}">${b.f} N</tspan></text>`
+          :`<text x="0" y="126" font-size="17">= ${e} ÷ 2 = <tspan font-weight="700" fill="${OK}">?</tspan></text><text x="0" y="148" font-size="13" fill="${MUTED}">${bricks?`check: ${bricks} brick${bricks>1?'s':''} = ${bricks*PER} cm = ${bricks} N so far`:'check it: fill the extension with 1 N bricks'}</text>`)+`</g>`;
       $('#mfcalc').innerHTML=s; drawBricks(); }
     // the extension gap and the 1 N bricks inside it
     const brick=(k,cls='')=>`<g class="${cls}"><rect x="${BX}" y="${yOf(L0+k*PER)+1}" width="${BW}" height="${PER*PX-2}" fill="${k%2?'#86efac':'#4ade80'}" stroke="${OK}" stroke-width="1.5"/><text x="${BX+BW/2}" y="${yOf(L0+k*PER)+PER*PX/2+5}" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">1 N</text></g>`;
@@ -130,7 +139,7 @@ window.HookeWidgets = (function(){
         button(bi<2?'Next box →':'Make a scale →',next); }
       else if(st==='scale') ban(tags?`Good. Now <b>${tags+1} N</b>.`:'Drag <b>1 N</b> to the ruler mark where the spring’s bottom would be with 1 N on it.');
       else if(st==='final') ban('Your <b>force scale</b>: every 1 N adds 2 cm. Hang <b>box D</b> and read its force straight off the scale.');
-      else if(st==='end'){ ban(`<b>Box D = 4 N</b>, read straight off your scale. The spring’s <b>extension measures the force</b>.`); button('Start again',()=>{ const p=el.parentNode; measure(el); }); }
+      else if(st==='end'){ ban(`<b>Box D = 4 N</b>, read straight off your scale. The spring’s <b>extension measures the force</b>.`); button('Start again',()=>{ measure(el); }); }
       wig(); drawPile(); drawPtr(); }
     function next(){ const b=box(); hung=null; back(items[b.id],HOME[b.id]); items[b.id].style.opacity=.45; setLen(L0); bricks=0; moved=false; reading=0;
       $('#mfcalc').innerHTML=''; if(bi===2){ st='scale'; drawScale(); drawTags(); } else { bi++; st='hang'; } drawBricks(); prompt(); }
@@ -142,9 +151,9 @@ window.HookeWidgets = (function(){
         if((st==='hang'||st==='final')&&id!==box().id){ ban(`Hang <b>box ${box().id}</b> next.`,true); return false; }
         if(!['cal','hang','final'].includes(st)) return false;
         hung=id; g.setAttribute('transform',`translate(${CX} ${yOf(len)+(id==='w'?24:30)})`);
-        if(id==='w'){ st='calshow'; setLen(L0+PER); prompt();
-          setTimeout(()=>{ if(!el.isConnected) return; $('#mfbricks').innerHTML=brick(0)+`<text x="${BX+BW+6}" y="${yOf(L0+PER)-6}" font-size="13" font-weight="700" fill="${OK}" ${halo}>1 N → 2 cm</text>`; },700);
-          setTimeout(()=>{ if(!el.isConnected) return; found.cal=1; hung=null; back(g,HOME.w); g.style.opacity=.45; setLen(L0); $('#mfbricks').innerHTML=''; st='hang'; prompt(); },3400); }
+        if(id==='w'){ st='calshow'; setLen(L0+PER); prompt(); setTimeout(()=>drawCal(true),900);
+          setTimeout(()=>{ if(!el.isConnected) return; $('#mfbricks').innerHTML=brick(0); },700);
+          setTimeout(()=>{ if(!el.isConnected) return; found.cal=1; drawCal(); hung=null; back(g,HOME.w); g.style.opacity=.45; setLen(L0); $('#mfbricks').innerHTML=''; st='hang'; prompt(); },3400); }
         else if(st==='final'){ setLen(L0+box().f*PER); setTimeout(()=>{ st='end'; items.D.querySelector('text:last-child').textContent='4 N'; prompt(); drawSpring(); },900); }
         else { setLen(L0+box().f*PER); st='read'; prompt(); }
         wig(); return true; }}));
