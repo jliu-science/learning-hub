@@ -33,100 +33,120 @@ window.HookeWidgets = (function(){
     const run=()=>{ const x=get(); v=(v+(target-x)*.12)*.82; const nx=Math.abs(target-x)<.01&&Math.abs(v)<.01?target:x+v; set(nx); draw(); raf=nx!==target?requestAnimationFrame(run):0; };
     return to=>{ target=to; if(!raf) raf=requestAnimationFrame(run); }; }
 
-  /* ---------------- Measure a force ---------------- */
+  /* ---------------- Measure a force ----------------
+     1 N stretches the spring 2 cm → that 2 cm becomes a "1 N brick". Hang a box, read the length,
+     fill the extension with bricks to count the newtons. Then build a force scale on the ruler and read box D straight off it. */
   function measure(el){
-    const L0=5, PER=2, PX=12.5, TOP=34, CX=160, RX=64;   // cm scale: 0 cm at y=TOP
-    const BOX=[{id:'A',f:3,col:'#7c3aed'},{id:'B',f:6,col:'#0e7490'},{id:'C',f:5,col:'#b45309'}];
-    const OPTS={A:[3,6,11,12],B:[6,12,17,24],C:[5,10,15,20]};
-    let st='cal', bi=0, len=L0, hung=null, reading=0, pick=null, found={};
-    el.innerHTML=`<div class="stage" style="padding:6px"><svg viewBox="0 0 660 430" id="mfsvg" style="max-height:min(640px,80vh)" aria-label="A spring, a ruler and boxes to weigh">
-      <rect x="10" y="414" width="270" height="10" rx="2" fill="#57534e"/><rect x="18" y="12" width="7" height="404" fill="#78716c"/><rect x="18" y="14" width="160" height="7" rx="2" fill="#78716c"/>
-      <path d="M${CX} 21 l0 ${TOP-21}" stroke="${INK}" stroke-width="2.5"/>
-      <g id="mfruler"></g><g id="mforig"></g><g id="mfspring"></g><g id="mfext"></g><g id="mfseg"></g><g id="mfhook"></g>
-      <rect x="430" y="374" width="220" height="8" rx="2" fill="#a8a29e"/><g id="mfshelf"></g>
-      <g id="mfcard"></g><g id="mfptr" class="hk-grab"></g><g id="mfitems"></g></svg></div>
+    const L0=5, PER=2, PX=13, TOP=44, CX=236, RX=70, BX=140, BW=26;
+    const BOX=[{id:'A',f:3,col:'#7c3aed'},{id:'B',f:6,col:'#0e7490'},{id:'C',f:5,col:'#b45309'},{id:'D',f:4,col:'#be185d'}];
+    let st='cal', bi=0, len=L0, hung=null, reading=0, moved=false, bricks=0, tags=0, found={};
+    el.innerHTML=`<div class="stage" style="padding:6px"><svg viewBox="0 0 680 440" id="mfsvg" style="max-height:min(660px,82vh)" aria-label="A spring and a ruler used to measure forces">
+      <rect x="10" y="426" width="290" height="10" rx="2" fill="#57534e"/><rect x="18" y="14" width="7" height="414" fill="#78716c"/><rect x="18" y="16" width="${CX-4}" height="7" rx="2" fill="#78716c"/>
+      <path d="M${CX} 23 L${CX} ${TOP}" stroke="${INK}" stroke-width="2.5"/>
+      <g id="mfruler"></g><g id="mfscale"></g><g id="mforig"></g><g id="mfgap"></g><g id="mfbricks"></g><g id="mfspring"></g><g id="mfhook"></g><g id="mfcalc"></g>
+      <rect x="470" y="400" width="200" height="8" rx="2" fill="#a8a29e"/><g id="mfpile" class="hk-grab"></g><g id="mftags"></g>
+      <g id="mfptr" class="hk-grab"></g><g id="mfitems"></g><g id="mfban"></g><g id="mfbtn"></g></svg></div>
       <p class="hint" style="margin:6px 0 0"><b>Estimated values:</b> this demo spring is <b>set</b> to stretch <b>2 cm per newton</b>. Real springs are different.</p>`;
-    const $=s=>el.querySelector(s), svg=$('#mfsvg'), yOf=cm=>TOP+cm*PX;
-    let r=`<rect x="${RX-30}" y="${TOP-8}" width="34" height="${25*PX+16}" rx="2" fill="#f3e2b3" stroke="#a16207" stroke-width="1.2"/>`;
-    for(let c=0;c<=25;c++){ const y=yOf(c); r+=`<line x1="${c%5?RX-8:RX-14}" y1="${y}" x2="${RX+4}" y2="${y}" stroke="#7c5a12" stroke-width="${c%5?.8:1.3}"/>`+(c%5?'':`<text x="${RX-27}" y="${y+4.5}" font-size="12" class="mono" fill="#5b420c">${c}</text>`); }
-    $('#mfruler').innerHTML=r+`<text x="${RX-12}" y="${yOf(25)+24}" text-anchor="middle" font-size="13" fill="${MUTED}">cm</text>`;
-    $('#mforig').innerHTML=`<line x1="${RX+4}" y1="${yOf(L0)}" x2="${CX+60}" y2="${yOf(L0)}" stroke="${OK}" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${CX+26}" y="${yOf(L0)-7}" font-size="13" font-weight="700" fill="${OK}" ${halo}>original length 5 cm</text>`;
-    // items: 1 N weight and three mystery boxes, persistent groups
-    const HOME={w:{x:455,y:340}}; BOX.forEach((b,i)=>HOME[b.id]={x:510+i*48,y:334});
+    const $=s=>el.querySelector(s), svg=$('#mfsvg'), yOf=cm=>TOP+cm*PX, box=()=>BOX[bi], B=s=>s.replace(/<([^>]+)>/g,'<tspan font-weight="700">$1</tspan>');
+    let r=`<rect x="${RX-36}" y="${TOP-8}" width="36" height="${25*PX+16}" rx="2" fill="#f3e2b3" stroke="#a16207" stroke-width="1.2"/>`;
+    for(let c=0;c<=25;c++){ const y=yOf(c); r+=`<line x1="${c%5?RX-8:RX-14}" y1="${y}" x2="${RX}" y2="${y}" stroke="#7c5a12" stroke-width="${c%5?.8:1.3}"/>`+(c%5?'':`<text x="${RX-33}" y="${y+4.5}" font-size="12" class="mono" fill="#5b420c">${c}</text>`); }
+    $('#mfruler').innerHTML=r+`<text x="${RX-18}" y="${yOf(25)+24}" text-anchor="middle" font-size="13" fill="${MUTED}">cm</text>`;
+    $('#mforig').innerHTML=`<line x1="${RX}" y1="${yOf(L0)}" x2="${CX+40}" y2="${yOf(L0)}" stroke="${OK}" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${CX+22}" y="${yOf(L0)-7}" font-size="13" font-weight="700" fill="${OK}" ${halo}>original length 5 cm</text>`;
+    // prompt on the diagram (top right)
+    function ban(html,bad){ $('#mfban').innerHTML=`<foreignObject x="290" y="2" width="384" height="84"><div xmlns="http://www.w3.org/1999/xhtml" style="font:15px/1.4 Inter,'Segoe UI',sans-serif;color:${bad?BAD:INK};border-left:4px solid ${bad?BAD:'var(--accent)'};background:${bad?'#fef2f2':'var(--accent-soft)'};padding:7px 10px">${html}</div></foreignObject>`; }
+    function button(label,fn){ $('#mfbtn').innerHTML=label?`<g class="hk-btn" id="mfgo"><rect x="300" y="296" width="150" height="34" rx="3" fill="${BLUE}"/><text x="375" y="318" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">${label}</text></g>`:''; if(label) $('#mfgo').onclick=fn; }
+    // things on the shelf
+    const HOME={w:{x:495,y:366}}; BOX.forEach((b,i)=>HOME[b.id]={x:i<3?545+i*45:495,y:360});
     const items={};
-    const mk=(id,html)=>{ const g=el$('g',{class:'hk-grab',transform:`translate(${HOME[id].x} ${HOME[id].y})`}); g.innerHTML=html; $('#mfitems').appendChild(g); items[id]=g; return g; };
-    mk('w',`<g class="hk-in"><rect x="-20" y="0" width="40" height="34" rx="3" fill="#64748b" stroke="${INK}"/><rect x="-16" y="3" width="32" height="3" rx="1" fill="#fff" opacity=".35"/><text x="0" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">1 N</text></g>`);
-    BOX.forEach(b=>mk(b.id,`<g class="hk-in"><rect x="-20" y="-6" width="40" height="40" rx="3" fill="${b.col}" stroke="${INK}"/><path d="M-20 4 h40" stroke="#000" opacity=".2"/><text x="0" y="17" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">${b.id}</text><text x="0" y="30" text-anchor="middle" font-size="11" fill="#fff">? N</text></g>`));
-    const hookAt=()=>({x:CX,y:yOf(len)+16});
-    const box=()=>BOX[bi];
-    const setLen=bouncer(()=>len,v=>len=v,()=>{ drawSpring(); if(hung) items[hung].setAttribute('transform',`translate(${CX} ${yOf(len)+18})`); });
-    function drawSpring(){ const b=yOf(len);
-      $('#mfspring').innerHTML=coil(CX,TOP,b)+`<line x1="${CX-10}" y1="${b}" x2="${CX+10}" y2="${b}" stroke="${BLUE}" stroke-width="2.5"/>`;
+    const mk=(id,html,show=true)=>{ const g=el$('g',{class:'hk-grab',transform:`translate(${HOME[id].x} ${HOME[id].y})`}); g.innerHTML=`<g>${html}</g>`; if(!show) g.style.display='none'; $('#mfitems').appendChild(g); items[id]=g; return g; };
+    mk('w',`<rect x="-20" y="0" width="40" height="34" rx="3" fill="#64748b" stroke="${INK}"/><rect x="-16" y="3" width="32" height="3" rx="1" fill="#fff" opacity=".35"/><text x="0" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">1 N</text>`);
+    BOX.forEach(b=>mk(b.id,`<rect x="-20" y="-6" width="40" height="40" rx="3" fill="${b.col}" stroke="${INK}"/><path d="M-20 4 h40" stroke="#000" opacity=".2"/><text x="0" y="17" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">${b.id}</text><text x="0" y="30" text-anchor="middle" font-size="11" fill="#fff">? N</text>`,b.id!=='D'));
+    const setLen=bouncer(()=>len,v=>len=v,()=>{ drawSpring(); if(hung) items[hung].setAttribute('transform',`translate(${CX} ${yOf(len)+(hung==='w'?24:30)})`); });
+    function drawSpring(){ const b=yOf(len), want=!hung&&(st==='cal'||st==='hang'||st==='final');
+      $('#mfspring').innerHTML=coil(CX,TOP,b)+`<line x1="${CX-11}" y1="${b}" x2="${CX+11}" y2="${b}" stroke="${BLUE}" stroke-width="2.5"/>`;
       $('#mfhook').innerHTML=`<path d="M${CX} ${b} l0 8 q0 9 -7 9 q-6 0 -6 -6" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>`
-        +(!hung&&(st==='cal'||st==='hang')?`<circle cx="${CX}" cy="${b+26}" r="30" fill="none" stroke="${BLUE}" stroke-width="2" stroke-dasharray="6 3" class="hk-ant"/><text x="${CX+36}" y="${b+31}" font-size="14" font-weight="700" fill="${BLUE}" ${halo}>hang it here</text>`:''); }
-    // reading pointer on the ruler
+        +(want?`<circle cx="${CX}" cy="${b+30}" r="30" fill="none" stroke="${BLUE}" stroke-width="2" stroke-dasharray="6 3" class="hk-ant"/><text x="${CX+36}" y="${b+35}" font-size="14" font-weight="700" fill="${BLUE}" ${halo}>hang it here</text>`:'');
+      if(st==='end') $('#mfspring').innerHTML+=`<line x1="${RX+50}" y1="${b}" x2="${CX-11}" y2="${b}" stroke="${BLUE}" stroke-width="2"/>`;
+      if((st==='final'||st==='end')&&hung) $('#mfscale').querySelectorAll('[data-k]').forEach(t=>t.classList.toggle('hk-pulse',+t.dataset.k*PER+L0===Math.round(len))); }
+    function wig(){ Object.entries(items).forEach(([id,g])=>{ const want=hung!==id&&((st==='cal'&&id==='w')||((st==='hang'||st==='final')&&id===box().id)); g.firstElementChild.classList.toggle('hk-wig',want); }); }
+    // reading pointer
     const ptr=$('#mfptr');
-    function drawPtr(){ if(st!=='read'&&st!=='ans'&&st!=='why'){ ptr.innerHTML=''; return; } const y=yOf(reading), live=st==='read';
-      ptr.innerHTML=`<line x1="${RX+4}" y1="${y}" x2="${CX+24}" y2="${y}" stroke="${BLUE}" stroke-width="2" ${live?'stroke-dasharray="4 3"':''}/>
-        <g ${live&&!moved?'class="hk-wig"':''}><path d="M${RX+4} ${y} l16 -11 h34 v22 h-34 z" fill="${BLUE}"/><text x="${RX+38}" y="${y+5}" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">${reading}</text></g>`
-        +(live&&!moved?`<text x="${RX+62}" y="${y-16}" font-size="14" font-weight="700" fill="${BLUE}" ${halo}>drag ↓ to the bottom of the spring</text>`:''); }
-    let moved=false;
-    K.svgDrag(ptr,svg,{start(){ if(st!=='read') return; },move(x,y){ if(st!=='read') return; moved=true; reading=Math.max(0,Math.min(25,Math.round((y-TOP)/PX))); drawPtr(); card(); },
-      end(){ if(st!=='read'||!moved) return; const true_=L0+box().f*PER; if(reading===true_){ st='ans'; drawPtr(); card(); drawExt(); } else { card(reading<L0?'That is above where the spring starts. Line the pointer up with the <bottom of the spring>.':'Not quite. Line the blue pointer up with the <blue line at the bottom of the spring>.'); } }});
-    function drawExt(){ if(st==='ans'||st==='why'){ const e=box().f*PER;
-        $('#mfext').innerHTML=K.arrow(112,yOf(L0)+2,112,yOf(L0+e)-2,OK,3,9)+`<text x="118" y="${(yOf(L0)+yOf(L0+e))/2+5}" font-size="13" font-weight="700" fill="${OK}" ${halo}>${st==='why'?'':'ext.'}</text>`; }
-      else $('#mfext').innerHTML=''; }
-    // the notebook card on the right
-    function card(msg){ const b=box(), e=b.f*PER, Lm=L0+e; const x=336, lines=[];
-      lines.push([`<tspan font-weight="700" fill="${OK}">1 N</tspan> stretches it ${found.cal?`<tspan font-weight="700" fill="${OK}">2 cm</tspan>`:'… ?'}`]);
-      if(st!=='cal'&&st!=='calshow'){
-        lines.push([`<tspan font-weight="700" fill="${b.col}">Box ${b.id}</tspan>`]);
-        if(st==='hang') lines.push([`<tspan fill="${MUTED}">hang box ${b.id} on the spring</tspan>`]);
-        if(['read','ans','why'].includes(st)) lines.push([`measured length = <tspan font-weight="700" fill="${BLUE}">${st==='read'&&!moved?'?':reading} cm</tspan>`]);
-        if(st==='ans'||st==='why'){ lines.push([`extension = measured − original`]); lines.push([`= ${Lm} − ${L0} = <tspan font-weight="700" fill="${OK}">${e} cm</tspan>`]); }
-        if(st==='why') lines.push([`${e} cm ÷ 2 cm = ${b.f}, so force = <tspan font-weight="700" fill="${b.col}">${b.f} N</tspan>`]);
-      }
-      let s='', yy=66; lines.forEach(l=>{ s+=T(x+14,yy,l[0],'fill="'+INK+'"'); yy+=28; });
-      if(st==='ans'){ s+=T(x+14,yy,`force = <tspan font-weight="700">?</tspan>  <tspan fill="${MUTED}" font-size="13">tap the right answer</tspan>`);
-        OPTS[b.id].forEach((v,i)=>{ const bx=x+14+i*74, by=yy+12; s+=`<g class="hk-btn hk-pulse" data-v="${v}"><rect x="${bx}" y="${by}" width="66" height="32" rx="3" fill="#fff" stroke="${pick===v?BAD:BLUE}" stroke-width="1.8"/><text x="${bx+33}" y="${by+21}" text-anchor="middle" font-size="15" font-weight="700" fill="${INK}">${v} N</text></g>`; }); yy+=60; }
-      if(st==='why'&&bi===BOX.length-1){ s+=T(x+14,yy,`<tspan font-weight="700" fill="${OK}">✓ The extension measured each force.</tspan>`); yy+=28; }
-      const done=BOX.filter(q=>found[q.id]).map(q=>`<tspan font-weight="700" fill="${q.col}">${q.id} = ${q.f} N</tspan>`).join('   ');
-      if(done){ s+=`<line x1="${x+14}" y1="${yy-14}" x2="${x+300}" y2="${yy-14}" stroke="${LINE}"/>`+T(x+14,yy+6,'Found:  '+done); yy+=34; }
-      if(found.A&&found.B){ s+=T(x+14,yy-6,`<tspan fill="${MUTED}" font-size="13">B stretched it <tspan font-weight="700">double</tspan> A’s, so B’s force is <tspan font-weight="700">double</tspan>.</tspan>`); yy+=22; }
-      if(st==='why'&&bi<BOX.length-1){ s+=`<g class="hk-btn" id="mfnext"><rect x="${x+14}" y="${yy-8}" width="126" height="32" rx="3" fill="${BLUE}"/><text x="${x+77}" y="${yy+13}" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Next box →</text></g>`; yy+=36; }
-      if(msg){ s+=`<foreignObject x="${x+10}" y="${yy-8}" width="296" height="64"><div xmlns="http://www.w3.org/1999/xhtml" style="font:14px/1.35 Inter,'Segoe UI',sans-serif;color:${BAD}">${msg.replace(/<([^>]+)>/g,'<b>$1</b>')}</div></foreignObject>`; yy+=60; }
-      s=`<rect x="${x}" y="14" width="314" height="${Math.max(230,yy-20)}" rx="3" fill="#fff" stroke="${LINE}"/><text x="${x+14}" y="38" font-size="12" class="mono" fill="${MUTED}">MEASURING A FORCE</text>`+s;
-      $('#mfcard').innerHTML=s;
-      $('#mfcard').querySelectorAll('[data-v]').forEach(g=>g.onclick=()=>answer(+g.dataset.v));
-      const nx=$('#mfnext'); if(nx) nx.onclick=next;
-      // wiggle what to touch next
-      Object.entries(items).forEach(([id,g])=>{ const want=(st==='cal'&&id==='w')||(st==='hang'&&id===box().id); g.firstElementChild.classList.toggle('hk-wig',want&&hung!==id); });
-    }
-    function answer(v){ const b=box(), e=b.f*PER; pick=v;
-      if(v===b.f){ st='why'; found[b.id]=1; items[b.id].querySelector('text:last-child').textContent=b.f+' N'; card(); count(); return; }
-      card(v===e?`${e} is the <extension in cm>. Each 1 N stretches it 2 cm.`:v===L0+e?`${v} cm is the <measured length>, not the extension.`:`That force would stretch it ${v*PER} cm. <Divide by 2 cm per N>.`); }
-    // the extension splits into 2 cm steps, one for each newton
-    function count(){ const b=box(), g=$('#mfseg'); g.innerHTML=''; drawExt();
-      for(let i=0;i<b.f;i++) setTimeout(()=>{ if(!el.isConnected) return; const y0=yOf(L0+i*PER), y1=yOf(L0+(i+1)*PER);
-        const s=el$('g',{}); s.innerHTML=`<rect x="104" y="${y0+1}" width="16" height="${y1-y0-2}" fill="${i%2?'#86efac':'#4ade80'}" stroke="${OK}"/><text x="${CX+24}" y="${(y0+y1)/2+5}" font-size="14" font-weight="700" fill="${OK}" ${halo}>${i+1} N</text>`;
-        g.appendChild(s); s.animate([{opacity:0,transform:'translateX(-8px)'},{opacity:1,transform:'none'}],{duration:260}); },180+i*330); }
-    function next(){ const b=box(); hung=null; back(items[b.id],HOME[b.id]); items[b.id].style.opacity=.45; setLen(L0); $('#mfseg').innerHTML='';
-      bi++; st='hang'; pick=null; moved=false; reading=0; drawExt(); drawPtr(); card(); }
-    // dragging items
+    function drawPtr(){ if(st!=='read'){ ptr.innerHTML=''; return; } const y=yOf(reading);
+      ptr.innerHTML=`<line x1="${RX}" y1="${y}" x2="${CX+26}" y2="${y}" stroke="${BLUE}" stroke-width="2" stroke-dasharray="4 3"/>
+        <g ${moved?'':'class="hk-wig"'}><path d="M${RX} ${y} l16 -12 h38 v24 h-38 z" fill="${BLUE}"/><text x="${RX+36}" y="${y+5}" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">${reading}</text></g>`
+        +(moved?'':`<text x="${RX+60}" y="${y-18}" font-size="14" font-weight="700" fill="${BLUE}" ${halo}>drag me ↓</text>`); }
+    K.svgDrag(ptr,svg,{move(x,y){ if(st!=='read') return; moved=true; reading=Math.max(0,Math.min(25,Math.round((y-TOP)/PX))); drawPtr(); },
+      end(){ if(st!=='read'||!moved) return; const L=L0+box().f*PER;
+        if(reading===L){ st='fill'; ptr.innerHTML=''; drawRead(); prompt(); }
+        else ban(reading<L?'Too high. Line the pointer up with the <b>blue line at the bottom</b> of the spring.':'Too low. Line the pointer up with the <b>blue line at the bottom</b> of the spring.',true); }});
+    // the measured length and the extension sum, beside the spring
+    function drawRead(){ const b=box(), e=b.f*PER, L=L0+e, y=yOf(L);
+      let s=`<line x1="${RX}" y1="${y}" x2="${CX-12}" y2="${y}" stroke="${BLUE}" stroke-width="2"/><path d="M${RX} ${y} l12 -9 h30 v18 h-30 z" fill="${BLUE}"/><text x="${RX+27}" y="${y+5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">${L}</text>`;
+      const cy=Math.max(yOf(L0)+20,(yOf(L0)+y)/2-34), x=CX+44;
+      s+=`<g transform="translate(${x} ${cy})"><text x="0" y="0" font-size="15">measured length <tspan font-weight="700" fill="${BLUE}">${L} cm</tspan></text>
+        <text x="0" y="22" font-size="15">− original length <tspan font-weight="700" fill="${OK}">${L0} cm</tspan></text><line x1="0" y1="30" x2="200" y2="30" stroke="${INK}"/>
+        <text x="0" y="50" font-size="16" font-weight="700" fill="${OK}">= extension ${e} cm</text>`
+        +(bricks===b.f?`<text x="0" y="78" font-size="15">${e} cm ÷ 2 cm = <tspan font-weight="700">${b.f}</tspan></text><text x="0" y="106" font-size="19" font-weight="700" fill="${b.col}">Box ${b.id} = ${b.f} N</text>`:'')+`</g>`;
+      $('#mfcalc').innerHTML=s; drawBricks(); }
+    // the extension gap and the 1 N bricks inside it
+    const brick=(k,cls='')=>`<g class="${cls}"><rect x="${BX}" y="${yOf(L0+k*PER)+1}" width="${BW}" height="${PER*PX-2}" fill="${k%2?'#86efac':'#4ade80'}" stroke="${OK}" stroke-width="1.5"/><text x="${BX+BW/2}" y="${yOf(L0+k*PER)+PER*PX/2+5}" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">1 N</text></g>`;
+    function drawBricks(){ const f=st==='fill'||st==='boxdone'?box().f:0;
+      $('#mfgap').innerHTML=f?`<rect x="${BX-3}" y="${yOf(L0)}" width="${BW+6}" height="${f*PER*PX}" fill="#f0fdf4" stroke="${OK}" stroke-width="2" stroke-dasharray="6 4" ${bricks<f?'class="hk-ant"':''}/>`:'';
+      let s=''; for(let k=0;k<bricks;k++) s+=brick(k)+`<text x="${BX+BW+6}" y="${yOf(L0+(k+1)*PER)-6}" font-size="13" font-weight="700" fill="${OK}" ${halo}>${k+1} N</text>`;
+      $('#mfbricks').innerHTML=s; }
+    // the pile of bricks to drag from
+    const PH={x:300,y:372}, pile=$('#mfpile');
+    function drawPile(){ const on=st==='fill';
+      pile.style.display=found.cal&&st!=='scale'&&st!=='final'&&st!=='end'?'':'none'; pile.setAttribute('transform',`translate(${PH.x} ${PH.y})`);
+      pile.innerHTML=`<g ${on&&bricks===0?'class="hk-wig"':''}><rect x="-4" y="6" width="${BW}" height="${PER*PX-2}" fill="#4ade80" stroke="${OK}" stroke-width="1.5" opacity=".5"/><rect x="0" y="0" width="${BW}" height="${PER*PX-2}" fill="#4ade80" stroke="${OK}" stroke-width="1.5"/><text x="${BW/2}" y="${PER*PX/2+4}" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">1 N</text></g>
+        <text x="${BW+10}" y="10" font-size="13" font-weight="700" fill="${OK}">1 N brick</text><text x="${BW+10}" y="27" font-size="13" fill="${MUTED}">= 2 cm of stretch</text>`; }
+    grab(pile,svg,{home:()=>PH,can:()=>st==='fill',drop(x,y){ const f=box().f;
+      if(Math.abs(x+BW/2-(BX+BW/2))>70||y<yOf(L0)-50||y>yOf(L0+f*PER)+40) return false;
+      if(bricks>=f){ ban('The extension is already full.',true); return false; }
+      bricks++; pile.setAttribute('transform',`translate(${PH.x} ${PH.y})`); drawRead();
+      if(bricks===f){ st='boxdone'; found[box().id]=1; items[box().id].querySelector('text:last-child').textContent=box().f+' N'; prompt(); } else prompt(); return true; }});
+    // force scale tags
+    function drawScale(){ let s=''; const show=st==='scale'||st==='final'||st==='end';
+      if(show) for(let k=0;k<=6;k++){ const y=yOf(L0+k*PER), has=k===0||k<=tags||(tags>=3);
+        s+=has?`<g data-k="${k}"><rect x="${RX+6}" y="${y-11}" width="44" height="22" rx="2" fill="#fff" stroke="${BLUE}" stroke-width="1.5"/><text x="${RX+28}" y="${y+5}" text-anchor="middle" font-size="13" font-weight="700" fill="${BLUE}">${k} N</text></g>`
+          :`<rect x="${RX+6}" y="${y-11}" width="44" height="22" rx="2" fill="#fff" stroke="${MUTED}" stroke-dasharray="4 3" ${k===tags+1?'class="hk-ant"':''}/>`; }
+      $('#mfscale').innerHTML=s; }
+    const TH=k=>({x:300+(k-1)*62,y:240});
+    function drawTags(){ const g=$('#mftags'); g.innerHTML=''; if(st!=='scale') return;
+      for(let k=tags+1;k<=3;k++){ const t=el$('g',{class:'hk-grab',transform:`translate(${TH(k).x} ${TH(k).y})`}); t.innerHTML=`<g ${k===tags+1?'class="hk-wig"':''}><rect x="0" y="0" width="50" height="26" rx="2" fill="#fff" stroke="${BLUE}" stroke-width="1.8" stroke-dasharray="4 2"/><text x="25" y="18" text-anchor="middle" font-size="14" font-weight="700" fill="${BLUE}">${k} N</text></g>`; g.appendChild(t);
+        grab(t,svg,{home:()=>TH(k),drop(x,y){ if(x>RX+80) return false; const cm=(y+13-TOP)/PX, want=L0+k*PER;
+          if(Math.abs(cm-want)>1){ ban((k===1?'1 N stretches it 2 cm':`1 N stretches it 2 cm, so <b>${k} N</b> stretches it ${k*PER} cm`)+`: the <b>${k} N</b> mark goes at 5 + ${k*PER} = <b>${want} cm</b>.`,true); return false; }
+          if(k!==tags+1){ ban(`Start with <b>${tags+1} N</b>.`,true); return false; }
+          tags++; drawScale(); drawTags(); if(tags===3){ st='final'; bi=3; items.w.style.display='none'; items.D.style.display=''; drawSpring(); } prompt(); return true; }}); } }
+    function prompt(){ const b=box(); button('');
+      if(st==='cal') ban('Hang the <b>1 N</b> weight on the spring. How far does <b>1 N</b> stretch it?');
+      else if(st==='calshow') ban('<b>1 N</b> stretches it <b>2 cm</b>. So every <b>2 cm</b> of extension is <b>1 N</b>: a green <b>1 N brick</b>.');
+      else if(st==='hang') ban(`Now hang <b>box ${b.id}</b>. How big is its force?`);
+      else if(st==='read') ban('Drag the <b>blue pointer</b> to the bottom of the spring to measure its length.');
+      else if(st==='fill') ban(bricks?`<b>${bricks} N</b> so far. Keep filling the extension.`:'Drag <b>1 N bricks</b> into the green gap until the <b>extension</b> is full.');
+      else if(st==='boxdone'){ ban(`<b>Box ${b.id} = ${b.f} N.</b> `+(b.id==='B'?'B stretched it <b>double</b> A’s, so its force is <b>double</b>.':b.id==='C'?'Three boxes measured. Now turn the ruler into a <b>force scale</b>.':''));
+        button(bi<2?'Next box →':'Make a scale →',next); }
+      else if(st==='scale') ban(tags?`Good. Now <b>${tags+1} N</b>.`:'Drag <b>1 N</b> to the ruler mark where the spring’s bottom would be with 1 N on it.');
+      else if(st==='final') ban('Your <b>force scale</b>: every 1 N adds 2 cm. Hang <b>box D</b> and read its force straight off the scale.');
+      else if(st==='end'){ ban(`<b>Box D = 4 N</b>, read straight off your scale. The spring’s <b>extension measures the force</b>.`); button('Start again',()=>{ const p=el.parentNode; measure(el); }); }
+      wig(); drawPile(); drawPtr(); }
+    function next(){ const b=box(); hung=null; back(items[b.id],HOME[b.id]); items[b.id].style.opacity=.45; setLen(L0); bricks=0; moved=false; reading=0;
+      $('#mfcalc').innerHTML=''; if(bi===2){ st='scale'; drawScale(); drawTags(); } else { bi++; st='hang'; } drawBricks(); prompt(); }
+    // hanging things on the hook
     Object.entries(items).forEach(([id,g])=>grab(g,svg,{home:()=>HOME[id],
-      can:()=>hung!==id&&!(id!=='w'&&found[id]),
-      drop(x,y){ const h=hookAt(); if(Math.hypot(x-h.x,y-h.y)>70) return false;
-        if(st==='cal'&&id!=='w'){ card('First hang the <1 N weight>, so you know how far 1 N stretches it.'); return false; }
-        if(st==='hang'&&id==='w'){ card(`You already know 1 N gives 2 cm. Now hang <box ${box().id}>.`); return false; }
-        if(st==='hang'&&id!==box().id){ card(`Measure the boxes in order: hang <box ${box().id}> next.`); return false; }
-        if(st!=='cal'&&st!=='hang') return false;
-        hung=id; g.setAttribute('transform',`translate(${CX} ${yOf(len)+18})`);
-        if(id==='w'){ st='calshow'; setLen(L0+PER); setTimeout(()=>{ found.cal=1; card();
-            $('#mfext').innerHTML=K.arrow(112,yOf(L0)+2,112,yOf(L0+PER)-2,OK,3,8)+`<text x="${CX+24}" y="${yOf(L0+1)+5}" font-size="14" font-weight="700" fill="${OK}" ${halo}>1 N → 2 cm</text>`; },900);
-          setTimeout(()=>{ if(!el.isConnected) return; hung=null; back(g,HOME.w); setLen(L0); $('#mfext').innerHTML=''; st='hang'; card(); },2600); }
-        else { setLen(L0+box().f*PER); st='read'; setTimeout(()=>{ drawPtr(); card(); },500); }
-        card(); return true; }}));
-    drawSpring(); card(); drawPtr();
+      can:()=>hung!==id&&!found[id]&&!(id==='w'&&found.cal),
+      drop(x,y){ const h={x:CX,y:yOf(len)+30}; if(Math.hypot(x-h.x,y-h.y)>75) return false;
+        if(st==='cal'&&id!=='w'){ ban('First hang the <b>1 N</b> weight, so you know how far 1 N stretches it.',true); return false; }
+        if((st==='hang'||st==='final')&&id!==box().id){ ban(`Hang <b>box ${box().id}</b> next.`,true); return false; }
+        if(!['cal','hang','final'].includes(st)) return false;
+        hung=id; g.setAttribute('transform',`translate(${CX} ${yOf(len)+(id==='w'?24:30)})`);
+        if(id==='w'){ st='calshow'; setLen(L0+PER); prompt();
+          setTimeout(()=>{ if(!el.isConnected) return; $('#mfbricks').innerHTML=brick(0)+`<text x="${BX+BW+6}" y="${yOf(L0+PER)-6}" font-size="13" font-weight="700" fill="${OK}" ${halo}>1 N → 2 cm</text>`; },700);
+          setTimeout(()=>{ if(!el.isConnected) return; found.cal=1; hung=null; back(g,HOME.w); g.style.opacity=.45; setLen(L0); $('#mfbricks').innerHTML=''; st='hang'; prompt(); },3400); }
+        else if(st==='final'){ setLen(L0+box().f*PER); setTimeout(()=>{ st='end'; items.D.querySelector('text:last-child').textContent='4 N'; prompt(); drawSpring(); },900); }
+        else { setLen(L0+box().f*PER); st='read'; prompt(); }
+        wig(); return true; }}));
+    drawSpring(); drawBricks(); drawScale(); prompt();
   }
 
   /* ---------------- Elastic band results (class data) ---------------- */

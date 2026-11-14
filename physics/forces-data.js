@@ -121,7 +121,7 @@ const L2 = {
   fact:['','Foul fact: when a footballer heads a ball, the forces deform both the ball and the footballer’s head.'],
   widgets:[
     {title:'Spring lab',intro:'Hang weights on the spring, plot the graph, then go past the elastic limit and see what happens.',render:W.springLab},
-    {title:'Measure a force',intro:'Your teacher asked: <b>how would you use this fact to measure a force?</b> Find out what 1 N does, then weigh three mystery boxes.',render:HW.measure},
+    {title:'Measure a force',intro:'<b style="background:#fde68a;color:#1d1b16;padding:3px 8px;font-size:1.05rem">How would you use this fact to measure a force?</b>',render:HW.measure},
     {title:'Elastic band results',intro:'Your class experiment. Add the weights one at a time and work out each <b>extension</b>.',render:HW.band},
     {title:'Results detective',intro:'Four experiments that went wrong. Find the reason for each one.',render:HW.detective},
     {title:'Squashed or stretched?',intro:'<b>How:</b> press and hold an example card, drag it into the right box, then let go.',render:(el,U)=>U.sorter(el,{
