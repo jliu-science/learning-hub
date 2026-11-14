@@ -24,8 +24,10 @@ const L1 = {
   ],
   summary:[
     ['reaction','All chemical reactions involve <b>energy transfers</b>. Changes of state and dissolving do too.'],
-    ['exo','<b>Exothermic</b>: energy is transferred <b>to</b> the surroundings, so the <b>temperature increases</b>. Examples: combustion, <b>respiration</b>, <b>rusting</b>, <b>neutralisation</b>, freezing, condensing, some dissolving.'],
-    ['endo','<b>Endothermic</b>: energy is transferred <b>from</b> the surroundings, so the <b>temperature decreases</b>. Examples: <b>photosynthesis</b>, <b>thermal decomposition</b>, some other reactions, melting, <b>evaporation</b>, boiling, some dissolving.'],
+    ['exo','<b>Exothermic</b>: energy is <b>given out</b> (transferred <b>to</b> the surroundings). In a test tube or beaker experiment you see the <b>temperature increase</b>.'],
+    ['endo','<b>Endothermic</b>: energy is <b>taken in</b> (transferred <b>from</b> the surroundings). In a test tube or beaker experiment you see the <b>temperature decrease</b>.'],
+    ['exo','Changes that <b>give out</b> energy: combustion, <b>respiration</b>, <b>rusting</b>, <b>neutralisation</b>, freezing, condensing, some dissolving.'],
+    ['endo','Changes that <b>take in</b> energy: <b>photosynthesis</b>, <b>thermal decomposition</b>, melting, <b>evaporation</b>, boiling, some dissolving. Not all of them make things colder: <b>photosynthesis</b> takes in energy from <b>light</b>.'],
     ['reaction','When ice melts it is <b>not</b> a chemical reaction. It is a <b>physical change</b> (a change of state).'],
     ['endo','A <b>cold pack</b>: ammonium nitrate dissolves in water. This takes in energy from the injury, so the injury cools down.'],
     ['endo','Tom mixed citric acid with sodium hydrogen carbonate: the temperature of the mixture fell from 20 °C to <b>10 °C</b>, an <b>endothermic</b> reaction.'],

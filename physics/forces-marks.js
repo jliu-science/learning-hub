@@ -14,6 +14,12 @@ const permanent={check:(_answer,parts,hit)=>{
   (hit(s,'permanent')&&/\b(?:stretch|extend|extension|deform|change|long)/.test(s))||
   ['stays stretched','stay stretched','stays longer','stay longer'].some(t=>hit(s,t))); }};
 const badBalance=[/\bunbalanced\b/,/\bnot balanced\b/,/\bresultant(?: force)? (?:is )?(?:not zero|nonzero|non zero)\b/];
+// extension = measured length − original length: the subtraction must go the right way round
+const MEAS='(?:measured|new|stretched|final) length|measured|measurement', ORIG='(?:original|starting|start|unstretched|natural) length|original';
+const extensionSum={check:answer=>answer.toLowerCase().replace(/\s[-−–]\s|[−–]/g,' minus ').split(/[.;!?\n]+/).some(s=>
+  new RegExp(`\\b(?:${MEAS})\\b.{0,40}?\\b(?:minus|take away|takeaway|subtract|take off|less)\\b.{0,30}?\\b(?:${ORIG})\\b`).test(s)||
+  new RegExp(`\\b(?:subtract|take away|takeaway|take off|take)\\b.{0,30}?\\b(?:${ORIG})\\b.{0,30}?\\bfrom\\b.{0,30}?\\b(?:${MEAS})\\b`).test(s)||
+  new RegExp(`\\bdifference between\\b.{0,50}?\\b(?:${MEAS})\\b.{0,30}?\\band\\b.{0,30}?\\b(?:${ORIG})\\b|\\bdifference between\\b.{0,50}?\\b(?:${ORIG})\\b.{0,30}?\\band\\b.{0,30}?\\b(?:${MEAS})\\b`).test(s))};
 window.MARKS = {
   l1:[
     [ [['friction']], [RES.concat(['slows','slow','stops','against','opposite'])], [['lubric','oil','grease','smooth','wheel','polish']] ],
@@ -25,7 +31,7 @@ window.MARKS = {
     [ [['shape','deform','squash','flatten','change']], [['compress','squash']] ],
     [ [['bond','particle']], [['compress','push','squash','together','weight']], [['push back','reaction','support','pushes back','push up','pushes up','force back']] ],
     [ [['12']], [['double','twice','2 times','two times','x2','proportion']], permanent ],
-    [ [['extension','extend','stretch']], [['original','minus','take away','takeaway','subtract','difference','take off']], [['1 n','known','each newton','per newton','compare','divide','2 cm','one newton']] ]
+    [ [['extension','extend','stretch'],['measur','ruler','read','how far','how much']], extensionSum, [['1 n','known','each newton','per newton','compare','divide','2 cm','one newton']] ]
   ],
   l3:[
     [ [['5'],['0 75','0.75','75']], {check:answer=>/\b3[.,]75\s*(?:n\s*[·⋅*.]?\s*m|newton[ -]*(?:metres?|meters?))\b/i.test(answer)} ],

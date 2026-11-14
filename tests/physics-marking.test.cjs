@@ -109,3 +109,23 @@ test('bell and breaker comparison needs a shared mechanism and reset difference'
     assert.equal(c.mark('l3', 1, similarity + wrong)[1].ok, false, wrong);
   }
 });
+
+test('measuring a force: extension must be measured length minus original length', () => {
+  const c = load('forces');
+  const sum = a => c.mark('l2', 3, a)[1].ok;
+  for (const right of [
+    'Extension = measured length − original length.',
+    'The extension is the measured length minus the original length.',
+    'Take the original length away from the measured length.',
+    'Subtract the original length from the new length.',
+    'Work out the difference between the measured length and the original length.'
+  ]) assert.equal(sum(right), true, right);
+  for (const wrong of [
+    'The extension is the original length minus measured length. Compare it to 1 N.',
+    'Extension = original length − measured length.',
+    'Subtract the measured length from the original length.',
+    'Take the measured length away from the original length.',
+    'The extension is the original length.'
+  ]) assert.equal(sum(wrong), false, wrong);
+  assert.equal(c.score('l2', 3, 'The extension is the original length minus measured length. Compare it to 1 N.'), 2);
+});
