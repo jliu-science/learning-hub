@@ -125,7 +125,9 @@ test('measuring a force: extension must be measured length minus original length
     'Extension = original length − measured length.',
     'Subtract the measured length from the original length.',
     'Take the measured length away from the original length.',
-    'The extension is the original length.'
+    'The extension is the original length.',
+    'Extension is measured length minus original length. Extension is original length minus measured length.',
+    'Extension = measured length − original length, or original length − measured length.'
   ]) assert.equal(sum(wrong), false, wrong);
   assert.equal(c.score('l2', 3, 'The extension is the original length minus measured length. Compare it to 1 N.'), 2);
 });

@@ -16,10 +16,15 @@ const permanent={check:(_answer,parts,hit)=>{
 const badBalance=[/\bunbalanced\b/,/\bnot balanced\b/,/\bresultant(?: force)? (?:is )?(?:not zero|nonzero|non zero)\b/];
 // extension = measured length − original length: the subtraction must go the right way round
 const MEAS='(?:measured|new|stretched|final) length|measured|measurement', ORIG='(?:original|starting|start|unstretched|natural) length|original';
-const extensionSum={check:answer=>answer.toLowerCase().replace(/\s[-−–]\s|[−–]/g,' minus ').split(/[.;!?\n]+/).some(s=>
-  new RegExp(`\\b(?:${MEAS})\\b.{0,40}?\\b(?:minus|take away|takeaway|subtract|take off|less)\\b.{0,30}?\\b(?:${ORIG})\\b`).test(s)||
-  new RegExp(`\\b(?:subtract|take away|takeaway|take off|take)\\b.{0,30}?\\b(?:${ORIG})\\b.{0,30}?\\bfrom\\b.{0,30}?\\b(?:${MEAS})\\b`).test(s)||
-  new RegExp(`\\bdifference between\\b.{0,50}?\\b(?:${MEAS})\\b.{0,30}?\\band\\b.{0,30}?\\b(?:${ORIG})\\b|\\bdifference between\\b.{0,50}?\\b(?:${ORIG})\\b.{0,30}?\\band\\b.{0,30}?\\b(?:${MEAS})\\b`).test(s))};
+// order(A,B): a sentence says "A minus B" (or "take B from A"); the difference wording works either way round
+const order=(s,A,B)=>new RegExp(`\\b(?:${A})\\b.{0,40}?\\b(?:minus|take away|takeaway|subtract|take off|less)\\b.{0,30}?\\b(?:${B})\\b`).test(s)||
+  new RegExp(`\\b(?:subtract|take away|takeaway|take off|take)\\b.{0,30}?\\b(?:${B})\\b.{0,30}?\\bfrom\\b.{0,30}?\\b(?:${A})\\b`).test(s);
+const sentences=answer=>answer.toLowerCase().replace(/\s[-−–]\s|[−–]/g,' minus ').split(/[.;!?\n]+/);
+// right way round somewhere, and never the wrong way round anywhere (contradictory answers get no mark)
+const extensionSum={check:answer=>{ const ss=sentences(answer);
+  const right=ss.some(s=>order(s,MEAS,ORIG)||[[MEAS,ORIG],[ORIG,MEAS]].some(([A,B])=>new RegExp(`\\bdifference between\\b.{0,50}?\\b(?:${A})\\b.{0,30}?\\band\\b.{0,30}?\\b(?:${B})\\b`).test(s)));
+  const wrong=ss.some(s=>order(s,ORIG,MEAS));
+  return right&&!wrong; }};
 window.MARKS = {
   l1:[
     [ [['friction']], [RES.concat(['slows','slow','stops','against','opposite'])], [['lubric','oil','grease','smooth','wheel','polish']] ],
