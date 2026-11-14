@@ -54,7 +54,7 @@ window.HookeWidgets = (function(){
     $('#mforig').innerHTML=`<line x1="${RX}" y1="${yOf(L0)}" x2="${CX+40}" y2="${yOf(L0)}" stroke="${OK}" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${CX+22}" y="${yOf(L0)-7}" font-size="13" font-weight="700" fill="${OK}" ${halo}>original length 5 cm</text>`;
     // prompt on the diagram (top right)
     function ban(html,bad){ $('#mfban').innerHTML=`<foreignObject x="290" y="2" width="384" height="84"><div xmlns="http://www.w3.org/1999/xhtml" style="font:15px/1.4 Inter,'Segoe UI',sans-serif;color:${bad?BAD:INK};border-left:4px solid ${bad?BAD:'var(--accent)'};background:${bad?'#fef2f2':'var(--accent-soft)'};padding:7px 10px">${html}</div></foreignObject>`; }
-    function button(label,fn){ $('#mfbtn').innerHTML=label?`<g class="hk-btn" id="mfgo"><rect x="300" y="296" width="150" height="34" rx="3" fill="${BLUE}"/><text x="375" y="318" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">${label}</text></g>`:''; if(label) $('#mfgo').onclick=fn; }
+    function button(label,fn){ $('#mfbtn').innerHTML=label?`<g class="hk-btn" id="mfgo"><rect x="300" y="314" width="150" height="34" rx="3" fill="${BLUE}"/><text x="375" y="336" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">${label}</text></g>`:''; if(label) $('#mfgo').onclick=fn; }
     // things on the shelf
     const HOME={w:{x:495,y:366}}; BOX.forEach((b,i)=>HOME[b.id]={x:i<3?545+i*45:495,y:360});
     const items={};
@@ -86,7 +86,9 @@ window.HookeWidgets = (function(){
       s+=`<g transform="translate(${x} ${cy})"><text x="0" y="0" font-size="15">measured length <tspan font-weight="700" fill="${BLUE}">${L} cm</tspan></text>
         <text x="0" y="22" font-size="15">− original length <tspan font-weight="700" fill="${OK}">${L0} cm</tspan></text><line x1="0" y1="30" x2="200" y2="30" stroke="${INK}"/>
         <text x="0" y="50" font-size="16" font-weight="700" fill="${OK}">= extension ${e} cm</text>`
-        +(bricks===b.f?`<text x="0" y="78" font-size="15">${e} cm ÷ 2 cm = <tspan font-weight="700">${b.f}</tspan></text><text x="0" y="106" font-size="19" font-weight="700" fill="${b.col}">Box ${b.id} = ${b.f} N</text>`:'')+`</g>`;
+        +`<text x="0" y="82" font-size="15">force = extension ÷ <tspan font-weight="700" fill="${OK}">2 cm per N</tspan></text>`
+        +(bricks===b.f?`<text x="0" y="106" font-size="16" font-weight="700">= ${e} ÷ 2 = <tspan fill="${b.col}">${b.f} N</tspan></text><text x="0" y="136" font-size="19" font-weight="700" fill="${b.col}">Box ${b.id} = ${b.f} N</text>`
+          :`<text x="0" y="106" font-size="16">= ${e} ÷ 2 = <tspan font-weight="700" fill="${OK}">?</tspan></text><text x="0" y="130" font-size="13" fill="${MUTED}">${bricks?`${bricks} brick${bricks>1?'s':''} = ${bricks*PER} cm = ${bricks} N so far`:'count the 1 N bricks to check'}</text>`)+`</g>`;
       $('#mfcalc').innerHTML=s; drawBricks(); }
     // the extension gap and the 1 N bricks inside it
     const brick=(k,cls='')=>`<g class="${cls}"><rect x="${BX}" y="${yOf(L0+k*PER)+1}" width="${BW}" height="${PER*PX-2}" fill="${k%2?'#86efac':'#4ade80'}" stroke="${OK}" stroke-width="1.5"/><text x="${BX+BW/2}" y="${yOf(L0+k*PER)+PER*PX/2+5}" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">1 N</text></g>`;
