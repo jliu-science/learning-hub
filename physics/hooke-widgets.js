@@ -129,7 +129,7 @@ window.HookeWidgets = (function(){
     drawSpring(); card(); drawPtr();
   }
 
-  /* ---------------- Elastic band results (Dora's class data) ---------------- */
+  /* ---------------- Elastic band results (class data) ---------------- */
   function band(el){
     const D=[50,75,102,130,161,193,224,252,275], TOP=34, CX=128, RX=72;   // 1 svg unit per mm
     let n=0, ext=[0], len=50, wait=false;
