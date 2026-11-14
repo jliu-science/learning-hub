@@ -16,9 +16,9 @@ const L1 = {
   hook:'How does a cold pack get cold with no fridge? And why does a candle flame feel hot? It is all about which way energy moves.',
   goals:['Describe exothermic and endothermic changes','Use temperature readings to tell them apart'],
   keywords:[
-    {word:'Exothermic change',t:'exo',def:'A change that transfers energy TO the surroundings. The temperature of the surroundings goes up.'},
+    {word:'Exothermic change',t:'exo',def:'A change that gives out energy: it transfers energy TO the surroundings. In a test tube or beaker experiment, the temperature goes up.'},
     {word:'Exothermic reaction',t:'exo',def:'A chemical reaction that gives out energy to the surroundings, e.g. combustion (burning).'},
-    {word:'Endothermic change',t:'endo',def:'A change that transfers energy FROM the surroundings. The temperature of the surroundings goes down.'},
+    {word:'Endothermic change',t:'endo',def:'A change that takes in energy: it transfers energy FROM the surroundings. In a test tube or beaker experiment, the temperature goes down.'},
     {word:'Endothermic reaction',t:'endo',def:'A chemical reaction that takes in energy from the surroundings, e.g. citric acid + sodium hydrogen carbonate.'},
     {word:'Combustion',t:'fuel',def:'Burning. A reaction with oxygen that gives out energy as heat and light. Always exothermic.'}
   ],
@@ -51,12 +51,12 @@ const L1 = {
       {word:'endothermic',clue:'A change that transfers energy <b>from</b> the surroundings.'},
       {word:'combustion',clue:'Another word for burning.'},
       {word:'thermometer',clue:'The instrument you use to measure temperature.'},
-      {word:'temperature',clue:'What goes <b>down</b> during an endothermic change.'}
+      {word:'temperature',clue:'What you see go <b>down</b> on a thermometer during an endothermic change in a beaker.'}
     ])}
   ],
   quiz:[
     {q:'In an <b>exothermic</b> change, energy is transferred…',options:['to the surroundings','from the surroundings','into the thermometer only','nowhere, it is destroyed'],answer:0},
-    {q:'In an <b>endothermic</b> change, the temperature of the surroundings…',options:['decreases','increases','stays the same','doubles'],answer:0},
+    {q:'You mix two substances in a beaker and the change is <b>endothermic</b>. The temperature you measure…',options:['decreases','increases','stays the same','doubles'],answer:0},
     {q:'Which of these is an <b>exothermic</b> change?',options:['Combustion of a fuel','Melting ice','Boiling water','A cold pack working'],answer:0},
     {q:'Which of these is an <b>endothermic</b> change?',options:['Melting','Freezing','Condensing','Burning'],answer:0,explain:'Melting and boiling take in energy. Freezing and condensing give it out.'},
     {q:'Which of these reactions is <b>endothermic</b>?',options:['Photosynthesis','Respiration','Rusting','Neutralisation'],answer:0,explain:'Photosynthesis and thermal decomposition take in energy. Respiration, rusting, combustion and neutralisation give it out.'},
