@@ -116,8 +116,8 @@ const L2 = {
     {title:'Read the diagram',intro:'Drag each clue into the box for the type of change it shows.',render:(el,U)=>U.sorter(el,{
       bins:[{id:'x',label:'Exothermic',t:'exo'},{id:'n',label:'Endothermic',t:'endo'}],
       items:[
-        {label:'Products lower than reactants',bin:'x'},{label:'Arrow points down',bin:'x'},{label:'Energy change is negative (−)',bin:'x'},{label:'Temperature of surroundings rises',bin:'x'},{label:'Liquid water → ice',bin:'x'},
-        {label:'Products higher than reactants',bin:'n'},{label:'Arrow points up',bin:'n'},{label:'Energy change is positive (+)',bin:'n'},{label:'Temperature of surroundings falls',bin:'n'},{label:'Ice → liquid water',bin:'n'}
+        {label:'Products lower than reactants',bin:'x'},{label:'Arrow points down',bin:'x'},{label:'Energy change is negative (−)',bin:'x'},{label:'Reaction in a beaker: temperature rises',bin:'x'},{label:'Liquid water → ice',bin:'x'},
+        {label:'Products higher than reactants',bin:'n'},{label:'Arrow points up',bin:'n'},{label:'Energy change is positive (+)',bin:'n'},{label:'Reaction in a beaker: temperature falls',bin:'n'},{label:'Ice → liquid water',bin:'n'}
       ]})}
   ],
   quiz:[

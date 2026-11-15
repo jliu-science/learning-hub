@@ -64,7 +64,7 @@
     function once(){
       if(squeeze||done) return; n++;
       const br=bolusR(), start=pos-br-14;
-      const step = fibre ? 48 : 12;   // low fibre: little to push against, so it moves about 4x slower
+      const step = fibre ? 48 : 12;   // low fibre: little to push against (model setting only)
       slip++;
       const from=pos, t0=performance.now(), dur=520;
       squeeze={at:start,amp:0};
@@ -80,7 +80,7 @@
       if(pos>=L-50){ done=true; stop();
         msg.innerHTML = fibre
           ? `<b>Through in ${n} squeezes.</b> Fibre added bulk to the food, so the muscles had something to push against.`
-          : `<b>It took ${n} squeezes.</b> With little fibre there is little bulk for the muscles to push against, so the food moves slowly. Fibre-rich foods help prevent <b>constipation</b>.`;
+          : `<b>It took ${n} squeezes.</b> With little fibre there is little bulk for the muscles to push against, so it is harder to keep the food moving. Fibre-rich foods help prevent <b>constipation</b>.`;
         return; }
       if(!fibre && n===10) msg.innerHTML='Hardly moving. With so little fibre there is very little bulk for the muscles to push against. Keep going, or switch to the high-fibre meal and compare.';
       else if(fibre && n===1) msg.innerHTML='The muscles in the gut wall <b>squeeze</b> the food along, a bit like squeezing a tube of toothpaste.';

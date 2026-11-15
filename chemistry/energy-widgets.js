@@ -289,10 +289,10 @@ window.EnergyWidgets = (function(){
   function bondSvg(p,q,o,col,w,gap){ const L=Math.hypot(q[0]-p[0],q[1]-p[1])||1, nx=-(q[1]-p[1])/L, ny=(q[0]-p[0])/L;
     return (o===2?[-gap,gap]:[0]).map(d=>`<line x1="${p[0]+nx*d}" y1="${p[1]+ny*d}" x2="${q[0]+nx*d}" y2="${q[1]+ny*d}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`).join(''); }
   const MOLS=[
-    {n:'Methane CH₄',ghs:['flame'],info:'A <b>gas</b> at room temperature. The main substance in <b>natural gas</b>, a <b>fuel</b>: it burns in oxygen and gives out energy. Comes through pipes (<b>mains gas</b>) to cookers, boilers and the lab’s Bunsen burners. Not poisonous, but <b>extremely flammable</b>.',atoms:[['C',0,0],['H',0,-66],['H',66,0],['H',0,66],['H',-66,0]],bonds:[[0,1,1],[0,2,1],[0,3,1],[0,4,1]]},
-    {n:'Oxygen O₂',ghs:['oxid','cyl'],info:'A <b>gas</b>, about <b>one fifth of the air</b>. We need it to breathe, and fuels need it to burn. Stored in <b>gas cylinders</b> in labs and hospitals. Not poisonous, but pure oxygen makes things burn <b>much more fiercely</b> (<b>oxidising</b>).',atoms:[['O',-40,0],['O',40,0]],bonds:[[0,1,2]]},
-    {n:'Carbon dioxide CO₂',ghs:['cyl'],info:'A <b>gas</b>. Made when fuels such as methane burn, and we <b>breathe it out</b>. Stored in <b>gas cylinders</b>, e.g. for fizzy drinks and some fire extinguishers. It <b>does not burn</b>.',atoms:[['O',-80,0],['C',0,0],['O',80,0]],bonds:[[0,1,2],[1,2,2]]},
-    {n:'Water H₂O',ghs:[],info:'A <b>liquid</b> at room temperature. Also made when methane burns. <b>No hazard symbol</b> (but hot water and steam can scald).',atoms:[['O',0,-16],['H',-58,28],['H',58,28]],bonds:[[0,1,1],[0,2,1]]}];
+    {n:'Methane CH₄',info:'A <b>fuel</b>. It burns in <b>oxygen</b> and gives out energy.',atoms:[['C',0,0],['H',0,-66],['H',66,0],['H',0,66],['H',-66,0]],bonds:[[0,1,1],[0,2,1],[0,3,1],[0,4,1]]},
+    {n:'Oxygen O₂',info:'Fuels need <b>oxygen</b> to burn.',atoms:[['O',-40,0],['O',40,0]],bonds:[[0,1,2]]},
+    {n:'Carbon dioxide CO₂',info:'A <b>product</b>: made when methane burns.',atoms:[['O',-80,0],['C',0,0],['O',80,0]],bonds:[[0,1,2],[1,2,2]]},
+    {n:'Water H₂O',info:'A <b>product</b>: also made when methane burns.',atoms:[['O',0,-16],['H',-58,28],['H',58,28]],bonds:[[0,1,1],[0,2,1]]}];
   /* snap / form burst: an expanding ring and a floating +energy number, drawn on an overlay svg */
   function burst(stage,vb,x,y,col,txt){ let o=stage.querySelector('svg.fx'); if(!o){ o=document.createElementNS('http://www.w3.org/2000/svg','svg'); o.setAttribute('class','fx'); o.setAttribute('viewBox',vb); stage.appendChild(o); }
     const g=document.createElementNS('http://www.w3.org/2000/svg','g'); g.setAttribute('transform',`translate(${x},${y})`);
@@ -307,10 +307,6 @@ window.EnergyWidgets = (function(){
         <div class="subst" id="psub"></div><div id="pcalc" hidden></div><button class="btn ghost small" id="preset" style="margin-top:10px">Put it back together</button></div>
       <div class="stage"><svg viewBox="0 0 520 350" id="psvg" aria-label="Molecule to pull apart"></svg></div></div>`;
     const $=s=>el.querySelector(s), svg=$('#psvg');
-    const GHS={flame:['Flammable','<path d="M24 34c-5 0-8-3-8-7 0-5 5-7 4-13 4 2 6 6 5 10 1-1 2-2 2-4 3 3 5 6 5 8 0 4-3 6-8 6z"/>'],
-      oxid:['Oxidising','<path d="M24 27c-3 0-5-2-5-4 0-3 3-5 2-9 3 1 5 4 4 7 1-1 1-1 1-3 2 2 3 4 3 5 0 3-2 4-5 4z"/><circle cx="24" cy="31" r="5" fill="none" stroke="#1d1b16" stroke-width="2.4"/><path d="M15 37h18" stroke="#1d1b16" stroke-width="2"/>'],
-      cyl:['Gas under pressure','<rect x="13" y="20" width="22" height="10" rx="5" transform="rotate(-30 24 25)"/><path d="M32 15l4-3" stroke="#1d1b16" stroke-width="2.5"/>']};
-    const ghsSvg=k=>`<span class="ghs"><svg viewBox="0 0 48 48"><rect x="10" y="10" width="28" height="28" transform="rotate(45 24 24)" fill="#fff" stroke="#c81e1e" stroke-width="3"/><g fill="${INK}">${GHS[k][1]}</g></svg><span>${GHS[k][0]}</span></span>`;
     function draw(){
       svg.querySelector('#pb').innerHTML=B.map(b=>{ if(b.broken) return ''; const p=A[b.i], q=A[b.j]; const f=Math.min(1,(b.s||0)/b.T);
         return bondSvg([p.x,p.y],[q.x,q.y],b.o,f>.05?BL:INK,4-2*f,5); }).join('');
@@ -345,7 +341,7 @@ window.EnergyWidgets = (function(){
       clearTimeout(g._t); g._t=setTimeout(()=>{ g._t=0; g.innerHTML=''; },3500); }
     let raf=0; const redraw=()=>{ if(raf) return; raf=requestAnimationFrame(()=>{ raf=0; draw(); }); };
     function calc(){}
-    function setup(k){ M=MOLS[k]; total=0; broke=[]; $('#psub').innerHTML=`<p><b>${M.n}</b>: ${M.info}</p><div class="ghsrow">${M.ghs.length?M.ghs.map(ghsSvg).join(''):'<span class="hint">No hazard symbol</span>'}</div>`;
+    function setup(k){ M=MOLS[k]; total=0; broke=[]; $('#psub').innerHTML=`<p><b>${M.n}</b>: ${M.info}</p>`;
       A=M.atoms.map(([a,x,y])=>({a,x:CX+x,y:CY+y}));
       B=M.bonds.map(([i,j,o])=>{ const k2=bname(A[i].a,A[j].a,o), e=BE[k2]; return {i,j,o,k:k2,e,L:Math.hypot(A[i].x-A[j].x,A[i].y-A[j].y),T:e/6,s:0}; });
       const deg=A.map((_,i)=>B.filter(b=>b.i===i||b.j===i).length), mx=Math.max(...deg);

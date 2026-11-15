@@ -63,7 +63,7 @@ const L1 = {
     {q:'What happens when a north-seeking pole and a south-seeking pole are brought together?',options:['They attract','They repel','Nothing','They spin'],answer:0},
     {q:'Which list contains only magnetic materials?',options:['Iron, steel, cobalt, nickel','Iron, copper, steel, nickel','Aluminium, steel, cobalt, iron','Steel, nickel, tungsten, copper'],answer:0},
     {q:'Magnetic force is a…',options:['non-contact force','contact force','drag force','type of friction'],answer:0},
-    {q:'Which way do magnetic field lines go?',options:['From the north pole to the south pole','From the south pole to the north pole','Round in a circle inside the magnet','Straight out from the middle'],answer:0},
+    {q:'Which way do magnetic field lines go?',options:['From the north pole to the south pole','From the south pole to the north pole','In random directions','Straight out from the middle'],answer:0},
     {q:'Where is the magnetic field strongest?',options:['Where the field lines are closest together','Where the field lines are furthest apart','Far away from the magnet','It is the same everywhere'],answer:0},
     {q:'Which two things can you use to find the shape of a magnetic field?',options:['Plotting compasses and iron filings','A ruler and a thermometer','Copper wire and a battery','A newtonmeter and a spring'],answer:0},
     {q:'Why does a hanging magnet line up pointing north–south?',options:['It is in the magnetic field of the Earth','The Sun pulls it','Gravity pulls it north','The air pushes it'],answer:0},
