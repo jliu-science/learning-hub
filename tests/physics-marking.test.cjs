@@ -131,3 +131,38 @@ test('measuring a force: extension must be measured length minus original length
   ]) assert.equal(sum(wrong), false, wrong);
   assert.equal(c.score('l2', 3, 'The extension is the original length minus measured length. Compare it to 1 N.'), 2);
 });
+
+test('tennis ball: the ball itself must be squashed, not the ground, and not stretched', () => {
+  const c = load('forces');
+  const pts = a => [...c.mark('l2', 0, a)].map(r => r.ok);
+  for (const right of [
+    'The force of hitting the ground squashes the ball, so it changes shape: it deforms and is under compression.',
+    'The ball changes shape. It is compressed.',
+    'It deforms because it gets squashed (compression).',
+    'The ball gets squashed when it hits the ground so it is under compression, then it bounces back.'
+  ]) assert.deepEqual(pts(right), [true, true], right);
+  for (const [wrong, want] of [
+    ['The ball doesn\'t change shape. The ground gets squashed.', [false, false]],
+    ['The ball stays the same shape because the ground is compressed.', [false, false]],
+    ['The ball squashes the ground.', [false, false]],
+    ['The ball is stretched so it is in tension and changes shape.', [true, false]],
+    ['The ball is not squashed, it is in tension.', [false, false]]
+  ]) assert.deepEqual(pts(wrong), want, wrong);
+});
+
+test('floor: bonds between particles are compressed and push back; breaking or stretching bonds is wrong', () => {
+  const c = load('forces');
+  const pts = a => [...c.mark('l2', 1, a)].map(r => r.ok);
+  for (const right of [
+    'The floor is a solid made of particles joined strongly by bonds in a regular pattern. Your weight pushes the particles together and the bonds are compressed by a very small amount. The bonds push back, giving a support force called the reaction force.',
+    'The floor is made of particles held together by bonds. My weight squashes the bonds. They push back up on me with a reaction force.',
+    'Bonds between the particles get compressed by your weight and push back (support force).'
+  ]) assert.deepEqual(pts(right), [true, true, true], right);
+  for (const [wrong, want] of [
+    ['Chemical bonds break when you stand on the floor, which pushes you up.', [false, false, false]],
+    ['The particles have no bonds. Your weight stretches them apart and the floor pulls you up with a reaction force.', [false, false, false]],
+    ['Your weight pulls the bonds apart and they pull back.', [false, false, false]],
+    ['The floor pushes you up.', [false, false, true]],
+    ['Your weight pushes on the floor and the floor pushes back.', [false, false, true]]
+  ]) assert.deepEqual(pts(wrong), want, wrong);
+});

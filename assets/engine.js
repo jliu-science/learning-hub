@@ -177,7 +177,7 @@
   /* Match related words within one statement, rather than joining unrelated facts.
      Only verbatim copied sentences are ignored: correct answers often reuse terms
      from the question, so vocabulary overlap alone is not evidence of copying. */
-  const statements=t=>String(t).split(/(?<!\d)\.|\.(?!\d)|[!?;\n]+|(?:[,\:]\s*|\b(?:but|whereas|while|and)\s+)(?=(?:the\s+)?(?:carbohydrase|amylase|protease|lipase|enzymes?|catalysts?)\b)/i).map(s=>mnorm(s).trim()).filter(Boolean);
+  const statements=t=>String(t).replace(/\b([ei])\.([ge])\.?/gi,'$1$2').split(/(?<!\d)\.|\.(?!\d)|[!?;\n]+|(?:[,\:]\s*|\b(?:but|whereas|while|and)\s+)(?=(?:the\s+)?(?:carbohydrase|amylase|protease|lipase|enzymes?|catalysts?)\b)/i).map(s=>mnorm(s).trim()).filter(Boolean);
   function dropCopied(answer,stem){
     const copied=new Set(statements(stem||''));
     return statements(answer).filter(s=>s.split(' ').length<6||!copied.has(s));
@@ -214,14 +214,17 @@
     };
     return rules.map(rule=>{
       const spec=Array.isArray(rule)?{all:rule}:rule;
+      // reject: any wrong or reversed claim anywhere loses the point, so contradictory answers never score
+      if((spec.reject||[]).some(re=>typeof re==='function'?re(answer,parts,positiveHit):re.test(whole))) return {ok:false,hits:[]};
       if(spec.check){ const ok=!!spec.check(answer,parts,positiveHit); return {ok,hits:[]}; }
-      if((spec.reject||[]).some(re=>re.test(whole))) return {ok:false,hits:[]};
       if(spec.choices){
         const found=spec.choices.map(matchGroups).filter(Boolean);
         const ok=found.length>=(spec.minimum||1);
         return {ok,hits:ok?[...new Set(found.flat())]:[]};
       }
       const hits=matchGroups(spec.all);
+      // also: an extra relation test (direction, units, pairing) on top of the keyword groups
+      if(hits&&spec.also&&!spec.also(answer,parts,positiveHit)) return {ok:false,hits:[]};
       return {ok:!!hits,hits:hits||[]};
     });
   }

@@ -179,7 +179,7 @@ const L3 = {
   apply:[
     {scenario:'A female office worker needs <b style="background:#fde68a;padding:0 .3em">about 10 000 kJ</b> a day. When she becomes pregnant she needs <b style="background:#fde68a;padding:0 .3em">about 13 000 kJ</b> a day. <b style="background:#fde68a;padding:0 .3em">(Estimates read from the graph, not exact.)</b>',question:'Use the graph values to calculate the extra energy she needs each day.',marks:2,
       model:'Extra energy = 13 000 − 10 000 = <b>about 3000 kJ</b> per day (an estimate, because the graph values are estimates).',
-      points:['Subtracts: 13 000 − 10 000','3000 kJ']},
+      points:['Subtracts: 13 000 − 10 000','3000 kJ (the unit kJ is needed)']},
     {scenario:'A man works in an office and needs <b style="background:#fde68a;padding:0 .3em">about 11 000 kJ</b> a day. He starts a new job as a construction worker and now needs <b style="background:#fde68a;padding:0 .3em">about 16 000 kJ</b> a day. <b style="background:#fde68a;padding:0 .3em">(Estimates read from the graph, not exact.)</b>',question:'Calculate the percentage increase in his daily energy needs.',marks:4,
       chain:['Increase = new − old','÷ old','× 100'],
       hints:['Percentage increase = (increase ÷ original) × 100'],
@@ -282,8 +282,8 @@ const L5 = {
   memory:'The enzyme name tells you its food: <b>CARBOHYDR</b>ase → carbohydrates, <b>PROT</b>ease → proteins, <b>LIP</b>ase → lipids. Each enzyme is named after the type of nutrient it breaks down.',
   widgets:[
     {title:'Enzyme workbench',icon:'',intro:'Drag each enzyme onto the large molecule it breaks down. The diagrams are drawn like the ones in your textbook.',render:(el,U)=>W.enzymeBench(el,U)},
-    {title:'Bile and lipase',icon:'',intro:'Digest a drop of lipid in the small intestine. Which do you add first?',render:(el,U)=>W.bileLab(el,U)},
-    {title:'Where is it digested?',icon:'',intro:'Drag each nutrient onto every part of the gut where it is digested, then check. Fibre is the odd one out: it is not digested, but gut bacteria live on it.',render:(el,U)=>W.digestMap(el,U)}
+    {title:'Bile and lipase',icon:'',intro:'Digest a drop of lipid in the small intestine. Try lipase on its own, then with bile. What does bile do for lipase?',render:(el,U)=>W.bileLab(el,U)},
+    {title:'Where is it digested?',icon:'',intro:'Step 1: drag carbohydrate, protein and lipid onto every part of the gut where each is digested, then check. Step 2: fibre is not digested. Drag it to where gut bacteria live on it.',render:(el,U)=>W.digestMap(el,U)}
   ],
   quiz:[
     {q:'What is an enzyme?',options:['A special protein that breaks large molecules into small molecules','A type of bacteria','A vitamin','A large food molecule'],answer:0},
