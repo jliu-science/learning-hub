@@ -133,25 +133,26 @@
       const w=h('div',{class:'qwrap'}); el.appendChild(w);
       if(i>=questions.length){ return finish(w); }
       const q=questions[i]; let answered=false;
+      const right=()=>q.type==='fill'?q.answers[0]:q.type==='order'?q.items.join(' → '):q.options[q.answer];
       w.appendChild(h('div',{class:'qtop'},`<span>Question ${i+1} of ${questions.length}</span><div class="prog"><i style="width:${i/questions.length*100}%"></i></div><span>Score ${score}</span>`));
       w.appendChild(h('div',{class:'qtext'},q.q));
       const fb=h('div',{class:'fb'});
       const next=h('button',{class:'btn accent',disabled:''},i===questions.length-1?'See results':'Next →'); next.onclick=()=>{ i++; draw(); };
-      const done=(ok,extra='')=>{ answered=true; if(ok) score++; log.push([q.q,ok]); fb.className='fb show '+(ok?'good':'bad'); fb.innerHTML=`<b>${ok?'Correct.':'Not quite.'}</b> ${extra}${q.explain?' '+q.explain:''}`; next.disabled=false; next.focus(); };
+      const done=(ok,extra='')=>{ answered=true; if(ok) score++; log.push([q.q,ok,ok?'':right()]); fb.className='fb show '+(ok?'good':'bad'); fb.innerHTML=`<b>${ok?'Correct.':'Not quite.'}</b> ${extra}${q.explain?' '+q.explain:''}`; next.disabled=false; next.focus(); };
       if(q.type==='fill'){
         const f=h('div',{class:'fill row'}); const inp=h('input',{type:'text',placeholder:'Type your answer','aria-label':'answer'}); const go=h('button',{class:'btn'},'Check');
-        const check=()=>{ if(answered) return; const v=norm(inp.value); if(!v){inp.focus();return;} const ok=fillOK(q,v); inp.classList.add(ok?'ok':'no'); inp.disabled=true; go.disabled=true; done(ok, ok?'':`Answer: <b>${q.answers[0]}</b>.`); };
+        const check=()=>{ if(answered) return; const v=norm(inp.value); if(!v){inp.focus();return;} const ok=fillOK(q,v); inp.classList.add(ok?'ok':'no'); inp.disabled=true; go.disabled=true; done(ok, ok?'':`<span class="ans">Correct answer: <b>${right()}</b></span>`); };
         go.onclick=check; inp.addEventListener('keydown',e=>{ if(e.key==='Enter') answered? next.click() : check(); });
         f.append(inp,go); w.appendChild(f); setTimeout(()=>inp.focus(),50);
       } else if(q.type==='order'){
         const ul=h('ol',{class:'order-list'}); let items=shuffle(q.items.map((t,k)=>({t,k}))); if(items.every((x,k)=>x.k===k)) items.reverse();
         const dr=()=>{ ul.innerHTML=''; items.forEach((it,k)=>{ const li=h('li',{},`<span>${it.t}</span>`); const up=h('button',{'aria-label':'move up'},'▲'), dn=h('button',{'aria-label':'move down'},'▼'); up.onclick=()=>{ if(k>0){[items[k-1],items[k]]=[items[k],items[k-1]]; dr();} }; dn.onclick=()=>{ if(k<items.length-1){[items[k+1],items[k]]=[items[k],items[k+1]]; dr();} }; li.append(up,dn); ul.appendChild(li); }); };
         dr(); const go=h('button',{class:'btn',style:'margin-top:10px'},'Check order');
-        go.onclick=()=>{ const ok=items.every((x,k)=>x.k===k); [...ul.children].forEach((li,k)=>{ li.classList.add(items[k].k===k?'ok':'no'); li.querySelectorAll('button').forEach(b=>b.disabled=true); }); go.disabled=true; done(ok, ok?'':'Correct order: '+q.items.join(' → ')+'.'); };
+        go.onclick=()=>{ const ok=items.every((x,k)=>x.k===k); [...ul.children].forEach((li,k)=>{ li.classList.add(items[k].k===k?'ok':'no'); li.querySelectorAll('button').forEach(b=>b.disabled=true); }); go.disabled=true; done(ok, ok?'':`<span class="ans">Correct order: <b>${right()}</b></span>`); };
         w.append(ul,go);
       } else {
         const opts=h('div',{class:'opts'}); const order=q.noShuffle?q.options.map((o,k)=>k):shuffle(q.options.map((o,k)=>k));
-        order.forEach((k,pos)=>{ const b=h('button',{class:'opt'},`<span class="k">${'ABCD'[pos]}</span><span>${q.options[k]}</span>`); b.onclick=()=>{ if(answered) return; const ok=k===q.answer; opts.querySelectorAll('.opt').forEach(x=>x.disabled=true); b.classList.add(ok?'right':'wrong'); if(!ok) opts.children[order.indexOf(q.answer)].classList.add('right'); done(ok); }; opts.appendChild(b); });
+        order.forEach((k,pos)=>{ const b=h('button',{class:'opt'},`<span class="k">${'ABCD'[pos]}</span><span>${q.options[k]}</span>`); b.onclick=()=>{ if(answered) return; const ok=k===q.answer; opts.querySelectorAll('.opt').forEach(x=>x.disabled=true); b.classList.add(ok?'right':'wrong'); if(!ok) opts.children[order.indexOf(q.answer)].classList.add('right'); done(ok, ok?'':`<span class="ans">Correct answer: <b>${'ABCD'[order.indexOf(q.answer)]}. ${right()}</b></span>`); }; opts.appendChild(b); });
         w.appendChild(opts);
       }
       w.appendChild(fb);
@@ -163,7 +164,7 @@
       w.innerHTML=`<div class="result card"><div class="hint">Your score</div><div class="big">${score} / ${questions.length}</div><div class="stars">${'★'.repeat(stars)}<span style="color:#d1d5db">${'★'.repeat(3-stars)}</span></div>
         <p>${stars===3?'Every answer right.':stars===2?'Nearly there. Have another go for all three stars.':stars===1?'Look at the ones you missed below, then try again.':'Read through the Learn tab first, then come back.'}</p>
         <div class="row" style="justify-content:center"><button class="btn accent" id="again">Try again (new order)</button></div>
-        <div class="review">${log.map(([t,ok])=>`<div>${ok?'✓':'✗'} &nbsp;${t}</div>`).join('')}</div></div>`;
+        <div class="review">${log.map(([t,ok,a])=>`<div>${ok?'✓':'✗'} &nbsp;${t}${ok?'':`<span class="ans">Correct answer: <b>${a}</b></span>`}</div>`).join('')}</div></div>`;
       w.querySelector('#again').onclick=()=>quiz(el,shuffle(questions),id,onDone);
       onDone&&onDone();
     };
