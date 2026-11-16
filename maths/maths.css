@@ -241,3 +241,20 @@ body.maths{--m-ink:#26231f;--m-hair:#e4dccb;--m-faint:#f0e9da;--m-cue:#a4532e}
 .maths .mleft{background-image:none}
 .maths .mfull svg.mstage{max-height:calc(100vh - 300px);min-height:320px}
 .maths .mtopsteps+.mfull svg.mstage{max-height:calc(100vh - 380px);min-height:300px}
+
+/* ===== Topic colour themes (2026-11-16, joe: "too dull"). Livelier page colour per topic;
+   cards stay paper-white so diagrams read clearly. Topic is picked by the scripts the page loads. ===== */
+body.maths{--t-bg:#f7f3ea;--t-side:#f1ebdd;--t-dot:rgba(0,0,0,.06);--t-hair:#e4dccb}
+/* Perimeter, area & volume: blueprint blue */
+body.maths:has(script[src^="area-widgets"]){--t-bg:#dcebf3;--t-side:#cde0ec;--t-dot:rgba(30,80,120,.13);--t-hair:#b9d0de}
+/* Fractions & decimals: apricot */
+body.maths:has(script[src^="fd-widgets"]){--t-bg:#fbe3d2;--t-side:#f6d3bc;--t-dot:rgba(150,70,30,.12);--t-hair:#ecc5ab}
+body.maths{background-color:var(--t-bg);background-image:radial-gradient(var(--t-dot) 1.1px,transparent 1.3px);background-size:22px 22px;background-attachment:fixed}
+.maths .side{background:var(--t-side);border-right:1px solid var(--t-hair)}
+.maths .side a:hover{background:rgba(255,255,255,.35)}
+.maths .side a.on{background:rgba(255,253,248,.7)}
+.maths .side .sep{background:var(--t-hair)}
+.maths .tabbar{border-bottom-color:var(--t-hair)}
+.maths .mleft,.maths .msteps,.maths .card{border-color:var(--t-hair);box-shadow:0 1px 0 rgba(60,40,10,.04),0 18px 36px -26px rgba(40,30,20,.45)}
+.maths .lhead{border-bottom-color:rgba(38,35,31,.75)}
+.maths .fcard{box-shadow:0 10px 24px -20px rgba(40,30,20,.5)}
