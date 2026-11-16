@@ -32,7 +32,7 @@
   const face=m=>`<svg viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11.5" ${S}/>${m.f}</svg>`;
   const css=`
   .hub{position:relative}
-  #nezha{position:absolute;right:28px;top:4px;width:150px;z-index:5;text-align:center;font-family:"Inter","Segoe UI",sans-serif}
+  #nezha{position:absolute;right:28px;top:2px;width:134px;z-index:5;text-align:center;font-family:"Inter","Segoe UI",sans-serif}
   .nz-btn{display:block;width:100%;padding:0;border:0;background:none;cursor:pointer;position:relative}
   .nz-pic{display:block;position:relative;filter:drop-shadow(0 3px 4px rgba(29,27,22,.12));transition:transform .25s;transform-origin:50% 90%}
   .nz-pic img{display:block;width:100%}
