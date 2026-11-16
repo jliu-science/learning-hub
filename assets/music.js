@@ -11,6 +11,10 @@
     const brand=bar.querySelector('.brand'), homeHref=brand&&brand.getAttribute('href');
     if(homeHref&&homeHref!=='#'&&homeHref!=='index.html'){ const home=document.createElement('a'); home.className='home-btn'; home.href=homeHref; home.setAttribute('aria-label','Back to the home page');
       home.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg><span>Home</span>'; bar.insertBefore(home, fab); }
+    // Daily flashcards button before Home/Music on every page except the flashcards page itself
+    if(homeHref&&!/flashcards\//.test(location.pathname)){ const fc=document.createElement('a'); fc.className='home-btn fc-btn'; fc.href=homeHref.replace(/index\.html$/,'')+'flashcards/daily.html'; fc.setAttribute('aria-label','Daily flashcards');
+      fc.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="14" height="13" rx="1.5"/><path d="M7 7V4.5A1.5 1.5 0 0 1 8.5 3h11A1.5 1.5 0 0 1 21 4.5v10a1.5 1.5 0 0 1-1.5 1.5H17"/></svg><span>Flashcards</span>';
+      bar.insertBefore(fc, bar.querySelector('.home-btn')||fab); }
     const p=document.createElement('div'); p.className='mpanel'; p.setAttribute('role','dialog');
     p.innerHTML=`<h3>Study music <button aria-label="Close">×</button></h3>
       <div class="mt"><button data-m="sp" class="on">Spotify</button><button data-m="files">My files</button></div>

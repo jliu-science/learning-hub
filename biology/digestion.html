@@ -18,9 +18,12 @@
   <nav class="side" id="lessonnav" aria-label="Lessons"></nav>
   <main id="main"></main>
 </div>
+<!-- Dora's own painting (seasons tree), faded into the empty foot of the lesson sidebar -->
+<style>.dora-art{position:fixed;left:0;bottom:0;width:249px;height:max(0px,min(340px,calc(100vh - 540px)));background:url(../assets/dora-tree.jpg) center 30%/cover no-repeat;opacity:.6;pointer-events:none;z-index:2;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 35%);mask-image:linear-gradient(to bottom,transparent,#000 35%)}@media (max-width:900px){.dora-art{display:none}}</style>
+<div class="dora-art" aria-hidden="true"></div>
 <script src="../assets/icons.js"></script>
 <script src="../assets/engine.js?v=20261116q"></script>
-<script src="../assets/music.js"></script>
+<script src="../assets/music.js?v=20261116f"></script>
 <script src="../assets/kit.js"></script>
 <script src="../assets/guides.js"></script>
 <script src="digestion-widgets.js?v=20261115b"></script>
