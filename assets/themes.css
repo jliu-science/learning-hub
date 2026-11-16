@@ -1,0 +1,13 @@
+/* ===== Subject page colours (2026-11-16, joe: physics and chemistry pages "a bit dull").
+   Same recipe as the maths topic themes: pale lively page colour + faint dot grid, tinted sidebar,
+   cards stay paper-white with a soft shadow so diagrams and text read clearly. ===== */
+body.theme-forces{--t-bg:#e3e6fb;--t-side:#d5daf6;--t-dot:rgba(40,60,170,.12);--t-hair:#c3c9ee}   /* contact forces: periwinkle */
+body.theme-mag{--t-bg:#dcf2e6;--t-side:#cbe9d9;--t-dot:rgba(20,110,70,.12);--t-hair:#b5dcc6}      /* magnets: mint */
+body.theme-chem{--t-bg:#fdf1c8;--t-side:#f8e5a9;--t-dot:rgba(160,110,10,.13);--t-hair:#ecd48d}    /* chemical energy: lemon */
+body[class*="theme-"]{background-color:var(--t-bg);background-image:radial-gradient(var(--t-dot) 1.1px,transparent 1.3px);background-size:22px 22px;background-attachment:fixed}
+body[class*="theme-"] .side{background:var(--t-side);border-right:1px solid var(--t-hair)}
+body[class*="theme-"] .side a:hover{background:rgba(255,255,255,.4)}
+body[class*="theme-"] .side a.on{background:rgba(255,253,248,.75)}
+body[class*="theme-"] .side .sep{background:var(--t-hair)}
+body[class*="theme-"] .tabbar{border-bottom-color:var(--t-hair)}
+body[class*="theme-"] .card{border-color:var(--t-hair);box-shadow:0 1px 0 rgba(60,40,10,.04),0 18px 36px -26px rgba(40,30,20,.45)}
